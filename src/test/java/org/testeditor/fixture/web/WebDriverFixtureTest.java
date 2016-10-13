@@ -59,10 +59,10 @@ public class WebDriverFixtureTest  {
 		fixture.gotToUrl(tool.getUrl());
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
 		fixture.typeInto(tool.getUserName(), "test_1");
-		String userName = fixture.getDriver().findElement(By.id(tool.getUserName())).getAttribute("value");
+		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
 		Assert.assertTrue((userName).equals("test_1"));
 		fixture.typeInto(tool.getPasswd(), "test");
-		String password = fixture.getDriver().findElement(By.id(tool.getPasswd())).getAttribute("value");
+		String password = fixture.getWebElement("[id]" + (tool.getPasswd())).getAttribute("value");
 		Assert.assertTrue((password).equals("test"));
 		fixture.closeBrowser();
 	}
