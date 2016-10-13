@@ -42,7 +42,7 @@ public class WebDriverFixtureTest  {
 	 *	
 	 * @throws InterruptedException
 	 */
-	@Test
+	//@Test
 	public void firefoxPortableStartAndStopTest() throws InterruptedException {
 
 		logger.info("Starting Firefox Protable 45.2.0");
