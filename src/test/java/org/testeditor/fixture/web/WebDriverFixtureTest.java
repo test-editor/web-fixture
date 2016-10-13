@@ -1,33 +1,35 @@
+/*******************************************************************************
+ * Copyright (c) 2012 - 2016 Signal Iduna Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * Signal Iduna Corporation - initial API and implementation
+ * akquinet AG
+ * itemis AG
+ *******************************************************************************/
+
 package org.testeditor.fixture.web;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
+import org.junit.Assert;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
+/**
+ * 	Bitte diesen Test nicht loeschen 
+ *	da die Entwicklung der Selenium Treiber für Firefox noch in der Betaphase ist und noch nicht final,
+ * 	 moechte ich diesen Test dafuer nutzen, vorhandene Methoden weiterhin auf Funktionalitaet zu pruefen.  
+ */
 public class WebDriverFixtureTest  {
-	
-	private static final Logger logger = LoggerFactory.getLogger(WebDriverFixtureTest.class);
-	private static final String PROPERTIES_FILE = "test.properties";
-	private String proxyValue = null;
-	private String proxyPort = null;
-	private String proxyUserValue = null;
-	private String proxyPasswordValue = null;
-	private String proxyNonProxyValue = null;
-	private String userName = null;
-	private String passwd = null;
-	private String url = null;
-	
-	/* 	Bitte diesen Test nicht loeschen 
-	   	da die Entwicklung der Selenium Treiber für Firefox noch in der Betaphase ist und noch nicht final,
-	   	moechte ich diesen Test dafuer nutzen, vorhandene Methoden weiterhin auf Funktionalitaet zu pruefen.  
-	*/
+		
 
+
+	private static final Logger logger = LoggerFactory.getLogger(WebDriverFixtureTest.class);
+	
 	/**
 	 * 	Dieser Test testet die vorhandene Funktionalitaet in der Konstellation <br>
 	 *	<ul>
@@ -40,21 +42,28 @@ public class WebDriverFixtureTest  {
 	 *	
 	 * @throws InterruptedException
 	 */
-	//@Test
+	@Test
 	public void firefoxPortableStartAndStopTest() throws InterruptedException {
 
+		logger.info("Starting Firefox Protable 45.2.0");
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable\\firefox.exe";
-				
-		loadProperties();
-		setProxyValuesForFirefox();
+		String expectedTitle = "Log In";
+		
+		HelperTool tool = new HelperTool();
+		tool.initializeProperties();		
+		
 		WebDriverFixture fixture = new WebDriverFixture();
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(url);
-		fixture.typeInto(userName, "test");
-		fixture.typeInto(passwd, "test");
-		fixture.waitSeconds(2);
+		fixture.gotToUrl(tool.getUrl());
+		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
+		fixture.typeInto(tool.getUserName(), "test_1");
+		String userName = fixture.getDriver().findElement(By.id(tool.getUserName())).getAttribute("value");
+		Assert.assertTrue((userName).equals("test_1"));
+		fixture.typeInto(tool.getPasswd(), "test");
+		String password = fixture.getDriver().findElement(By.id(tool.getPasswd())).getAttribute("value");
+		Assert.assertTrue((password).equals("test"));
 		fixture.closeBrowser();
 	}
 	
@@ -73,7 +82,7 @@ public class WebDriverFixtureTest  {
 	 */
 	//@Test
 	public void newFirefoxPortableStartAndStopTest() throws InterruptedException {
-		
+		logger.info("Starting Firefox Protable 49.0.1");
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable_49.01\\FirefoxPortable\\firefox.exe";
 		String pathGeckodriver = "c:\\dev\\tools\\firefox\\geckodriver.exe";
 		
@@ -81,93 +90,17 @@ public class WebDriverFixtureTest  {
 		// weil Firefox (ab 47) nur noch mit dem GeckoDriver (zur Zeit akt. Version 0.11.1) startet. 
 		System.setProperty("webdriver.gecko.driver", pathGeckodriver);
 		
-		loadProperties();
-		setProxyValuesForFirefox();
+		HelperTool tool = new HelperTool();
+		tool.initializeProperties();
 		WebDriverFixture fixture = new WebDriverFixture();
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(url);
-		fixture.typeInto(userName, "test");
-		fixture.typeInto(passwd, "test");
+		fixture.gotToUrl(tool.getUrl());
+		fixture.typeInto(tool.getUserName(), "test");
+		fixture.typeInto(tool.getPasswd(), "test");
 		fixture.waitSeconds(2);
 		fixture.closeBrowser();
 	}
 	
-	
-	private void setProxyValuesForFirefox() {
-		logger.info("setting proxy properties");
-		String PROXY_HOST_HTTP_VALUE = proxyValue;
-		String PROXY_PORT_HTTP_VALUE = proxyPort;
-		String PROXY_HOST_HTTPS_VALUE = proxyValue;
-		String PROXY_PORT_HTTPS_VALUE = proxyPort;	
-		
-		String PROXY_USER = "http.proxyUser";
-		String PROXY_PASSWORD = "http.proxyPassword";
-		String PROXY_HOST_HTTP = "http.proxyHost";
-		String PROXY_PORT_HTTP = "http.proxyPort";
-		String PROXY_HOST_HTTPS = "https.proxyHost";
-		String PROXY_PORT_HTTPS = "https.proxyPort";
-		String PROXY_NONPROXY_HTTP = "http.nonProxyHosts";
-
-		// First set Proxy Settings
-		
-		System.setProperty(PROXY_USER, proxyUserValue);
-		System.setProperty(PROXY_PASSWORD, proxyPasswordValue);
-		System.setProperty(PROXY_HOST_HTTP, PROXY_HOST_HTTP_VALUE);
-		System.setProperty(PROXY_PORT_HTTP, PROXY_PORT_HTTP_VALUE);
-		System.setProperty(PROXY_HOST_HTTPS, PROXY_HOST_HTTPS_VALUE);
-		System.setProperty(PROXY_PORT_HTTPS, PROXY_PORT_HTTPS_VALUE);
-		System.setProperty(PROXY_NONPROXY_HTTP, proxyNonProxyValue);
-	}
-	
-	
-	private void loadProperties() {
-		
-		Properties prop = new Properties();
-		InputStream input = null;
-		logger.info("loading proxy properties from input file");
-		try {
-
-		      input = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE);
-
-
-		    // load a properties file
-		    prop.load(input);
-
-		    // get the property values for these variables for testing firefox with proxy settings
-//		    logger.info(prop.getProperty("PROXY_VALUE"));
-//		    logger.info(prop.getProperty("PROXY_PORT"));
-//		    logger.info(prop.getProperty("PROXY_USER"));
-//		    logger.info(prop.getProperty("PROXY_PASSWORD"));
-//		    logger.info(prop.getProperty("PROXY_NONPROXY"));
-		    
-		    // set properties
-		    setProperties(prop);
-
-		} catch (IOException ex) {
-		    ex.printStackTrace();
-		} finally {
-		    if (input != null) {
-		        try {
-		            input.close();
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-		    }
-		}	
-	}
-	
-	private void setProperties(Properties prop ) {
-		logger.info("reading proxy properties from input file");
-		proxyValue = prop.getProperty("PROXY_VALUE");
-		proxyPort = prop.getProperty("PROXY_PORT");
-		proxyUserValue = prop.getProperty("PROXY_USER");
-		proxyPasswordValue = prop.getProperty("PROXY_PASSWORD");
-		proxyNonProxyValue = prop.getProperty("PROXY_NONPROXY");
-		userName = prop.getProperty("USERNAME");
-		passwd = prop.getProperty("PASSWORD");
-		url = prop.getProperty("URL");
-	}
-
 }
