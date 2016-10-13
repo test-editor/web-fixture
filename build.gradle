@@ -80,6 +80,18 @@ bintray {
     }
 }
 
+configurations.all {
+  resolutionStrategy {
+    // fail eagerly on version conflict (includes transitive dependencies)
+    // e.g. multiple different versions of the same dependency (group and name are equal)
+   // failOnVersionConflict()
+    
+        // force certain versions of dependencies (including transitive)
+    //  *append new forced modules:
+    force 'org.slf4j:slf4j-api:1.7.18', 'org.seleniumhq.selenium:selenium-java:2.53.0'
+    }
+}
+
 bintrayUpload.doFirst {
     // Version is changed during release, we need to set the proper version right before uploading
     versionName = "$project.version"

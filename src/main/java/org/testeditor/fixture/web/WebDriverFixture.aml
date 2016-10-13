@@ -1,7 +1,6 @@
 package org.testeditor.fixture.web
 
 interaction type wait {
-	label = "Wait seconds"
 	template = "Wait" ${seconds} "seconds"
 	method = WebDriverFixture.waitSeconds(seconds)
 }
@@ -19,13 +18,11 @@ interaction type startFireForxPortable {
 }
 
 interaction type goToUrl {
-	label = "Browse to url"
 	template = "Browse to" ${url}
 	method = WebDriverFixture.gotToUrl(url)
 }
 
 interaction type closeBrowser {
-	label = "Close browser"
 	template = "Close browser"
 	method = WebDriverFixture.closeBrowser
 }
@@ -36,30 +33,25 @@ interaction type setActiveBrwoser {
 }
 
 interaction type typeIn {
-	label = "Type in"
 	template = "Type in" ${element} "value" ${value}
 	method = WebDriverFixture.typeInto(element, value)
 }
 
 interaction type sendEnter {
-	label = "press enter in"
 	template = "press enter in" ${element}
 	method = WebDriverFixture.pressEnterOn(element)
 }
 
 interaction type clear {
-	label = "Clear field"
 	template = "Clear value in" ${element}
 	method = WebDriverFixture.clear(element)
 }
 
 interaction type click {
-	label = "Click"
 	template = "click on" ${element}
 	method = WebDriverFixture.clickOn(element)	
 }
 interaction type moveToElementAndClick {
-	label = "move to element and click"
 	template = "move to" ${element} "and click"
 	method = WebDriverFixture.moveToElementAndClick(element)	
 }
@@ -77,20 +69,17 @@ interaction type getAvailableOptions {
 }
 
 interaction type readValue {
-	label = "Read value"
 	template = "read value from" ${element}
 	method = WebDriverFixture.readValue(element)	
 }
 
 interaction type executeScript {
-	label = "Execute Script"
 	template = "Execute script" ${value}
 	method = WebDriverFixture.setExecuteScript(value)	
 }
 
 
 interaction type checkEnabled {
-	label = "check enabled"
 	template = "check if element " ${element} " is enabled"
 	method = WebDriverFixture.checkEnabled(element)	
 }
@@ -126,7 +115,6 @@ component type Page {
 
 component WebBrowser is GeneralBrowser {
 	element defaultBrowser is BrowserApplication {
-		label = "default"
 		locator ="default"
 	}
 	element OlderFirefox is BrowserApplication {

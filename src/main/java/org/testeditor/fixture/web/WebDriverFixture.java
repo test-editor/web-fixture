@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -35,7 +33,10 @@ import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
+
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
@@ -44,7 +45,8 @@ import io.github.bonigarcia.wdm.MarionetteDriverManager;
 public class WebDriverFixture {
 
 	private WebDriver driver;
-	private Logger logger = LogManager.getLogger(WebDriverFixture.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebDriverFixture.class);
+	
 	private String exeuteScript = null;
 
 	@FixtureMethod
@@ -167,11 +169,13 @@ public class WebDriverFixture {
 		
 		if (System.getProperty("http.proxyHost") != null) {
 			logger.info("Setting up proxy: {} on port {} with nonProxyHosts {} ", System.getProperty("http.proxyHost"), System.getProperty("http.proxyPort"), System.getProperty("http.nonProxyHosts") );
+			profile.setPreference("network.proxy.type", 1);
 			profile.setPreference("network.proxy.user_name", System.getProperty("http.proxyUser"));
 			profile.setPreference("network.proxy.password", System.getProperty("http.proxyPassword"));
-			profile.setPreference("network.proxy.type", 1);
 			profile.setPreference("network.proxy.http", System.getProperty("http.proxyHost"));
 			profile.setPreference("network.proxy.http_port", System.getProperty("http.proxyPort"));
+			profile.setPreference("network.proxy.ssl", System.getProperty("http.proxyHost"));
+			profile.setPreference("network.proxy.ssl_port", System.getProperty("http.proxyPort"));
 			profile.setPreference("network.proxy.no_proxies_on", System.getProperty("http.nonProxyHosts"));
 		}
 		return profile;
@@ -281,14 +285,14 @@ public class WebDriverFixture {
 
 	private void executeScript() {
 		try {
-			System.err.println(exeuteScript);
+			logger.info("execute script begin {}", exeuteScript);
 			BufferedReader br = new BufferedReader(new FileReader(exeuteScript));
 			StringBuilder sb = new StringBuilder();
 			while (br.ready()) {
 				sb.append(br.readLine()).append("\n");
 			}
 			br.close();
-			logger.info("execute script {}", exeuteScript);
+			logger.info("execute script end {}", exeuteScript);
 			((JavascriptExecutor) driver).executeScript(sb.toString());
 		} catch (IOException e) {
 			logger.error("Can't read java script", e);
