@@ -45,7 +45,7 @@ public class WebDriverFixtureTest  {
 	//@Test
 	public void firefoxPortableStartAndStopTest() throws InterruptedException {
 
-		logger.info("Starting Firefox Protable 45.2.0");
+		logger.info("Starting Firefox Portable 45.2.0");
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable\\firefox.exe";
 		String expectedTitle = "Log In";
 		
@@ -82,7 +82,7 @@ public class WebDriverFixtureTest  {
 	 */
 	//@Test
 	public void newFirefoxPortableStartAndStopTest() throws InterruptedException {
-		logger.info("Starting Firefox Protable 49.0.1");
+		logger.info("Starting Firefox Portable 49.0.1");
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable_49.01\\FirefoxPortable\\firefox.exe";
 		String pathGeckodriver = "c:\\dev\\tools\\firefox\\geckodriver.exe";
 		

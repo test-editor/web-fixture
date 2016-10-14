@@ -11,9 +11,9 @@ interaction type startBrowser {
 	method = NgOneWebDriverFixture.startBrowser(element)
 }
 
-interaction type startFireForxPortable {
-	label = "Start browser firefox protable"
-	template = "start firefox protable" ${path} 
+interaction type startFireFoxPortable {
+	label = "Start browser firefox portable"
+	template = "start firefox portable" ${path} 
 	method = NgOneWebDriverFixture.startFireFoxPortable(path)
 }
 
@@ -63,7 +63,7 @@ interaction type executeScript {
 }
 
 element type BrowserApplication {
-	interactions = startBrowser, startFireForxPortable
+	interactions = startBrowser, startFireFoxPortable
 }
 
 element type field {
