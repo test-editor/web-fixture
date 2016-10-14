@@ -73,13 +73,11 @@ interaction type selectCurrentDate {
 
 
 interaction type executeScript {
-	label = "Execute Script"
 	template = "Execute script" ${value}
 	method = NgMdWebDriverFixture.setExecuteScript(value)	
 }
 
 interaction type checkEnabled {
-	label = "check enabled"
 	template = "check element " ${element} " enabled"
 	method = NgMdWebDriverFixture.checkEnabled(element)	
 
@@ -119,7 +117,6 @@ component type Page {
 
 component WebBrowser is GeneralBrowser {
 	element defaultBrowser is BrowserApplication {
-		label = "default"
 		locator ="default"
 	}
 	element OlderFirefox is BrowserApplication {
