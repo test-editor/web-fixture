@@ -13,9 +13,11 @@
 
 package org.testeditor.fixture.web;
 
+import java.net.URL;
+
 import org.junit.Assert;
 import org.junit.Test;
-import org.openqa.selenium.By;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,7 @@ public class WebDriverFixtureTest  {
 
 
 	private static final Logger logger = LoggerFactory.getLogger(WebDriverFixtureTest.class);
+	private static final String WEBSITE = "index.html";
 	
 	/**
 	 * 	Dieser Test testet die vorhandene Funktionalitaet in der Konstellation <br>
@@ -43,11 +46,13 @@ public class WebDriverFixtureTest  {
 	 * @throws InterruptedException
 	 */
 	//@Test
-	public void firefoxPortableStartAndStopTest() throws InterruptedException {
+	public void firefoxPortableStartAndStopTest() throws InterruptedException{
 
 		logger.info("Starting Firefox Portable 45.2.0");
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable\\firefox.exe";
-		String expectedTitle = "Log In";
+		URL webSite =  getClass().getClassLoader().getResource(WEBSITE);
+		logger.info("Following URL : {} will be opened" , webSite.toString());
+		String expectedTitle = "Login Wiki";
 		
 		HelperTool tool = new HelperTool();
 		tool.initializeProperties();		
@@ -56,7 +61,7 @@ public class WebDriverFixtureTest  {
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(tool.getUrl());
+		fixture.gotToUrl(webSite.toString());
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
 		fixture.typeInto(tool.getUserName(), "test_1");
 		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");

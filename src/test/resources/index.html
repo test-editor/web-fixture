@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login Wiki</title>
+</head>
+                                                                                                             
+ <form     name="loginform" method="POST" action="/dologin.action" class="aui login-form-container" >
+   <h2>Anmelden</h2>
+   <label id="os_username-label" for="os_username">
+      <u>B</u>enutzername
+   </label>
+   <input type="text" name="os_username" id="os_username" class="text" placeholder="Benutzername" data-focus="0" />
+
+   <div class="field-group">
+       <label id="os_password-label" for="os_password">
+          <u>P</u>asswort
+       </label>
+       <input type="password" name="os_password" id="os_password" class="password " placeholder="Passwort" />
+   </div>                        
+   <input id="loginButton" class="aui-button aui-style aui-button-primary" name="login" type="submit" value="Anmelden"/>
+   <input type="hidden" name="os_destination" value="/index.action"/>
+</form>                
+</body>
+</html>
