@@ -90,6 +90,9 @@ public class WebDriverFixtureTest  {
 		logger.info("Starting Firefox Portable 49.0.1");
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable_49.01\\FirefoxPortable\\firefox.exe";
 		String pathGeckodriver = "c:\\dev\\tools\\firefox\\geckodriver.exe";
+		URL webSite =  getClass().getClassLoader().getResource(WEBSITE);
+		logger.info("Following URL : {} will be opened" , webSite.toString());
+		String expectedTitle = "Login Wiki";
 		
 		// einkommentieren nur wenn mit Selenium Version ab 3.00 beta4 getetestet werden soll,
 		// weil Firefox (ab 47) nur noch mit dem GeckoDriver (zur Zeit akt. Version 0.11.1) startet. 
@@ -101,11 +104,16 @@ public class WebDriverFixtureTest  {
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(tool.getUrl());
-		fixture.typeInto(tool.getUserName(), "test");
+		fixture.gotToUrl(webSite.toString());
+		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
+		fixture.typeInto(tool.getUserName(), "test_1");
+		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
+		Assert.assertTrue((userName).equals("test_1"));
 		fixture.typeInto(tool.getPasswd(), "test");
-		fixture.waitSeconds(2);
-		fixture.closeBrowser();
+		String password = fixture.getWebElement("[id]" + (tool.getPasswd())).getAttribute("value");
+		Assert.assertTrue((password).equals("test"));
+		fixture.closeBrowser();	
+		
 	}
 	
 }
