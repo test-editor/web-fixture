@@ -1,0 +1,138 @@
+package org.testeditor.fixture.web.angularjs.materialdesign
+
+interaction type wait {
+	template = "Wait" ${seconds} "seconds"
+	method = NgMdWebDriverFixture.waitSeconds(seconds)
+}
+
+interaction type startBrowser {
+	template = "start browser" ${element} 
+	method = NgMdWebDriverFixture.startBrowser(element)
+}
+
+interaction type startFireFoxPortable {
+	label = "Start browser firefox portable"
+	template = "start firefox portable " ${path} 
+	method = NgMdWebDriverFixture.startFireFoxPortable(path)
+}
+
+interaction type goToUrl {
+	template = "Browse to" ${url}
+	method = NgMdWebDriverFixture.gotToUrl(url)
+}
+
+interaction type closeBrowser {
+	template = "Close browser"
+	method = NgMdWebDriverFixture.closeBrowser
+}
+
+interaction type setActiveBrwoser {
+	template = "Set active browser" ${browser}
+	method = NgMdWebDriverFixture.setDriver(browser)
+}
+
+interaction type typeIn {
+	template = "Type in" ${element} "value" ${value}
+	method = NgMdWebDriverFixture.typeInto(element, value)
+}
+
+interaction type sendEnter {
+	template = "press enter in" ${element}
+	method = NgMdWebDriverFixture.pressEnterOn(element)
+}
+
+interaction type clear {
+	template = "Clear value in" ${element}
+	method = NgMdWebDriverFixture.clear(element)
+}
+
+interaction type click {
+	template = "click on" ${element}
+	method = NgMdWebDriverFixture.clickOn(element)	
+}
+
+interaction type selectInSelection {
+	template = "select " ${value} "in" ${element}
+	method = NgMdWebDriverFixture.selectElementInSelection(element,value)	
+}
+
+interaction type getAvailableOptions {
+	template = "available Options in" ${element}
+	method = NgMdWebDriverFixture.getOptionsInSelection(element)	
+}
+
+interaction type readValue {
+	template = "read value from" ${element}
+	method = NgMdWebDriverFixture.readValue(element)	
+}
+
+interaction type selectCurrentDate {
+	template = "select current date" 
+	method = NgMdWebDriverFixture.selectCurrentDate
+}
+
+
+interaction type executeScript {
+	template = "Execute script" ${value}
+	method = NgMdWebDriverFixture.setExecuteScript(value)	
+}
+
+interaction type checkEnabled {
+	template = "check element " ${element} " enabled"
+	method = NgMdWebDriverFixture.checkEnabled(element)	
+
+}
+
+element type BrowserApplication {
+	interactions = startBrowser, startFireFoxPortable
+}
+
+element type field {
+	interactions = typeIn, sendEnter
+}
+
+element type button {
+	interactions = click, sendEnter, checkEnabled
+}
+
+element type selection {
+	interactions = click, sendEnter, selectInSelection, getAvailableOptions
+}
+
+element type dateTimePicker {
+	interactions = click, readValue, selectCurrentDate
+}
+
+element type labelElement {
+	interactions = readValue
+}
+
+component type GeneralBrowser {
+	interactions = wait, goToUrl, closeBrowser, setActiveBrwoser
+}
+
+component type Page {
+	interactions = wait
+}
+
+component WebBrowser is GeneralBrowser {
+	element defaultBrowser is BrowserApplication {
+		locator ="default"
+	}
+	element OlderFirefox is BrowserApplication {
+		label = "Firefox(older)"
+		locator ="firefox"
+	}
+	element Firefox is BrowserApplication {
+		label = "Firefox(47 and above)"
+		locator ="modernfirefox"
+	}
+	element IE is BrowserApplication {
+		label = "Internet Explorer"
+		locator ="ie"
+	}
+	element Chrome is BrowserApplication {
+		label = "Chrome"
+		locator ="chrome"
+	}
+}
