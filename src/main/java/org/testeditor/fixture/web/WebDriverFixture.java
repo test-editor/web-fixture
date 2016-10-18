@@ -201,7 +201,7 @@ public class WebDriverFixture {
 		return profile;
 	}
 
-	@FixtureMethod
+	@FixtureMethod 
 	public void gotToUrl(String url) {
 		driver.get(url);
 	}
