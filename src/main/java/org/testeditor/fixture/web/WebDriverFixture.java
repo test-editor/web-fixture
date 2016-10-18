@@ -16,11 +16,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -44,6 +47,13 @@ import io.github.bonigarcia.wdm.MarionetteDriverManager;
 
 public class WebDriverFixture {
 
+	public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
+	public static final String HTTP_PROXY_PORT = "http.proxyPort";
+	public static final String HTTP_PROXY_HOST = "http.proxyHost";
+	public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+	public static final String HTTP_PROXY_USER = "http.proxyUser";
+	public static final String HTTPS_PROXY_HOST = "https.proxyHost";
+	public static final String HTTPS_PROXY_PORT = "https.proxyPort";
 	private WebDriver driver;
 	private static final Logger logger = LoggerFactory.getLogger(WebDriverFixture.class);
 	
@@ -73,7 +83,7 @@ public class WebDriverFixture {
 		logger.info("Starting brwoser: {}", browser);
 		switch (browser) {
 		case "default":
-			if (System.getProperty("os.name").startsWith("Windows")) {
+			if (SystemUtils.IS_OS_WINDOWS) {
 				launchIE();
 			} else {
 				launchFirefoxMarionetteDriver();
@@ -126,7 +136,17 @@ public class WebDriverFixture {
 //	               else
 //	                  return super.getPasswordAuthentication();
 //	         }});
-		MarionetteDriverManager.getInstance().setup("v0.7.1");
+		Authenticator.setDefault(new Authenticator() {
+        @Override
+       public PasswordAuthentication getPasswordAuthentication() {
+             if(getRequestorType() == Authenticator.RequestorType.PROXY) 
+                 return new PasswordAuthentication("u096310", "ups64yd".toCharArray());
+             else
+                return super.getPasswordAuthentication();
+       }});		
+		
+		
+		MarionetteDriverManager.getInstance().setup("v0.10.0");
 		driver = new MarionetteDriver();
 		registerShutdownHook(driver);
 	}
@@ -151,7 +171,7 @@ public class WebDriverFixture {
 	}
 
 	private FirefoxProfile getFireFoxProfile() {
-		File profFile = new File(System.getenv("java.io.tmpdir"), "selenium");
+		File profFile = new File(System.getProperty("java.io.tmpdir"), "selenium");
 		if (profFile.exists()) {
 			profFile.delete();
 		}
@@ -163,20 +183,20 @@ public class WebDriverFixture {
 		profile.setPreference("security.mixed_content.block_active_content", false);
 		profile.setPreference("security.mixed_content.block_display_content", true);
 		
-		logger.debug("proxyHost:\"" + System.getProperty("http.proxyHost") + "\"");
-		logger.debug("proxyPort:\"" + System.getProperty("http.proxyPort") + "\"");
-		logger.debug("nonProxyHosts:\"" + System.getProperty("http.nonProxyHosts") + "\"");
+		logger.debug("proxyHost:\"" + System.getProperty(HTTP_PROXY_HOST) + "\"");
+		logger.debug("proxyPort:\"" + System.getProperty(HTTP_PROXY_PORT) + "\"");
+		logger.debug("nonProxyHosts:\"" + System.getProperty(HTTP_NON_PROXY_HOSTS) + "\"");
 		
-		if (System.getProperty("http.proxyHost") != null) {
-			logger.info("Setting up proxy: {} on port {} with nonProxyHosts {} ", System.getProperty("http.proxyHost"), System.getProperty("http.proxyPort"), System.getProperty("http.nonProxyHosts") );
+		if (System.getProperty(HTTP_PROXY_HOST) != null) {
+			logger.info("Setting up proxy: {} on port {} with nonProxyHosts {} ", System.getProperty(HTTP_PROXY_HOST), System.getProperty(HTTP_PROXY_PORT), System.getProperty(HTTP_NON_PROXY_HOSTS) );
 			profile.setPreference("network.proxy.type", 1);
-			profile.setPreference("network.proxy.user_name", System.getProperty("http.proxyUser"));
-			profile.setPreference("network.proxy.password", System.getProperty("http.proxyPassword"));
-			profile.setPreference("network.proxy.http", System.getProperty("http.proxyHost"));
-			profile.setPreference("network.proxy.http_port", System.getProperty("http.proxyPort"));
-			profile.setPreference("network.proxy.ssl", System.getProperty("http.proxyHost"));
-			profile.setPreference("network.proxy.ssl_port", System.getProperty("http.proxyPort"));
-			profile.setPreference("network.proxy.no_proxies_on", System.getProperty("http.nonProxyHosts"));
+			profile.setPreference("network.proxy.user_name", System.getProperty(HTTP_PROXY_USER));
+			profile.setPreference("network.proxy.password", System.getProperty(HTTP_PROXY_PASSWORD));
+			profile.setPreference("network.proxy.http", System.getProperty(HTTP_PROXY_HOST));
+			profile.setPreference("network.proxy.http_port", System.getProperty(HTTP_PROXY_PORT));
+			profile.setPreference("network.proxy.ssl", System.getProperty(HTTPS_PROXY_HOST));
+			profile.setPreference("network.proxy.ssl_port", System.getProperty(HTTPS_PROXY_PORT));
+			profile.setPreference("network.proxy.no_proxies_on", System.getProperty(HTTP_NON_PROXY_HOSTS));
 		}
 		return profile;
 	}

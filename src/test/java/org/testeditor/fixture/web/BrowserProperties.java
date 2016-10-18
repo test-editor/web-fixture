@@ -20,9 +20,9 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HelperTool {
+public class BrowserProperties {
 
-	private static final Logger logger = LoggerFactory.getLogger(HelperTool.class);
+	private static final Logger logger = LoggerFactory.getLogger(BrowserProperties.class);
 	private static final String PROPERTIES_FILE = "test.properties";
 	private String proxyValue = null;
 	private String proxyPort = null;
@@ -33,7 +33,7 @@ public class HelperTool {
 	private String passwd = null;
 	private String url = null;
 
-	public void initializeProperties() {
+	public void initializeProperties() throws IOException {
 		this.loadProperties();
 		this.setProxyValuesForFirefox();
 	}
@@ -45,32 +45,21 @@ public class HelperTool {
 		String PROXY_HOST_HTTPS_VALUE = proxyValue;
 		String PROXY_PORT_HTTPS_VALUE = proxyPort;
 
-		String PROXY_USER = "http.proxyUser";
-		String PROXY_PASSWORD = "http.proxyPassword";
-		String PROXY_HOST_HTTP = "http.proxyHost";
-		String PROXY_PORT_HTTP = "http.proxyPort";
-		String PROXY_HOST_HTTPS = "https.proxyHost";
-		String PROXY_PORT_HTTPS = "https.proxyPort";
-		String PROXY_NONPROXY_HTTP = "http.nonProxyHosts";
-
 		// First set Proxy Settings
 
-		System.setProperty(PROXY_USER, proxyUserValue);
-		System.setProperty(PROXY_PASSWORD, proxyPasswordValue);
-		System.setProperty(PROXY_HOST_HTTP, PROXY_HOST_HTTP_VALUE);
-		System.setProperty(PROXY_PORT_HTTP, PROXY_PORT_HTTP_VALUE);
-		System.setProperty(PROXY_HOST_HTTPS, PROXY_HOST_HTTPS_VALUE);
-		System.setProperty(PROXY_PORT_HTTPS, PROXY_PORT_HTTPS_VALUE);
-		System.setProperty(PROXY_NONPROXY_HTTP, proxyNonProxyValue);
+		System.setProperty(WebDriverFixture.HTTP_PROXY_USER, proxyUserValue);
+		System.setProperty(WebDriverFixture.HTTP_PROXY_PASSWORD, proxyPasswordValue);
+		System.setProperty(WebDriverFixture.HTTP_PROXY_HOST, PROXY_HOST_HTTP_VALUE);
+		System.setProperty(WebDriverFixture.HTTP_PROXY_PORT, PROXY_PORT_HTTP_VALUE);
+		System.setProperty(WebDriverFixture.HTTPS_PROXY_HOST, PROXY_HOST_HTTPS_VALUE);
+		System.setProperty(WebDriverFixture.HTTPS_PROXY_PORT, PROXY_PORT_HTTPS_VALUE);
+		System.setProperty(WebDriverFixture.HTTP_NON_PROXY_HOSTS, proxyNonProxyValue);
 	}
 
-	private void loadProperties() {
+	private void loadProperties() throws IOException {
 		Properties prop = new Properties();
-		InputStream input = null;
 		logger.info("loading proxy properties from input file");
-		try {
-			input = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE);
-			// load a properties file
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
 			prop.load(input);
 			// get the property values for these variables for testing firefox
 			// with proxy settings
@@ -81,16 +70,6 @@ public class HelperTool {
 			// logger.info(prop.getProperty("PROXY_NONPROXY"));
 			// set properties
 			setProperties(prop);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 

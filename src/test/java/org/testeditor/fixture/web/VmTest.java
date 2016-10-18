@@ -32,7 +32,7 @@ public class VmTest {
 
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable\\firefox.exe";
 				
-		HelperTool tool = new HelperTool();
+		BrowserProperties tool = new BrowserProperties();
 		WebDriverFixture fixture = new WebDriverFixture();
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);

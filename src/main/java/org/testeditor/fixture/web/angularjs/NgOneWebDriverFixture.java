@@ -70,7 +70,7 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
 	protected void waitForAngularCompleteOperations() {
 		logger.trace("Wait until angular operations are completed.");
 		ngWebDriver.waitForAngularRequestsToFinish();
-		logger.trace("Angular operaitons completed.");
+		logger.trace("Angular operations completed.");
 	}
 
 }
