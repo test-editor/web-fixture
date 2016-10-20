@@ -37,7 +37,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebDriverFixtureLocalFirefoxTest.class);
 	private static final String WEBSITE = "index.html";
-	private static final String pathGeckodriver = "c:\\dev\\tools\\firefox\\geckodriver.exe";
+	
 	
 	@Before
 	public void Setup() {
@@ -46,11 +46,11 @@ public class WebDriverFixtureLocalFirefoxTest  {
 	}
 	
 	private boolean isGeckoDriverPresent() {
-		return new File(pathGeckodriver).exists();
+		return HelperTool.isGeckoDriverPresent();
 	}
 
 	private boolean isOsWindows() {
-		return SystemUtils.IS_OS_WINDOWS;
+		return HelperTool.isOsWindows();
 	}
 
 
@@ -119,7 +119,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		
 		// einkommentieren nur wenn mit Selenium Version ab 3.00 beta4 getetestet werden soll,
 		// weil Firefox (ab 47) nur noch mit dem GeckoDriver (zur Zeit akt. Version 0.11.1) startet. 
-		System.setProperty("webdriver.gecko.driver", pathGeckodriver);
+		System.setProperty("webdriver.gecko.driver", HelperTool.getPathgeckodriver());
 		
 		BrowserProperties tool = new BrowserProperties();
 		tool.initializeProperties();

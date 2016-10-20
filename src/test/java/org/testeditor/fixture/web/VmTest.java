@@ -13,7 +13,23 @@
 
 package org.testeditor.fixture.web;
 
+import java.io.IOException;
+
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
+
 public class VmTest {
+	
+	
+	/**
+	 * Prerequisites for execution of tests
+	 */
+	@Before
+	public void Setup() {
+		Assume.assumeTrue("This is not a Windows OS - ignoring test", HelperTool.isOsWindows());
+		Assume.assumeTrue("Geckodriver is not present on test system - ignoring test", HelperTool.isGeckoDriverPresent());
+	}
 	
 	/**
 	 * 	Dieser Test testet die vorhandene Funktionalitaet in der Konstellation <br>
@@ -26,13 +42,15 @@ public class VmTest {
 	 *  </ul>
 	 *	
 	 * @throws InterruptedException
+	 * @throws IOException 
 	 */
-	//@Test
-	public void firefoxPortableStartAndStopTest() throws InterruptedException {
+	@Test
+	public void firefoxPortableStartAndStopTest() throws InterruptedException, IOException {
 
 		String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable\\firefox.exe";
 				
 		BrowserProperties tool = new BrowserProperties();
+		tool.initializeProperties();
 		WebDriverFixture fixture = new WebDriverFixture();
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);

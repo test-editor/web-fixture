@@ -162,6 +162,7 @@ public class WebDriverFixture {
 
 	protected void configureDriver() {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		//maximizing works for Firefox tested with FF <= 49.0.1
 		driver.manage().window().maximize();
 	}
 

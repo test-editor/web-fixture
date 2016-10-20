@@ -97,3 +97,6 @@ bintrayUpload.doFirst {
     versionName = "$project.version"
     versionVcsTag = "v$project.version"
 }
+
+sourceSets.main.resources.srcDirs = [ "src/main/java" ]
+sourceSets.main.resources.includes = [ "**/*.aml" ]
