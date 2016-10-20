@@ -80,8 +80,8 @@ public class BrowserProperties {
 		proxyUserValue = prop.getProperty("PROXY_USER");
 		proxyPasswordValue = prop.getProperty("PROXY_PASSWORD");
 		proxyNonProxyValue = prop.getProperty("PROXY_NONPROXY");
-		userName = prop.getProperty("USERNAME");
-		passwd = prop.getProperty("PASSWORD");
+		userName = prop.getProperty("USERNAME_LOCATOR");
+		passwd = prop.getProperty("PASSWORD_LOCATOR");
 		url = prop.getProperty("URL");
 	}
 
