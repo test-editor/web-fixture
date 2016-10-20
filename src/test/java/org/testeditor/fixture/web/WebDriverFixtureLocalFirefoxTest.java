@@ -13,11 +13,9 @@
 
 package org.testeditor.fixture.web;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
@@ -41,18 +39,10 @@ public class WebDriverFixtureLocalFirefoxTest  {
 	
 	@Before
 	public void Setup() {
-		Assume.assumeTrue("Condition not true - ignoring test", isOsWindows());
-		Assume.assumeTrue("Condition not true - ignoring test", isGeckoDriverPresent());
+		Assume.assumeTrue("This is not a Windows OS - ignoring test", HelperTool.isOsWindows());
+		Assume.assumeTrue("Geckodriver is not present on test system - ignoring test", HelperTool.isGeckoDriverPresent());
 	}
 	
-	private boolean isGeckoDriverPresent() {
-		return HelperTool.isGeckoDriverPresent();
-	}
-
-	private boolean isOsWindows() {
-		return HelperTool.isOsWindows();
-	}
-
 
 	/**
 	 * 	Dieser Test testet die vorhandene Funktionalitaet in der Konstellation <br>
@@ -154,23 +144,26 @@ public class WebDriverFixtureLocalFirefoxTest  {
 	 */
 	//@Test
 	public void newFirefoxStartAndStopTest() throws InterruptedException, IOException {
+		
+		//GIVEN
 		logger.info("Starting Firefox 49.0.1");
 		//String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable_49.01\\FirefoxPortable\\firefox.exe";
 		URL webSite =  getClass().getClassLoader().getResource(WEBSITE);
 		logger.info("Following URL : {} will be opened" , webSite.toString());
 		String expectedTitle = "Login Wiki";
-		
-		// einkommentieren nur wenn mit Selenium Version ab 3.00 beta4 getetestet werden soll,
+    	// einkommentieren nur wenn mit Selenium Version ab 3.00 beta4 getetestet werden soll,
 		// weil Firefox (ab 47) nur noch mit dem GeckoDriver (zur Zeit akt. Version 0.11.1) startet. 
 		//System.setProperty("webdriver.gecko.driver", pathGeckodriver);
-		
 		BrowserProperties tool = new BrowserProperties();
 		tool.initializeProperties();
 		WebDriverFixture fixture = new WebDriverFixture();
 		
+		//WHEN
 		fixture.startBrowser("firefox");
 		fixture.waitSeconds(2);
 		fixture.gotToUrl(webSite.toString());
+		
+		//THEN
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
 		fixture.typeInto(tool.getUserName(), "test_1");
 		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
