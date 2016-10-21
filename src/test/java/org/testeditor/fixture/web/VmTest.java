@@ -27,8 +27,7 @@ public class VmTest {
 	 */
 	@Before
 	public void Setup() {
-		Assume.assumeTrue("This is not a Windows OS - ignoring test", HelperTool.isOsWindows());
-		Assume.assumeTrue("Geckodriver is not present on test system - ignoring test", HelperTool.isGeckoDriverPresent());
+		Assume.assumeTrue("This is not a Windows OS - ignoring test", HelperTool.isOsWindows()); 
 	}
 	
 	/**
