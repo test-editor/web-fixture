@@ -27,10 +27,20 @@ import org.testeditor.fixture.web.angularjs.NgOneWebDriverFixture;
 import com.paulhammant.ngwebdriver.ByAngular;
 import com.paulhammant.ngwebdriver.ByAngularCssContainingText;
 
+
+/**
+ * Includes special methods for AngularJS applications with Google's Material Design Specification.
+ */
 public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 
 	private static final Logger logger = LoggerFactory.getLogger(NgMdWebDriverFixture.class);
 
+	
+	/**
+	 * 
+	 * @param elementLocator Locator for Selection
+	 * @param value name of the entry to be selected
+	 */
 	@FixtureMethod
 	public void selectElementInSelection(String elementLocator, String value) throws InterruptedException {
 		clickOn(elementLocator);
@@ -46,6 +56,10 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 		logger.trace("Selected value {} in slection {}", value, elementLocator);
 	}
 
+	/**
+	 * @return the Options of a selection Field as a {@code Map}
+	 * @param elementLocator Locator for Selection
+	 */
 	@FixtureMethod
 	public Map<String, String> getOptionsInSelection(String elementLocator) throws InterruptedException {
 		Map<String, String> availableOptions = new HashMap<String, String>();
@@ -62,11 +76,6 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 		Actions actions = new Actions(getDriver());
 		actions.sendKeys(Keys.ESCAPE).perform();
 		return availableOptions;
-	}
-
-	@FixtureMethod
-	public void selectCurrentDate() throws InterruptedException {
-		clickOn("[xpath]/html/body/div[*]/md-dialog/md-dialog-actions/button[2]");
 	}
 
 }

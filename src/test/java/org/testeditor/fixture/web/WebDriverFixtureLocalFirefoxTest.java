@@ -30,12 +30,8 @@ import org.slf4j.LoggerFactory;
  * 	 moechte ich diesen Test dafuer nutzen, vorhandene Methoden weiterhin auf Funktionalitaet zu pruefen.  
  */
 public class WebDriverFixtureLocalFirefoxTest  {
-		
-
-
 	private static final Logger logger = LoggerFactory.getLogger(WebDriverFixtureLocalFirefoxTest.class);
 	private static final String WEBSITE = "index.html";
-	
 	
 	@Before
 	public void Setup() {
@@ -73,7 +69,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(webSite.toString());
+		fixture.goToUrl(webSite.toString());
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
 		fixture.typeInto(tool.getUserName(), "test_1");
 		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
@@ -117,7 +113,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(webSite.toString());
+		fixture.goToUrl(webSite.toString());
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
 		fixture.typeInto(tool.getUserName(), "test_1");
 		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
@@ -161,7 +157,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		//WHEN
 		fixture.startBrowser("firefox");
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(webSite.toString());
+		fixture.goToUrl(webSite.toString());
 		
 		//THEN
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));

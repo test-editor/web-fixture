@@ -1,7 +1,7 @@
 package org.testeditor.fixture.web.angularjs
 
 interaction type wait {
-	template = "Wait" ${seconds} "seconds"
+	template = "wait" ${seconds} "seconds"
 	method = NgOneWebDriverFixture.waitSeconds(seconds)
 }
 
@@ -18,22 +18,22 @@ interaction type startFireFoxPortable {
 }
 
 interaction type goToUrl {
-	template = "Browse to" ${url}
-	method = NgOneWebDriverFixture.gotToUrl(url)
+	template = "browse to" ${url}
+	method = NgOneWebDriverFixture.goToUrl(url)
 }
 
 interaction type closeBrowser {
-	template = "Close browser"
+	template = "close browser"
 	method = NgOneWebDriverFixture.closeBrowser
 }
 
 interaction type setActiveBrwoser {
-	template = "Set active browser" ${browser}
+	template = "set active browser" ${browser}
 	method = NgOneWebDriverFixture.setDriver(browser)
 }
 
 interaction type typeIn {
-	template = "Type in" ${element} "value" ${value}
+	template = "type in" ${element} "value" ${value}
 	method = NgOneWebDriverFixture.typeInto(element, value)
 }
 
@@ -43,7 +43,7 @@ interaction type sendEnter {
 }
 
 interaction type clear {
-	template = "Clear value in" ${element}
+	template = "clear value in" ${element}
 	method = NgOneWebDriverFixture.clear(element)
 }
 
@@ -58,7 +58,7 @@ interaction type readValue {
 }
 
 interaction type executeScript {
-	template = "Execute script" ${value}
+	template = "execute script" ${value}
 	method = NgOneWebDriverFixture.setExecuteScript(value)	
 }
 

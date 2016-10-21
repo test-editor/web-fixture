@@ -23,11 +23,22 @@ import org.testeditor.fixture.web.WebDriverFixture;
 import com.paulhammant.ngwebdriver.ByAngular;
 import com.paulhammant.ngwebdriver.NgWebDriver;
 
+
+
+/**
+ * Includes special methods for AngularJS applications
+ *
+ */
 public class NgOneWebDriverFixture extends WebDriverFixture {
 
 	private static final Logger logger = LoggerFactory.getLogger(NgOneWebDriverFixture.class);
 	private NgWebDriver ngWebDriver;
 
+	
+	/**
+	 * @param elementLocator
+	 * @return {@code WebElement} special handling for Angular tags beginning with "[model"
+	 */
 	@Override
 	protected WebElement getWebElement(String elementLocator) {
 		waitForAngularCompleteOperations();
@@ -42,6 +53,10 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
 	}
 	
 	
+	/**
+	 * @param elementLocator Locator for Gui-Widget
+	 * @return {@code WebElement} special handling for Angular tags beginning with "[model"
+	 */
 	private WebElement proofIfModel(String elementLocator) {
 		if (elementLocator.startsWith("[model(")) {
 			return subStringModel(elementLocator);
@@ -49,6 +64,11 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param elementLocator Locator for Gui-Widget
+	 * @return {@code WebElement} special handling for Angular Gui Widgets
+	 */
 	private WebElement subStringModel(String elementLocator) {
 		String substring = elementLocator.substring(elementLocator.indexOf("(") + 1);
 		String indexString = substring.substring(0, substring.indexOf(")"));
@@ -56,6 +76,10 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
 		return getDriver().findElements(ByAngular.model(extractLocatorStringFrom(elementLocator))).get(index);
 	}
 
+	
+	/**
+	 * Instantiate a special {@link NgWebDriver} for handling Angular Widgets
+	 */
 	@Override
 	protected void configureDriver() {
 		super.configureDriver();

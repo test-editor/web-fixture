@@ -1,7 +1,7 @@
 package org.testeditor.fixture.web.angularjs.materialdesign
 
 interaction type wait {
-	template = "Wait" ${seconds} "seconds"
+	template = "wait" ${seconds} "seconds"
 	method = NgMdWebDriverFixture.waitSeconds(seconds)
 }
 
@@ -17,22 +17,22 @@ interaction type startFireFoxPortable {
 }
 
 interaction type goToUrl {
-	template = "Browse to" ${url}
-	method = NgMdWebDriverFixture.gotToUrl(url)
+	template = "browse to" ${url}
+	method = NgMdWebDriverFixture.goToUrl(url)
 }
 
 interaction type closeBrowser {
-	template = "Close browser"
+	template = "close browser"
 	method = NgMdWebDriverFixture.closeBrowser
 }
 
 interaction type setActiveBrwoser {
-	template = "Set active browser" ${browser}
+	template = "set active browser" ${browser}
 	method = NgMdWebDriverFixture.setDriver(browser)
 }
 
 interaction type typeIn {
-	template = "Type in" ${element} "value" ${value}
+	template = "type in" ${element} "value" ${value}
 	method = NgMdWebDriverFixture.typeInto(element, value)
 }
 
@@ -42,7 +42,7 @@ interaction type sendEnter {
 }
 
 interaction type clear {
-	template = "Clear value in" ${element}
+	template = "clear value in" ${element}
 	method = NgMdWebDriverFixture.clear(element)
 }
 
@@ -66,14 +66,9 @@ interaction type readValue {
 	method = NgMdWebDriverFixture.readValue(element)	
 }
 
-interaction type selectCurrentDate {
-	template = "select current date" 
-	method = NgMdWebDriverFixture.selectCurrentDate
-}
-
 
 interaction type executeScript {
-	template = "Execute script" ${value}
+	template = "execute script" ${value}
 	method = NgMdWebDriverFixture.setExecuteScript(value)	
 }
 
@@ -100,7 +95,7 @@ element type selection {
 }
 
 element type dateTimePicker {
-	interactions = click, readValue, selectCurrentDate
+	interactions = click, readValue
 }
 
 element type labelElement {

@@ -54,7 +54,7 @@ public class VmTest {
 		
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
-		fixture.gotToUrl(tool.getUrl());
+		fixture.goToUrl(tool.getUrl());
 		fixture.typeInto(tool.getUserName(), "test");
 		fixture.typeInto(tool.getPasswd(), "test");
 		fixture.waitSeconds(2);
