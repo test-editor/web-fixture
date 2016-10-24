@@ -16,8 +16,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +32,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +42,11 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import io.github.bonigarcia.wdm.MarionetteDriverManager;
 
+/**
+ * The {@code WebDriverFixture} class represents methods for automating 
+ * browser-actions like clicking on gui-widgets by means of a test-driver 
+ * called {@code WebDriver}.
+ */
 public class WebDriverFixture {
 
 	public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
@@ -59,28 +61,67 @@ public class WebDriverFixture {
 	
 	private String exeuteScript = null;
 
+	/**
+	 * specifies the time to wait (in seconds) before an action will be performed.
+	 * @param timeToWait
+	 * @throws InterruptedException
+	 */
 	@FixtureMethod
 	public void waitSeconds(long timeToWait) throws InterruptedException {
 		Thread.sleep(timeToWait * 1000);
 	}
 
+	/**
+	 * @return {@code WebDriver} to perform actions.
+	 */
 	public WebDriver getDriver() {
 		return driver;
 	}
 
+	/**
+	 * sets the {@code WebDriver}
+	 * @param driver
+	 */
 	@FixtureMethod
 	public void setDriver(WebDriver driver) {
 		this.driver = driver;
 	}
 
+	/**
+	 * sets a String as a script-name for execution.
+	 * @param exec
+	 */
 	@FixtureMethod
 	public void setExecuteScript(String exec) {
 		exeuteScript = exec;
 	}
 
+	/**
+	 * Starts a specified browser. 
+	 * Following Strings are available:<br>
+	 * 
+	 * <ul>
+     *    <li><b>default</b> -opens a specific browser (On Windows -> Internet Explorer, on others -> 
+	 * 	      Firefox), but Firefox will only work for versions > 47.0.1</li>
+     *    <li><b>firefox</b> - starts a locally  installed firefox instance without {@code MarionetteDriver}</li>
+     *    <li><b>modernfirefox</b> - opens Firefox with {@code MarionetteDriver}</li>
+     *    <li><b>ie</b> - opens Microsoft Windows Internet Explorer with</li>
+     *    <li><b>chrome</b> - opens Google Chrome</li>
+     * </ul>
+	 * 
+	 * <b>default</b> - opens a specific browser (On Windows -> Internet Explorer, on others -> 
+	 * 	Firefox), but Firefox will only work for versions > 47.0.1 <br>
+	 * <b>firefox</b> - starts a locally  installed firefox instance without {@code MarionetteDriver}<br>
+	 * <b>modernfirefox</b> - opens Firefox with {@code MarionetteDriver} <br>
+	 * <b>ie</b> - opens Microsoft Windows Internet Explorer<br>
+	 * <b>chrome</b> - opens Google Chrome <br>
+	 * 
+	 * @param browser String literal for used browser 
+	 * @return  {@code WebDriver}
+	 */
 	@FixtureMethod
 	public WebDriver startBrowser(String browser) {
-		logger.info("Starting brwoser: {}", browser);
+		logger.info("Starting browser: {}", browser);
 		switch (browser) {
 		case "default":
 			if (SystemUtils.IS_OS_WINDOWS) {
@@ -106,6 +147,14 @@ public class WebDriverFixture {
 		return driver;
     }
 
+	
+	
+	/**
+	 * starts Firefox Portable.
+	 * This works for Versions < 47.0. preferably Firefox ESR 45.4.0
+	 * @param browserPath
+	 * @return  {@code WebDriver}
+	 */
 	@FixtureMethod
 	public WebDriver startFireFoxPortable(String browserPath) {
 		logger.info("Starting firefox portable: {}", browserPath);
@@ -116,17 +165,30 @@ public class WebDriverFixture {
 		return driver;
 	}
 
+	/**
+	 * launches Windows Internet Explorer with IEDriverServerManager
+	 * must be downloaded and present locally before test execution. 
+	 */
 	private void launchIE() {
 		InternetExplorerDriverManager.getInstance().setup();
 		driver = new InternetExplorerDriver();
 	}
 
+	/**
+	 * launches Google Chrome with the ChromeDriverManager
+	 * must be downloaded and present locally before test execution.
+	 */
 	private void launchChrome() {
 		ChromeDriverManager.getInstance().setup();
 		driver = new ChromeDriver();
 		registerShutdownHook(driver);
 	}
 
+	/**
+	 * launches Firefox with the deprecated MarionetteDriverManager 
+	 * (actual driver named geckodriver should be used) 
+	 * must be downloaded and present locally before test execution.
+	 */
 	private void launchFirefoxMarionetteDriver() {
 //		Authenticator.setDefault(new Authenticator() {
 //	          @Override
@@ -136,21 +198,16 @@ public class WebDriverFixture {
 //	               else
 //	                  return super.getPasswordAuthentication();
 //	         }});
-		Authenticator.setDefault(new Authenticator() {
-        @Override
-       public PasswordAuthentication getPasswordAuthentication() {
-             if(getRequestorType() == Authenticator.RequestorType.PROXY) 
-                 return new PasswordAuthentication("u096310", "ups64yd".toCharArray());
-             else
-                return super.getPasswordAuthentication();
-       }});		
-		
 		
 		MarionetteDriverManager.getInstance().setup("v0.10.0");
 		driver = new MarionetteDriver();
 		registerShutdownHook(driver);
 	}
 
+	/**
+	 * ShutdownHook for teardown of started Browsermanager 
+	 * @param driver Webdriver to be used
+	 */
 	private void registerShutdownHook(final WebDriver driver) {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -160,16 +217,29 @@ public class WebDriverFixture {
 		});
 	}
 
+	/**
+	 * Specifies behavior of Browser.
+	 * Prerequisite for a test to be executed is, that browsers are opened maximized
+	 * to prevent failures.
+	 */
 	protected void configureDriver() {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		//maximizing works for Firefox tested with FF <= 49.0.1
 		driver.manage().window().maximize();
 	}
 
+	/**
+	 * launches Firefox with a specific profile
+	 */
 	private void launchFirefox() {
 		FirefoxProfile profile = getFireFoxProfile();
 		driver = new FirefoxDriver(profile);
 	}
 
+	/**
+	 * creates a new Profile for testing with proxy settings
+	 * @return FirefoxProfile
+	 */
 	private FirefoxProfile getFireFoxProfile() {
 		File profFile = new File(System.getProperty("java.io.tmpdir"), "selenium");
 		if (profFile.exists()) {
@@ -201,46 +271,82 @@ public class WebDriverFixture {
 		return profile;
 	}
 
+	/**
+	 * opens a specified URL in the browser
+	 * @param url - an URL-String which represents the Web-Site to open in the browser.
+	 * example: url = "http://www.google.com"
+	 */
 	@FixtureMethod 
-	public void gotToUrl(String url) {
+	public void goToUrl(String url) {
 		driver.get(url);
 	}
 
+	/**
+	 * close the Browser window
+	 */
 	@FixtureMethod
 	public void closeBrowser() {
 		driver.close();
 	}
 
+	/**
+	 * press enter on a specified Gui-Widget
+	 * @param elementLocator Locator for Gui-Widget
+	 */
 	@FixtureMethod
 	public void pressEnterOn(String elementLocator) {
 		WebElement element = getWebElement(elementLocator);
 		element.submit();
 	}
 
+	/**
+	 * type into text fields on a specified Gui-Widget
+	 * @param elementLocator Locator for Gui-Widget
+	 * @param value String which is set into the textfield
+	 */
 	@FixtureMethod
 	public void typeInto(String elementLocator, String value) {
 		WebElement element = getWebElement(elementLocator);
 		element.sendKeys(value);
 	}
 
+	/**
+	 * empties the textfield 
+	 * @param elementLocator Locator for Gui-Widget
+	 */
 	@FixtureMethod
 	public void clear(String elementLocator) {
 		WebElement element = getWebElement(elementLocator);
 		element.clear();
 	}
 
+	/**
+	 * click on a specified Gui-Widget
+	 * @param elementLocator Locator for Gui-Widget
+	 */
 	@FixtureMethod
 	public void clickOn(String elementLocator) {
 		WebElement element = getWebElement(elementLocator);
 		element.click();
 	}
 
+	/**
+	 * 
+	 * @param elementLocator  Locator for Gui-Widget
+	 * @return value of a label
+	 */
 	@FixtureMethod
 	public String readValue(String elementLocator) {
 		WebElement element = getWebElement(elementLocator);
 		return element.getText();
 	}
 	
+	/**
+	 * 
+	 * @param elementLocator  Locator for Gui-Widget
+	 * @param value to be selected in a Selectionbox
+	 * @throws InterruptedException
+	 */
 	@FixtureMethod
 	public void selectElementInSelection(String elementLocator, String value) throws InterruptedException{
 		clickOn(elementLocator);
@@ -250,6 +356,12 @@ public class WebDriverFixture {
 		//logger.trace("Selected value {} in selection {}", value, elementLocator);
 	}
 	
+	/**
+	 * 
+	 * @param elementLocator Locator for Gui-Widget
+	 * @return a Map of the values in a Selectionbox
+	 * @throws InterruptedException
+	 */
 	@FixtureMethod
 	public Map<String, String>  getOptionsInSelection(String elementLocator) throws InterruptedException {
 		clickOn(elementLocator);
@@ -263,19 +375,22 @@ public class WebDriverFixture {
 		return namesOfAllSelectedOptions;
 	}
 	
-	@FixtureMethod
-	public void moveToElementAndClick(String elementLoacator) {
-		WebElement element = getWebElement(elementLoacator);
-		Actions actions = new Actions(driver);
-		actions.moveToElement(element).click().perform();
-	}
 	
+	/**
+	 * 
+	 * @param elementLoacator Locator for Gui-Widget
+	 * @return true if a checkable Gui-Widget is checked, false otherwise.
+	 */
 	@FixtureMethod
 	public Boolean checkEnabled(String elementLoacator) {
 		WebElement element = getWebElement(elementLoacator);
 		return element.isEnabled();
 	}
 
+	/**
+	 * @param elementLocator Locator for Gui-Widget
+	 * @return {@code WebElement} where the Locator String begins in a specific manner. 
+	 */
 	protected WebElement getWebElement(String elementLocator) {
 		if (exeuteScript != null) {
 			executeScript();
@@ -303,6 +418,10 @@ public class WebDriverFixture {
 		return result;
 	}
 
+	/**
+	 * executes a given Javascript file. Name or respectively path of script 
+	 * must be set before within method {@code setExecuteScript()}. 
+	 */
 	private void executeScript() {
 		try {
 			logger.info("execute script begin {}", exeuteScript);
@@ -320,6 +439,11 @@ public class WebDriverFixture {
 		}
 	}
 
+	/**
+	 * extracts the Locator
+	 * @param elementLocator Locator for Gui-Widget
+	 * @return substring of given elementLocator to the first index of an "]"
+	 */
 	protected String extractLocatorStringFrom(String elementLocator) {
 		return elementLocator.substring(elementLocator.indexOf(']') + 1);
 	}

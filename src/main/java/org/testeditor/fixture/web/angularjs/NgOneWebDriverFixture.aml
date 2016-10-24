@@ -7,19 +7,19 @@ interaction type wait {
 
 interaction type startBrowser {
 	label = "Start browser"
-	template = "start browser" ${element} 
+	template = "Start " ${element} 
 	method = NgOneWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "start firefox portable" ${path} 
+	template = "Start firefox portable" ${path} 
 	method = NgOneWebDriverFixture.startFireFoxPortable(path)
 }
 
 interaction type goToUrl {
-	template = "Browse to" ${url}
-	method = NgOneWebDriverFixture.gotToUrl(url)
+	template = "Browse" ${url}
+	method = NgOneWebDriverFixture.goToUrl(url)
 }
 
 interaction type closeBrowser {
@@ -33,27 +33,27 @@ interaction type setActiveBrwoser {
 }
 
 interaction type typeIn {
-	template = "Type in" ${element} "value" ${value}
+	template = "Enter" ${element} "into" ${value}
 	method = NgOneWebDriverFixture.typeInto(element, value)
 }
 
 interaction type sendEnter {
-	template = "press enter in" ${element}
+	template = "Press enter on" ${element}
 	method = NgOneWebDriverFixture.pressEnterOn(element)
 }
 
 interaction type clear {
-	template = "Clear value in" ${element}
+	template = "Clear" ${element}
 	method = NgOneWebDriverFixture.clear(element)
 }
 
 interaction type click {
-	template = "click on" ${element}
+	template = "Click" ${element}
 	method = NgOneWebDriverFixture.clickOn(element)	
 }
 
 interaction type readValue {
-	template = "read value from" ${element}
+	template = "Read" ${element}
 	method = NgOneWebDriverFixture.readValue(element)	
 }
 

@@ -6,19 +6,19 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	template = "start browser" ${element} 
+	template = "Start " ${element} 
 	method = NgMdWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "start firefox portable " ${path} 
+	template = "Start firefox portable " ${path} 
 	method = NgMdWebDriverFixture.startFireFoxPortable(path)
 }
 
 interaction type goToUrl {
-	template = "Browse to" ${url}
-	method = NgMdWebDriverFixture.gotToUrl(url)
+	template = "Browse" ${url}
+	method = NgMdWebDriverFixture.goToUrl(url)
 }
 
 interaction type closeBrowser {
@@ -32,43 +32,38 @@ interaction type setActiveBrwoser {
 }
 
 interaction type typeIn {
-	template = "Type in" ${element} "value" ${value}
+	template = "Enter" ${element} "into" ${value}
 	method = NgMdWebDriverFixture.typeInto(element, value)
 }
 
 interaction type sendEnter {
-	template = "press enter in" ${element}
+	template = "Press enter on" ${element}
 	method = NgMdWebDriverFixture.pressEnterOn(element)
 }
 
 interaction type clear {
-	template = "Clear value in" ${element}
+	template = "Clear" ${element}
 	method = NgMdWebDriverFixture.clear(element)
 }
 
 interaction type click {
-	template = "click on" ${element}
+	template = "Click" ${element}
 	method = NgMdWebDriverFixture.clickOn(element)	
 }
 
 interaction type selectInSelection {
-	template = "select " ${value} "in" ${element}
+	template = "Select " ${value} "from" ${element}
 	method = NgMdWebDriverFixture.selectElementInSelection(element,value)	
 }
 
 interaction type getAvailableOptions {
-	template = "available Options in" ${element}
+	template = "Read available " ${element}
 	method = NgMdWebDriverFixture.getOptionsInSelection(element)	
 }
 
 interaction type readValue {
-	template = "read value from" ${element}
+	template = "Read" ${element}
 	method = NgMdWebDriverFixture.readValue(element)	
-}
-
-interaction type selectCurrentDate {
-	template = "select current date" 
-	method = NgMdWebDriverFixture.selectCurrentDate
 }
 
 
@@ -78,7 +73,7 @@ interaction type executeScript {
 }
 
 interaction type checkEnabled {
-	template = "check element " ${element} " enabled"
+	template = "Is " ${element} " enabled"
 	method = NgMdWebDriverFixture.checkEnabled(element)	
 
 }
@@ -100,7 +95,7 @@ element type selection {
 }
 
 element type dateTimePicker {
-	interactions = click, readValue, selectCurrentDate
+	interactions = click, readValue
 }
 
 element type labelElement {

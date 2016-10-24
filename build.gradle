@@ -71,7 +71,7 @@ bintray {
     configurations = ['archives']
     publish = true 
     pkg {
-        repo = 'maven'
+        repo = 'Fixtures'
         name = project.name
         userOrg = 'test-editor'
         websiteUrl = 'http://testeditor.org'
@@ -97,3 +97,6 @@ bintrayUpload.doFirst {
     versionName = "$project.version"
     versionVcsTag = "v$project.version"
 }
+
+sourceSets.main.resources.srcDirs = [ "src/main/java" ]
+sourceSets.main.resources.includes = [ "**/*.aml" ]
