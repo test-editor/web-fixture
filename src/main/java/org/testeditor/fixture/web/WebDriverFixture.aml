@@ -74,7 +74,7 @@ interaction type executeScript {
 
 
 interaction type checkEnabled {
-	template = "is " ${element} " enabled"
+	template = "Is " ${element} " enabled"
 	method = WebDriverFixture.checkEnabled(element)	
 }
 
