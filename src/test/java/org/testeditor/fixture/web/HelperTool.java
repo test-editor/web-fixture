@@ -25,15 +25,13 @@ public class HelperTool {
    private static final String pathGeckodriver = "c:\\dev\\tools\\firefox\\geckodriver.exe";
 
 	/**
-	 * 
-	 * @return true if the path to geckodriver is avaliable, false otherwise.
+	 * @return true if the path to geckodriver is available, false otherwise.
 	 */
    public static boolean isGeckoDriverPresent() {
 		return new File(pathGeckodriver).exists();
 	}
 
 	/**
-	 * 
 	 * @return true if OS = WINDOWS, false otherwise
 	 */
 	public static boolean isOsWindows() {
@@ -41,7 +39,7 @@ public class HelperTool {
 	}
 
 	/**
-	 * @return the pathgeckodriver
+	 * @return String reperesenting the path to geckodriver.exe 
 	 */
 	public static String getPathgeckodriver() {
 		return pathGeckodriver;

@@ -100,11 +100,21 @@ public class WebDriverFixture {
 	/**
 	 * Starts a specified browser. 
 	 * Following Strings are available:<br>
+	 * 
+	 * <ul>
+     *    <li><b>default</b> -opens a specific browser (On Windows -> Internet Explorer, on others -> 
+	 * 	      Firefox), but Firefox will only work for versions > 47.0.1</li>
+     *    <li><b>firefox</b> - starts a locally  installed firefox instance without {@code MarionetteDriver}</li>
+     *    <li><b>modernfirefox</b> - opens Firefox with {@code MarionetteDriver}</li>
+     *    <li><b>ie</b> - opens Microsoft Windows Internet Explorer with</li>
+     *    <li><b>chrome</b> - opens Google Chrome</li>
+     * </ul>
+	 * 
 	 * <b>default</b> - opens a specific browser (On Windows -> Internet Explorer, on others -> 
 	 * 	Firefox), but Firefox will only work for versions > 47.0.1 <br>
 	 * <b>firefox</b> - starts a locally  installed firefox instance without {@code MarionetteDriver}<br>
 	 * <b>modernfirefox</b> - opens Firefox with {@code MarionetteDriver} <br>
-	 * <b>ie</b> - opens Microsoft Windows Internet Explorer with<br>
+	 * <b>ie</b> - opens Microsoft Windows Internet Explorer<br>
 	 * <b>chrome</b> - opens Google Chrome <br>
 	 * 
 	 * @param browser String literal for used browser 

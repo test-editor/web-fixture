@@ -34,7 +34,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 	private static final String WEBSITE = "index.html";
 	
 	@Before
-	public void Setup() {
+	public void setup() {
 		Assume.assumeTrue("This is not a Windows OS - ignoring test", HelperTool.isOsWindows());
 		Assume.assumeTrue("Geckodriver is not present on test system - ignoring test", HelperTool.isGeckoDriverPresent());
 	}
@@ -141,7 +141,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 	//@Test
 	public void newFirefoxStartAndStopTest() throws InterruptedException, IOException {
 		
-		//GIVEN
+		// Given
 		logger.info("Starting Firefox 49.0.1");
 		//String pathFirefoxPortable = "c:\\dev\\tools\\firefox\\FirefoxPortable_49.01\\FirefoxPortable\\firefox.exe";
 		URL webSite =  getClass().getClassLoader().getResource(WEBSITE);
@@ -154,12 +154,12 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		tool.initializeProperties();
 		WebDriverFixture fixture = new WebDriverFixture();
 		
-		//WHEN
+		// When
 		fixture.startBrowser("firefox");
 		fixture.waitSeconds(2);
 		fixture.goToUrl(webSite.toString());
 		
-		//THEN
+		// Then
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
 		fixture.typeInto(tool.getUserName(), "test_1");
 		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");

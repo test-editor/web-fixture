@@ -26,7 +26,7 @@ public class VmTest {
 	 * Prerequisites for execution of tests
 	 */
 	@Before
-	public void Setup() {
+	public void setup() {
 		Assume.assumeTrue("This is not a Windows OS - ignoring test", HelperTool.isOsWindows()); 
 	}
 	
