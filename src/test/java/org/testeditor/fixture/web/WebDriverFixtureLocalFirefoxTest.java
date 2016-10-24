@@ -147,7 +147,7 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		URL webSite =  getClass().getClassLoader().getResource(WEBSITE);
 		logger.info("Following URL : {} will be opened" , webSite.toString());
 		String expectedTitle = "Login Wiki";
-    	// einkommentieren nur wenn mit Selenium Version ab 3.00 beta4 getetestet werden soll,
+		// einkommentieren nur wenn mit Selenium Version ab 3.00 beta4 getetestet werden soll,
 		// weil Firefox (ab 47) nur noch mit dem GeckoDriver (zur Zeit akt. Version 0.11.1) startet. 
 		//System.setProperty("webdriver.gecko.driver", pathGeckodriver);
 		BrowserProperties tool = new BrowserProperties();
@@ -168,8 +168,6 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		String password = fixture.getWebElement("[id]" + (tool.getPasswd())).getAttribute("value");
 		Assert.assertTrue((password).equals("test"));
 		fixture.closeBrowser();	
-		
 	}
-	
 	
 }

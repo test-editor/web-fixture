@@ -6,7 +6,7 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	template = "Start browser" ${element} 
+	template = "Start " ${element} 
 	method = NgMdWebDriverFixture.startBrowser(element)
 }
 
@@ -57,7 +57,7 @@ interaction type selectInSelection {
 }
 
 interaction type getAvailableOptions {
-	template = "Available options in" ${element}
+	template = "Read available " ${element}
 	method = NgMdWebDriverFixture.getOptionsInSelection(element)	
 }
 
@@ -73,7 +73,7 @@ interaction type executeScript {
 }
 
 interaction type checkEnabled {
-	template = "Check " ${element} " selected"
+	template = "Is " ${element} " enabled"
 	method = NgMdWebDriverFixture.checkEnabled(element)	
 
 }

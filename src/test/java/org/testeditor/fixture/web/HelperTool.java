@@ -44,8 +44,5 @@ public class HelperTool {
 	public static String getPathgeckodriver() {
 		return pathGeckodriver;
 	}
-	
-	
-	
 
 }

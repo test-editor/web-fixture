@@ -7,7 +7,7 @@ interaction type wait {
 
 interaction type startBrowser {
 	label = "Start browser"
-	template = "Start browser" ${element} 
+	template = "Start " ${element} 
 	method = WebDriverFixture.startBrowser(element)
 }
 
@@ -58,7 +58,7 @@ interaction type selectInSelection {
 }
 
 interaction type getAvailableOptions {
-	template = "Available options in" ${element}
+	template = "Read available " ${element}
 	method = WebDriverFixture.getOptionsInSelection(element)	
 }
 
@@ -74,7 +74,7 @@ interaction type executeScript {
 
 
 interaction type checkEnabled {
-	template = "Check " ${element} " selected"
+	template = "is " ${element} " enabled"
 	method = WebDriverFixture.checkEnabled(element)	
 }
 
