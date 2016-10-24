@@ -1,64 +1,64 @@
 package org.testeditor.fixture.web.angularjs
 
 interaction type wait {
-	template = "wait" ${seconds} "seconds"
+	template = "Wait" ${seconds} "seconds"
 	method = NgOneWebDriverFixture.waitSeconds(seconds)
 }
 
 interaction type startBrowser {
 	label = "Start browser"
-	template = "start browser" ${element} 
+	template = "Start browser" ${element} 
 	method = NgOneWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "start firefox portable" ${path} 
+	template = "Start firefox portable" ${path} 
 	method = NgOneWebDriverFixture.startFireFoxPortable(path)
 }
 
 interaction type goToUrl {
-	template = "browse to" ${url}
+	template = "Browse" ${url}
 	method = NgOneWebDriverFixture.goToUrl(url)
 }
 
 interaction type closeBrowser {
-	template = "close browser"
+	template = "Close browser"
 	method = NgOneWebDriverFixture.closeBrowser
 }
 
 interaction type setActiveBrwoser {
-	template = "set active browser" ${browser}
+	template = "Set active browser" ${browser}
 	method = NgOneWebDriverFixture.setDriver(browser)
 }
 
 interaction type typeIn {
-	template = "type in" ${element} "value" ${value}
+	template = "Enter" ${element} "into" ${value}
 	method = NgOneWebDriverFixture.typeInto(element, value)
 }
 
 interaction type sendEnter {
-	template = "press enter in" ${element}
+	template = "Press enter on" ${element}
 	method = NgOneWebDriverFixture.pressEnterOn(element)
 }
 
 interaction type clear {
-	template = "clear value in" ${element}
+	template = "Clear" ${element}
 	method = NgOneWebDriverFixture.clear(element)
 }
 
 interaction type click {
-	template = "click on" ${element}
+	template = "Click" ${element}
 	method = NgOneWebDriverFixture.clickOn(element)	
 }
 
 interaction type readValue {
-	template = "read value from" ${element}
+	template = "Read" ${element}
 	method = NgOneWebDriverFixture.readValue(element)	
 }
 
 interaction type executeScript {
-	template = "execute script" ${value}
+	template = "Execute script" ${value}
 	method = NgOneWebDriverFixture.setExecuteScript(value)	
 }
 

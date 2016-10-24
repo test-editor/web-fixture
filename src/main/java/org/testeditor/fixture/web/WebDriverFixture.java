@@ -366,16 +366,6 @@ public class WebDriverFixture {
 		return namesOfAllSelectedOptions;
 	}
 	
-	/**
-	 * performs an action like move to a specific Gui Widget and click
-	 * @param elementLoacator  Locator for Gui-Widget
-	 */
-	@FixtureMethod
-	public void moveToElementAndClick(String elementLoacator) {
-		WebElement element = getWebElement(elementLoacator);
-		Actions actions = new Actions(driver);
-		actions.moveToElement(element).click().perform();
-	}
 	
 	/**
 	 * 

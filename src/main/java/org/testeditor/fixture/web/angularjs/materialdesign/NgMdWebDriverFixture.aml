@@ -1,79 +1,79 @@
 package org.testeditor.fixture.web.angularjs.materialdesign
 
 interaction type wait {
-	template = "wait" ${seconds} "seconds"
+	template = "Wait" ${seconds} "seconds"
 	method = NgMdWebDriverFixture.waitSeconds(seconds)
 }
 
 interaction type startBrowser {
-	template = "start browser" ${element} 
+	template = "Start browser" ${element} 
 	method = NgMdWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "start firefox portable " ${path} 
+	template = "Start firefox portable " ${path} 
 	method = NgMdWebDriverFixture.startFireFoxPortable(path)
 }
 
 interaction type goToUrl {
-	template = "browse to" ${url}
+	template = "Browse" ${url}
 	method = NgMdWebDriverFixture.goToUrl(url)
 }
 
 interaction type closeBrowser {
-	template = "close browser"
+	template = "Close browser"
 	method = NgMdWebDriverFixture.closeBrowser
 }
 
 interaction type setActiveBrwoser {
-	template = "set active browser" ${browser}
+	template = "Set active browser" ${browser}
 	method = NgMdWebDriverFixture.setDriver(browser)
 }
 
 interaction type typeIn {
-	template = "type in" ${element} "value" ${value}
+	template = "Enter" ${element} "into" ${value}
 	method = NgMdWebDriverFixture.typeInto(element, value)
 }
 
 interaction type sendEnter {
-	template = "press enter in" ${element}
+	template = "Press enter on" ${element}
 	method = NgMdWebDriverFixture.pressEnterOn(element)
 }
 
 interaction type clear {
-	template = "clear value in" ${element}
+	template = "Clear" ${element}
 	method = NgMdWebDriverFixture.clear(element)
 }
 
 interaction type click {
-	template = "click on" ${element}
+	template = "Click" ${element}
 	method = NgMdWebDriverFixture.clickOn(element)	
 }
 
 interaction type selectInSelection {
-	template = "select " ${value} "in" ${element}
+	template = "Select " ${value} "from" ${element}
 	method = NgMdWebDriverFixture.selectElementInSelection(element,value)	
 }
 
 interaction type getAvailableOptions {
-	template = "available Options in" ${element}
+	template = "Available options in" ${element}
 	method = NgMdWebDriverFixture.getOptionsInSelection(element)	
 }
 
 interaction type readValue {
-	template = "read value from" ${element}
+	template = "Read" ${element}
 	method = NgMdWebDriverFixture.readValue(element)	
 }
 
 
 interaction type executeScript {
-	template = "execute script" ${value}
+	template = "Execute script" ${value}
 	method = NgMdWebDriverFixture.setExecuteScript(value)	
 }
 
 interaction type checkEnabled {
-	template = "check element " ${element} " enabled"
+	template = "Check " ${element} " selected"
 	method = NgMdWebDriverFixture.checkEnabled(element)	
 
 }

@@ -1,86 +1,80 @@
 package org.testeditor.fixture.web
 
 interaction type wait {
-	template = "wait" ${seconds} "seconds"
+	template = "Wait" ${seconds} "seconds"
 	method = WebDriverFixture.waitSeconds(seconds)
 }
 
 interaction type startBrowser {
 	label = "Start browser"
-	template = "start browser" ${element} 
+	template = "Start browser" ${element} 
 	method = WebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "start firefox portable" ${path} 
+	template = "Start firefox portable" ${path} 
 	method = WebDriverFixture.startFireFoxPortable(path)
 }
 
 interaction type goToUrl {
-	template = "browse to" ${url}
+	template = "Browse to" ${url}
 	method = WebDriverFixture.goToUrl(url)
 }
 
 interaction type closeBrowser {
-	template = "close browser"
+	template = "Close browser"
 	method = WebDriverFixture.closeBrowser
 }
 
 interaction type setActiveBrwoser {
-	template = "set active browser" ${browser}
+	template = "Set active browser" ${browser}
 	method = WebDriverFixture.setDriver(browser)
 }
 
 interaction type typeIn {
-	template = "type in" ${element} "value" ${value}
+	template = "Type in" ${element} "value" ${value}
 	method = WebDriverFixture.typeInto(element, value)
 }
 
 interaction type sendEnter {
-	template = "press enter in" ${element}
+	template = "Press enter on" ${element}
 	method = WebDriverFixture.pressEnterOn(element)
 }
 
 interaction type clear {
-	template = "clear value in" ${element}
+	template = "Clear" ${element}
 	method = WebDriverFixture.clear(element)
 }
 
 interaction type click {
-	template = "click on" ${element}
+	template = "Click" ${element}
 	method = WebDriverFixture.clickOn(element)	
 }
-interaction type moveToElementAndClick {
-	template = "move to" ${element} "and click"
-	method = WebDriverFixture.moveToElementAndClick(element)	
-}
-
-
 
 interaction type selectInSelection {
-	template = "select " ${value} "in" ${element}
+	template = "Select " ${value} "from" ${element}
 	method = WebDriverFixture.selectElementInSelection(element,value)	
 }
 
 interaction type getAvailableOptions {
-	template = "available Options in" ${element}
+	template = "Available options in" ${element}
 	method = WebDriverFixture.getOptionsInSelection(element)	
 }
 
 interaction type readValue {
-	template = "read value from" ${element}
+	template = "Read" ${element}
 	method = WebDriverFixture.readValue(element)	
 }
 
 interaction type executeScript {
-	template = "execute script" ${value}
+	template = "Execute script" ${value}
 	method = WebDriverFixture.setExecuteScript(value)	
 }
 
 
 interaction type checkEnabled {
-	template = "check if element " ${element} " is enabled"
+	template = "Check " ${element} " selected"
 	method = WebDriverFixture.checkEnabled(element)	
 }
 
@@ -94,7 +88,7 @@ element type field {
 }
 
 element type button {
-	interactions = click, sendEnter, moveToElementAndClick, checkEnabled
+	interactions = click, sendEnter, checkEnabled
 }
 
 element type selection {
