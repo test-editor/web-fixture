@@ -1,0 +1,130 @@
+package org.testeditor.fixture.web
+
+interaction type wait {
+	template = "Wait" ${seconds} "seconds"
+	method = WebDriverFixture.waitSeconds(seconds)
+}
+
+interaction type startBrowser {
+	label = "Start browser"
+	template = "Start " ${element} 
+	method = WebDriverFixture.startBrowser(element)
+}
+
+interaction type startFireFoxPortable {
+	label = "Start browser firefox portable"
+	template = "Start firefox portable" ${path} 
+	method = WebDriverFixture.startFireFoxPortable(path)
+}
+
+interaction type goToUrl {
+	template = "Browse to" ${url}
+	method = WebDriverFixture.goToUrl(url)
+}
+
+interaction type closeBrowser {
+	template = "Close browser"
+	method = WebDriverFixture.closeBrowser
+}
+
+interaction type setActiveBrwoser {
+	template = "Set active browser" ${browser}
+	method = WebDriverFixture.setDriver(browser)
+}
+
+interaction type typeIn {
+	template = "Type in" ${element} "value" ${value}
+	method = WebDriverFixture.typeInto(element, value)
+}
+
+interaction type sendEnter {
+	template = "Press enter on" ${element}
+	method = WebDriverFixture.pressEnterOn(element)
+}
+
+interaction type clear {
+	template = "Clear" ${element}
+	method = WebDriverFixture.clear(element)
+}
+
+interaction type click {
+	template = "Click" ${element}
+	method = WebDriverFixture.clickOn(element)	
+}
+
+interaction type selectInSelection {
+	template = "Select " ${value} "from" ${element}
+	method = WebDriverFixture.selectElementInSelection(element,value)	
+}
+
+interaction type getAvailableOptions {
+	template = "Read available " ${element}
+	method = WebDriverFixture.getOptionsInSelection(element)	
+}
+
+interaction type readValue {
+	template = "Read" ${element}
+	method = WebDriverFixture.readValue(element)	
+}
+
+interaction type executeScript {
+	template = "Execute script" ${value}
+	method = WebDriverFixture.setExecuteScript(value)	
+}
+
+
+interaction type checkEnabled {
+	template = "Is " ${element} " enabled"
+	method = WebDriverFixture.checkEnabled(element)	
+}
+
+
+element type BrowserApplication {
+	interactions = startBrowser, startFireFoxPortable, executeScript
+}
+
+element type field {
+	interactions = typeIn, sendEnter
+}
+
+element type button {
+	interactions = click, sendEnter, checkEnabled
+}
+
+element type selection {
+	interactions = click, sendEnter, selectInSelection, getAvailableOptions
+}
+
+element type labelElement {
+	interactions = readValue
+}
+
+component type GeneralBrowser {
+	interactions = wait, goToUrl, closeBrowser, setActiveBrwoser
+}
+
+component type Page {
+	interactions = wait
+}
+
+component WebBrowser is GeneralBrowser {
+	element defaultBrowser is BrowserApplication {
+		locator ="default"
+	}
+	element OlderFirefox is BrowserApplication {
+		label = "Firefox(older)"
+		locator ="firefox"
+	}
+	element Firefox is BrowserApplication {
+		label = "Firefox(47 and above)"
+		locator ="modernfirefox"
+	}
+	element IE is BrowserApplication {
+		label = "Internet Explorer"
+		locator ="ie"
+	}
+	element Chrome is BrowserApplication {
+		label = "Chrome"
+		locator ="chrome"
+	}
+}

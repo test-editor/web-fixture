@@ -1,0 +1,102 @@
+plugins {
+    id 'maven'
+    id 'java'
+    id 'com.jfrog.bintray' version '1.7.1'
+    id 'net.researchgate.release' version '2.4.0'
+}
+
+repositories {
+   
+   /* ressources are not downloadable under url http://jcenter.bintray.com 
+   so the next line is recommended for using core-fixtures 3.0.1 */
+    maven { url "http://dl.bintray.com/test-editor/maven"}
+    jcenter()
+ }
+
+group = 'org.testeditor.fixture'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def coreFixtureVersion = "3.0.1" 
+def seleniumJavaVersion = "2.53.0"
+
+dependencies {
+	compile 'org.slf4j:slf4j-api:1.7.18'
+	compile 'org.apache.logging.log4j:log4j-core:2.5'
+	compile 'org.apache.logging.log4j:log4j-api:2.5'
+	compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.5'
+	compile 'junit:junit:4.12'
+    // these are just added for web-fixtures 
+    compile "org.testeditor.fixture:core-fixture:$coreFixtureVersion"
+    compile "org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion"
+    compile 'com.paulhammant:ngwebdriver:0.9.5'
+    compile 'io.github.bonigarcia:webdrivermanager:1.4.4'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': "${project.group}.${project.name}",
+                   'Implementation-Version': project.version
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives sourcesJar
+}
+
+install {
+    repositories.mavenInstaller {
+    	pom.packaging = 'jar'
+    }
+}
+
+release {
+    preTagCommitMessage = '[release]'
+    tagCommitMessage = '[release]'
+    newVersionCommitMessage = '[release] new version'
+    tagTemplate = 'v${version}'
+}
+
+afterReleaseBuild.dependsOn bintrayUpload
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    configurations = ['archives']
+    publish = true 
+    pkg {
+        repo = 'Fixtures'
+        name = project.name
+        userOrg = 'test-editor'
+        websiteUrl = 'http://testeditor.org'
+        vcsUrl = "https://github.com/test-editor/${project.name}.git"
+        licenses = ['EPL-1.0']
+    }
+}
+
+configurations.all {
+  resolutionStrategy {
+    // fail eagerly on version conflict (includes transitive dependencies)
+    // e.g. multiple different versions of the same dependency (group and name are equal)
+   // failOnVersionConflict()
+    
+        // force certain versions of dependencies (including transitive)
+    //  *append new forced modules:
+    force 'org.slf4j:slf4j-api:1.7.18', 'org.seleniumhq.selenium:selenium-java:2.53.0'
+    }
+}
+
+bintrayUpload.doFirst {
+    // Version is changed during release, we need to set the proper version right before uploading
+    versionName = "$project.version"
+    versionVcsTag = "v$project.version"
+}
+
+sourceSets.main.resources.srcDirs = [ "src/main/java" ]
+sourceSets.main.resources.includes = [ "**/*.aml" ]

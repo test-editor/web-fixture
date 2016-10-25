@@ -1,0 +1,109 @@
+package org.testeditor.fixture.web.angularjs
+
+interaction type wait {
+	template = "Wait" ${seconds} "seconds"
+	method = NgOneWebDriverFixture.waitSeconds(seconds)
+}
+
+interaction type startBrowser {
+	label = "Start browser"
+	template = "Start " ${element} 
+	method = NgOneWebDriverFixture.startBrowser(element)
+}
+
+interaction type startFireFoxPortable {
+	label = "Start browser firefox portable"
+	template = "Start firefox portable" ${path} 
+	method = NgOneWebDriverFixture.startFireFoxPortable(path)
+}
+
+interaction type goToUrl {
+	template = "Browse" ${url}
+	method = NgOneWebDriverFixture.goToUrl(url)
+}
+
+interaction type closeBrowser {
+	template = "Close browser"
+	method = NgOneWebDriverFixture.closeBrowser
+}
+
+interaction type setActiveBrwoser {
+	template = "Set active browser" ${browser}
+	method = NgOneWebDriverFixture.setDriver(browser)
+}
+
+interaction type typeIn {
+	template = "Enter" ${element} "into" ${value}
+	method = NgOneWebDriverFixture.typeInto(element, value)
+}
+
+interaction type sendEnter {
+	template = "Press enter on" ${element}
+	method = NgOneWebDriverFixture.pressEnterOn(element)
+}
+
+interaction type clear {
+	template = "Clear" ${element}
+	method = NgOneWebDriverFixture.clear(element)
+}
+
+interaction type click {
+	template = "Click" ${element}
+	method = NgOneWebDriverFixture.clickOn(element)	
+}
+
+interaction type readValue {
+	template = "Read" ${element}
+	method = NgOneWebDriverFixture.readValue(element)	
+}
+
+interaction type executeScript {
+	template = "Execute script" ${value}
+	method = NgOneWebDriverFixture.setExecuteScript(value)	
+}
+
+element type BrowserApplication {
+	interactions = startBrowser, startFireFoxPortable
+}
+
+element type field {
+	interactions = typeIn, sendEnter
+}
+
+element type button {
+	interactions = click, sendEnter
+}
+
+element type labelElement {
+	interactions = readValue
+}
+
+component type GeneralBrowser {
+	interactions = wait, goToUrl, closeBrowser, setActiveBrwoser
+}
+
+component type Page {
+	interactions = wait
+}
+
+component WebBrowser is GeneralBrowser {
+	element defaultBrowser is BrowserApplication {
+		locator ="default"
+	}
+	element OlderFirefox is BrowserApplication {
+		label = "Firefox(older)"
+		locator ="firefox"
+	}
+	element Firefox is BrowserApplication {
+		label = "Firefox(47 and above)"
+		locator ="modernfirefox"
+	}
+	element IE is BrowserApplication {
+		label = "Internet Explorer"
+		locator ="ie"
+	}
+	element Chrome is BrowserApplication {
+		label = "Chrome"
+		locator ="chrome"
+	}
+}
