@@ -29,6 +29,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriver.SystemProperty;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -162,6 +163,28 @@ public class WebDriverFixture {
 		FirefoxProfile profile = getFireFoxProfile();
 		driver = new FirefoxDriver(binary, profile);
 		configureDriver();
+		return driver;
+	}
+	
+	/**
+	 * Launches Firefox Portable with the predefined browser.path in the pom.xml of the testproject.
+	 * This works for Versions < 47.0. preferably Firefox ESR 45.4.0
+	 * @return  {@code WebDriver}
+	 * @throws Exception 
+	 */
+	@FixtureMethod
+	public WebDriver launchFirefoxPortable() throws Exception {
+		String browserPath = System.getProperty("browser.path");
+		if (browserPath != null && !browserPath.isEmpty() && !browserPath.contains("${browserPath}")) {
+			logger.info("Starting firefox portable: {}", browserPath);
+			FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
+			FirefoxProfile profile = getFireFoxProfile();
+			driver = new FirefoxDriver(binary, profile);
+			configureDriver();
+			
+		}else {
+			throw new Exception("No useful browserpath found as SystemProperty to start Firefox Portable, please define a \"browser.path\" variable in your pom.xml");
+		 }
 		return driver;
 	}
 
