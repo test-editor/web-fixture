@@ -17,6 +17,12 @@ interaction type startFireFoxPortable {
 	method = WebDriverFixture.startFireFoxPortable(path)
 }
 
+interaction type launchFireFoxPortable {
+	label = "Launch browser firefox portable with predefined browser.path in pom.xml"
+	template = "Launch firefox portable"
+	method = WebDriverFixture.launchFirefoxPortable()
+}
+
 interaction type goToUrl {
 	template = "Browse to" ${url}
 	method = WebDriverFixture.goToUrl(url)
@@ -80,7 +86,7 @@ interaction type checkEnabled {
 
 
 element type BrowserApplication {
-	interactions = startBrowser, startFireFoxPortable, executeScript
+	interactions = startBrowser, startFireFoxPortable, launchFireFoxPortable, executeScript
 }
 
 element type field {

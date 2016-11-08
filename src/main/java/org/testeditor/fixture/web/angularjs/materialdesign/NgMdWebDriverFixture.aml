@@ -16,6 +16,12 @@ interaction type startFireFoxPortable {
 	method = NgMdWebDriverFixture.startFireFoxPortable(path)
 }
 
+interaction type launchFireFoxPortable {
+	label = "Launch browser firefox portable with predefined browser.path in pom.xml"
+	template = "Launch firefox portable"
+	method = NgMdWebDriverFixture.launchFirefoxPortable()
+}
+
 interaction type goToUrl {
 	template = "Browse" ${url}
 	method = NgMdWebDriverFixture.goToUrl(url)
@@ -79,7 +85,7 @@ interaction type checkEnabled {
 }
 
 element type BrowserApplication {
-	interactions = startBrowser, startFireFoxPortable
+	interactions = startBrowser, startFireFoxPortable, launchFireFoxPortable
 }
 
 element type field {
