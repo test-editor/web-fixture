@@ -18,7 +18,7 @@ group = 'org.testeditor.fixture'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-def coreFixtureVersion = "3.0.1" 
+def coreFixtureVersion = "3.1.0" 
 def seleniumJavaVersion = "2.53.0"
 
 dependencies {
