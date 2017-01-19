@@ -32,7 +32,7 @@ interaction type setActiveBrwoser {
 }
 
 interaction type typeIn {
-	template = "Enter" ${element} "into" ${value}
+	template = "Enter" ${value} "into" ${element} 
 	method = NgMdWebDriverFixture.typeInto(element, value)
 }
 

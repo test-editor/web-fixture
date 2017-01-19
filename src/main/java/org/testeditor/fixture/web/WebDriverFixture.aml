@@ -6,19 +6,18 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	label = "Start browser"
 	template = "Start " ${element} 
 	method = WebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "Start firefox portable" ${path} 
+	template = "Start firefox portable " ${path} 
 	method = WebDriverFixture.startFireFoxPortable(path)
 }
 
 interaction type goToUrl {
-	template = "Browse to" ${url}
+	template = "Browse" ${url}
 	method = WebDriverFixture.goToUrl(url)
 }
 
@@ -33,7 +32,7 @@ interaction type setActiveBrwoser {
 }
 
 interaction type typeIn {
-	template = "Type in" ${element} "value" ${value}
+	template = "Enter" ${value} "into" ${element} 
 	method = WebDriverFixture.typeInto(element, value)
 }
 
@@ -93,6 +92,10 @@ element type button {
 
 element type selection {
 	interactions = click, sendEnter, selectInSelection, getAvailableOptions
+}
+
+element type dateTimePicker {
+	interactions = click, readValue
 }
 
 element type labelElement {
