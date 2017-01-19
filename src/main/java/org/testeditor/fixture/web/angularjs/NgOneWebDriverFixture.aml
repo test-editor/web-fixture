@@ -6,14 +6,13 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	label = "Start browser"
 	template = "Start " ${element} 
 	method = NgOneWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "Start firefox portable" ${path} 
+	template = "Start firefox portable " ${path} 
 	method = NgOneWebDriverFixture.startFireFoxPortable(path)
 }
 
@@ -33,7 +32,7 @@ interaction type setActiveBrwoser {
 }
 
 interaction type typeIn {
-	template = "Enter" ${element} "into" ${value}
+	template = "Enter" ${value} "into" ${element} 
 	method = NgOneWebDriverFixture.typeInto(element, value)
 }
 
@@ -52,14 +51,31 @@ interaction type click {
 	method = NgOneWebDriverFixture.clickOn(element)	
 }
 
+interaction type selectInSelection {
+	template = "Select " ${value} "from" ${element}
+	method = NgOneWebDriverFixture.selectElementInSelection(element,value)	
+}
+
+interaction type getAvailableOptions {
+	template = "Read available " ${element}
+	method = NgOneWebDriverFixture.getOptionsInSelection(element)	
+}
+
 interaction type readValue {
 	template = "Read" ${element}
 	method = NgOneWebDriverFixture.readValue(element)	
 }
 
+
 interaction type executeScript {
 	template = "Execute script" ${value}
 	method = NgOneWebDriverFixture.setExecuteScript(value)	
+}
+
+interaction type checkEnabled {
+	template = "Is " ${element} " enabled"
+	method = NgOneWebDriverFixture.checkEnabled(element)	
+
 }
 
 element type BrowserApplication {
@@ -71,7 +87,15 @@ element type field {
 }
 
 element type button {
-	interactions = click, sendEnter
+	interactions = click, sendEnter, checkEnabled
+}
+
+element type selection {
+	interactions = click, sendEnter, selectInSelection, getAvailableOptions
+}
+
+element type dateTimePicker {
+	interactions = click, readValue
 }
 
 element type labelElement {
