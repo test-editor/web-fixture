@@ -184,7 +184,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
 	private boolean screenshotShouldBeMade(SemanticUnit unit, Action action, String msg) {
 		// configurable through maven build?
-		return (action == Action.ENTER) || unit == SemanticUnit.TEST;
+		return ((action == Action.ENTER) || unit == SemanticUnit.TEST) && driver != null;
 	}
 
 	private String reduceToMaxLen(String base, int maxLen) {
@@ -223,12 +223,16 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	public String screenshot(String filenameBase) {
 		String testcase = getCurrentTestCase();
 		String finalFilename = constructScreenshotFilename(filenameBase, testcase);
-		try {
-			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-			FileUtils.copyFile(scrFile, new File(finalFilename));
-			logger.info("Wrote screenshot to file='{}'.", finalFilename);
-		} catch (IOException e) {
-			logger.error("could not write screenshot to file='{}'.", finalFilename);
+		if (driver != null) {
+			try {
+				File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+				FileUtils.copyFile(scrFile, new File(finalFilename));
+				logger.info("Wrote screenshot to file='{}'.", finalFilename);
+			} catch (IOException e) {
+				logger.error("Could not write screenshot to file='{}'.", finalFilename);
+			}
+		} else {
+			logger.warn("Driver not set (yet). Could not write screenshot to file='{}'.", finalFilename);
 		}
 		return finalFilename;
 	}
