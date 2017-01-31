@@ -13,6 +13,9 @@
 
 package org.testeditor.fixture.web;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.Assume;
@@ -56,9 +59,12 @@ public class VmTest {
 		fixture.waitSeconds(2);
 		fixture.goToUrl(tool.getUrl());
 		fixture.typeInto(tool.getUserName(), "test");
+		String filename = fixture.screenshot("test");
 		fixture.typeInto(tool.getPasswd(), "test");
 		fixture.waitSeconds(2);
 		fixture.closeBrowser();
-	}
 
+		assertTrue("Screenshot missing", new File(filename).exists());
+	}
+	
 }

@@ -16,14 +16,19 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -35,8 +40,12 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testeditor.fixture.core.TestRunListener;
+import org.testeditor.fixture.core.TestRunReportable;
+import org.testeditor.fixture.core.TestRunReporter;
+import org.testeditor.fixture.core.TestRunReporter.Action;
+import org.testeditor.fixture.core.TestRunReporter.SemanticUnit;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
-
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
@@ -47,7 +56,7 @@ import io.github.bonigarcia.wdm.MarionetteDriverManager;
  * browser-actions like clicking on gui-widgets by means of a test-driver 
  * called {@code WebDriver}.
  */
-public class WebDriverFixture {
+public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
 	public static final String HTTP_NON_PROXY_HOSTS = "http.nonProxyHosts";
 	public static final String HTTP_PROXY_PORT = "http.proxyPort";
@@ -145,10 +154,85 @@ public class WebDriverFixture {
 		}
 		configureDriver();
 		return driver;
-    }
+	}
 
-	
-	
+	public void initWithReporter(TestRunReporter reporter) {
+		reporter.addListener(this);
+	}
+
+	@Override
+	public void reported(SemanticUnit unit, Action action, String msg) {
+		if (unit == SemanticUnit.TEST && action == Action.ENTER) {
+			runningTest = msg;
+		}
+		if (screenshotShouldBeMade(unit, action, msg)) {
+			screenshot(msg + '.' + action.name());
+		}
+	}
+
+	private String runningTest = null;
+	private static final int SCREENSHOT_FILENAME_MAXLEN = 128;
+
+	private String getCurrentTestCase() {
+		return runningTest != null ? runningTest : "UNKNOWN_TEST";
+	}
+
+	private String getScreenshotPath() {
+		// configurable through maven build?
+		return "screenshots";
+	}
+
+	private boolean screenshotShouldBeMade(SemanticUnit unit, Action action, String msg) {
+		// configurable through maven build?
+		return (action == Action.ENTER) || unit == SemanticUnit.TEST;
+	}
+
+	private String reduceToMaxLen(String base, int maxLen) {
+		if (base.length() < maxLen) {
+			return base;
+		} else {
+			return base.substring(0, maxLen);
+		}
+	}
+
+	private String constructScreenshotFilename(String filenameBase, String testcase) {
+		String additionalGraphicType = ".png";
+		String escapedBaseName = filenameBase.replaceAll("[^a-zA-Z0-9.-]", "_").replaceAll("_+", "_")
+				.replaceAll("_+\\.", ".").replaceAll("\\._+", ".");
+		String timeStr = new SimpleDateFormat("HHmmss.SSS").format(new Date());
+		StringBuffer finalFilenameBuffer = new StringBuffer();
+		int lenOfFixedElements = timeStr.length() + additionalGraphicType.length() + 1/* hyphen */;
+		finalFilenameBuffer //
+				.append(getScreenshotPath()) //
+				.append('/').append(reduceToMaxLen(testcase, SCREENSHOT_FILENAME_MAXLEN))//
+				.append('/').append(timeStr).append('-')
+				.append(reduceToMaxLen(escapedBaseName, SCREENSHOT_FILENAME_MAXLEN - lenOfFixedElements))//
+				.append(additionalGraphicType);
+		return finalFilenameBuffer.toString();
+	}
+
+	/**
+	 * Write a screenshot of the current ui into a file, based on the basic
+	 * filenameBase provided. The final filename is constructed using the
+	 * testcase a hash of the fixture itself and a shortened timestamp.
+	 * 
+	 * @param filenameBase
+	 *            user definable part of the final filename
+	 */
+	@FixtureMethod
+	public String screenshot(String filenameBase) {
+		String testcase = getCurrentTestCase();
+		String finalFilename = constructScreenshotFilename(filenameBase, testcase);
+		try {
+			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(scrFile, new File(finalFilename));
+			logger.info("Wrote screenshot to file='{}'.", finalFilename);
+		} catch (IOException e) {
+			logger.error("could not write screenshot to file='{}'.", finalFilename);
+		}
+		return finalFilename;
+	}
+
 	/**
 	 * starts Firefox Portable.
 	 * This works for Versions < 47.0. preferably Firefox ESR 45.4.0
