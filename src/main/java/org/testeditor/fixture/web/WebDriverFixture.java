@@ -200,12 +200,14 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 		String escapedBaseName = filenameBase.replaceAll("[^a-zA-Z0-9.-]", "_").replaceAll("_+", "_")
 				.replaceAll("_+\\.", ".").replaceAll("\\._+", ".");
 		String timeStr = new SimpleDateFormat("HHmmss.SSS").format(new Date());
+		String dateStr = new SimpleDateFormat("YYYYMMdd").format(new Date());
 		StringBuffer finalFilenameBuffer = new StringBuffer();
 		int lenOfFixedElements = timeStr.length() + additionalGraphicType.length() + 1/* hyphen */;
 		finalFilenameBuffer //
 				.append(getScreenshotPath()) //
 				.append('/').append(reduceToMaxLen(testcase, SCREENSHOT_FILENAME_MAXLEN))//
-				.append('/').append(timeStr).append('-')
+				.append('/').append(dateStr) //
+				.append('/').append(timeStr).append('-') //
 				.append(reduceToMaxLen(escapedBaseName, SCREENSHOT_FILENAME_MAXLEN - lenOfFixedElements))//
 				.append(additionalGraphicType);
 		return finalFilenameBuffer.toString();
