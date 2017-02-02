@@ -4,6 +4,7 @@
 .settings/
 .metadata/
 bin/
+screenshots/
 
 ### IntelliJ ###
 *.iml
