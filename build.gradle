@@ -100,3 +100,10 @@ bintrayUpload.doFirst {
 
 sourceSets.main.resources.srcDirs = [ "src/main/java" ]
 sourceSets.main.resources.includes = [ "**/*.aml" ]
+
+task cleanScreenshotDir(type: Delete) {
+    description = "cleanup any screenshots written"
+    delete fileTree(dir: "${projectDir}/screenshots", include: "**/*.png")
+}
+
+test.dependsOn cleanScreenshotDir
