@@ -384,7 +384,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 */
 	@FixtureMethod
@@ -398,7 +398,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 * @param value
 	 *            String which is set into the textfield
@@ -414,7 +414,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 */
 	@FixtureMethod
@@ -428,7 +428,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 */
 	@FixtureMethod
@@ -441,7 +441,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 * @return value of a label
 	 */
@@ -455,7 +455,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 * @param value
 	 *            to be selected in a Selectionbox
@@ -474,7 +474,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 * @return a Map of the values in a Selectionbox
 	 * @throws InterruptedException
@@ -497,7 +497,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 * 
 	 * @param elementLoacator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 * @return true if a checkable Gui-Widget is checked, false otherwise.
 	 */
@@ -510,7 +510,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	/**
 	 * @param elementLocator
 	 *            Locator for Gui-Widget
-     * @param locatorType
+	 * @param locatorType
 	 *            Type of locator for Gui-Widget
 	 * @return {@code WebElement} where the Locator String begins in a specific
 	 *         manner.
