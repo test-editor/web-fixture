@@ -22,6 +22,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
+import org.testeditor.fixture.web.LocatorStrategy;
 import org.testeditor.fixture.web.angularjs.NgOneWebDriverFixture;
 
 import com.paulhammant.ngwebdriver.ByAngular;
@@ -42,8 +43,8 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 	 * @param value name of the entry to be selected
 	 */
 	@FixtureMethod
-	public void selectElementInSelection(String elementLocator, String value) throws InterruptedException {
-		clickOn(elementLocator);
+	public void selectElementInSelection(String elementLocator, LocatorStrategy locatorStrategy, String value) throws InterruptedException {
+		clickOn(elementLocator, locatorStrategy);
 		Thread.sleep(300);
 		waitForAngularCompleteOperations();
 		ByAngularCssContainingText cssContainingText = ByAngular.cssContainingText("md-option", value);
@@ -53,7 +54,7 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 				element.click();
 			}
 		}
-		logger.trace("Selected value {} in slection {}", value, elementLocator);
+		logger.trace("Selected value {} in selection {} using {}", value, elementLocator, locatorStrategy);
 	}
 
 	/**
@@ -61,9 +62,9 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 	 * @param elementLocator Locator for Selection
 	 */
 	@FixtureMethod
-	public Map<String, String> getOptionsInSelection(String elementLocator) throws InterruptedException {
+	public Map<String, String> getOptionsInSelection(String elementLocator, LocatorStrategy locatorStrategy) throws InterruptedException {
 		Map<String, String> availableOptions = new HashMap<String, String>();
-		clickOn(elementLocator);
+		clickOn(elementLocator, locatorStrategy);
 		Thread.sleep(300);
 		waitForAngularCompleteOperations();
 		ByAngularCssContainingText cssContainingText = ByAngular.cssContainingText("md-option", "");

@@ -6,8 +6,8 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	template = "Start " ${element} 
-	method = NgOneWebDriverFixture.startBrowser(element)
+	template = "Start " ${browser}
+	method = NgOneWebDriverFixture.startBrowser(browser)
 }
 
 interaction type startFireFoxPortable {
@@ -33,37 +33,37 @@ interaction type setActiveBrwoser {
 
 interaction type typeIn {
 	template = "Enter" ${value} "into" ${element} 
-	method = NgOneWebDriverFixture.typeInto(element, value)
+	method = NgOneWebDriverFixture.typeInto(element, locatorStrategy, value)
 }
 
 interaction type sendEnter {
 	template = "Press enter on" ${element}
-	method = NgOneWebDriverFixture.pressEnterOn(element)
+	method = NgOneWebDriverFixture.pressEnterOn(element, locatorStrategy)
 }
 
 interaction type clear {
 	template = "Clear" ${element}
-	method = NgOneWebDriverFixture.clear(element)
+	method = NgOneWebDriverFixture.clear(element, locatorStrategy)
 }
 
 interaction type click {
 	template = "Click" ${element}
-	method = NgOneWebDriverFixture.clickOn(element)	
+	method = NgOneWebDriverFixture.clickOn(element, locatorStrategy)
 }
 
 interaction type selectInSelection {
 	template = "Select " ${value} "from" ${element}
-	method = NgOneWebDriverFixture.selectElementInSelection(element,value)	
+	method = NgOneWebDriverFixture.selectElementInSelection(element, locatorStrategy, value)
 }
 
 interaction type getAvailableOptions {
 	template = "Read available " ${element}
-	method = NgOneWebDriverFixture.getOptionsInSelection(element)	
+	method = NgOneWebDriverFixture.getOptionsInSelection(element, locatorStrategy)
 }
 
 interaction type readValue {
 	template = "Read" ${element}
-	method = NgOneWebDriverFixture.readValue(element)	
+	method = NgOneWebDriverFixture.readValue(element, locatorStrategy)
 }
 
 
@@ -74,7 +74,7 @@ interaction type executeScript {
 
 interaction type checkEnabled {
 	template = "Is " ${element} " enabled"
-	method = NgOneWebDriverFixture.checkEnabled(element)	
+	method = NgOneWebDriverFixture.checkEnabled(element, locatorStrategy)
 
 }
 

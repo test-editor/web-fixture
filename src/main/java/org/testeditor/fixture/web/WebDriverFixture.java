@@ -381,130 +381,165 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
 	/**
 	 * press enter on a specified Gui-Widget
-	 * @param elementLocator Locator for Gui-Widget
+	 * 
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
 	 */
 	@FixtureMethod
-	public void pressEnterOn(String elementLocator) {
-		WebElement element = getWebElement(elementLocator);
+	public void pressEnterOn(String elementLocator, LocatorStrategy locatorType) {
+		WebElement element = getWebElement(elementLocator, locatorType);
 		element.submit();
 	}
 
 	/**
 	 * type into text fields on a specified Gui-Widget
-	 * @param elementLocator Locator for Gui-Widget
-	 * @param value String which is set into the textfield
+	 * 
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
+	 * @param value
+	 *            String which is set into the textfield
 	 */
 	@FixtureMethod
-	public void typeInto(String elementLocator, String value) {
-		WebElement element = getWebElement(elementLocator);
+	public void typeInto(String elementLocator, LocatorStrategy locatorType, String value) {
+		WebElement element = getWebElement(elementLocator, locatorType);
 		element.sendKeys(value);
 	}
 
 	/**
-	 * empties the textfield 
-	 * @param elementLocator Locator for Gui-Widget
+	 * empties the textfield
+	 * 
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
 	 */
 	@FixtureMethod
-	public void clear(String elementLocator) {
-		WebElement element = getWebElement(elementLocator);
+	public void clear(String elementLocator, LocatorStrategy locatorType) {
+		WebElement element = getWebElement(elementLocator, locatorType);
 		element.clear();
 	}
 
 	/**
 	 * click on a specified Gui-Widget
-	 * @param elementLocator Locator for Gui-Widget
+	 * 
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
 	 */
 	@FixtureMethod
-	public void clickOn(String elementLocator) {
-		WebElement element = getWebElement(elementLocator);
+	public void clickOn(String elementLocator, LocatorStrategy locatorType) {
+		WebElement element = getWebElement(elementLocator, locatorType);
 		element.click();
 	}
 
 	/**
 	 * 
-	 * @param elementLocator  Locator for Gui-Widget
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
 	 * @return value of a label
 	 */
 	@FixtureMethod
-	public String readValue(String elementLocator) {
-		WebElement element = getWebElement(elementLocator);
+	public String readValue(String elementLocator, LocatorStrategy locatorType) {
+		WebElement element = getWebElement(elementLocator, locatorType);
 		return element.getText();
 	}
-	
+
 	/**
 	 * 
-	 * @param elementLocator  Locator for Gui-Widget
-	 * @param value to be selected in a Selectionbox
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
+	 * @param value
+	 *            to be selected in a Selectionbox
 	 * @throws InterruptedException
 	 */
 	@FixtureMethod
-	public void selectElementInSelection(String elementLocator, String value) throws InterruptedException{
-		clickOn(elementLocator);
+	public void selectElementInSelection(String elementLocator, LocatorStrategy locatorType, String value) throws InterruptedException {
+		clickOn(elementLocator, locatorType);
 		Thread.sleep(300);
-		WebElement element = getWebElement(elementLocator);
-	    new Select(element).selectByVisibleText(value);
-		//logger.trace("Selected value {} in selection {}", value, elementLocator);
+		WebElement element = getWebElement(elementLocator, locatorType);
+		new Select(element).selectByVisibleText(value);
+		// logger.trace("Selected value {} in selection {} using {}", value, elementLocator, locatorStrategy);
 	}
-	
+
 	/**
 	 * 
-	 * @param elementLocator Locator for Gui-Widget
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
 	 * @return a Map of the values in a Selectionbox
 	 * @throws InterruptedException
 	 */
 	@FixtureMethod
-	public Map<String, String>  getOptionsInSelection(String elementLocator) throws InterruptedException {
-		clickOn(elementLocator);
+	public Map<String, String> getOptionsInSelection(String elementLocator, LocatorStrategy locatorType) throws InterruptedException {
+		clickOn(elementLocator, locatorType);
 		Thread.sleep(300);
 		Map<String, String> namesOfAllSelectedOptions = new HashMap<String, String>();
-		Select selection = new Select(getWebElement(elementLocator));
-		List<WebElement> allSelectedOptions;allSelectedOptions = selection.getAllSelectedOptions();
+		Select selection = new Select(getWebElement(elementLocator, locatorType));
+		List<WebElement> allSelectedOptions;
+		allSelectedOptions = selection.getAllSelectedOptions();
 		for (WebElement webElement : allSelectedOptions) {
 			namesOfAllSelectedOptions.put(webElement.getText(), webElement.getText());
 		}
 		return namesOfAllSelectedOptions;
 	}
-	
-	
+
 	/**
 	 * 
-	 * @param elementLoacator Locator for Gui-Widget
+	 * @param elementLoacator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
 	 * @return true if a checkable Gui-Widget is checked, false otherwise.
 	 */
 	@FixtureMethod
-	public Boolean checkEnabled(String elementLoacator) {
-		WebElement element = getWebElement(elementLoacator);
+	public Boolean checkEnabled(String elementLoacator, LocatorStrategy locatorType) {
+		WebElement element = getWebElement(elementLoacator, locatorType);
 		return element.isEnabled();
 	}
 
 	/**
-	 * @param elementLocator Locator for Gui-Widget
-	 * @return {@code WebElement} where the Locator String begins in a specific manner. 
+	 * @param elementLocator
+	 *            Locator for Gui-Widget
+     * @param locatorType
+	 *            Type of locator for Gui-Widget
+	 * @return {@code WebElement} where the Locator String begins in a specific
+	 *         manner.
 	 */
-	protected WebElement getWebElement(String elementLocator) {
+	protected WebElement getWebElement(String elementLocator, LocatorStrategy locatorType) {
 		if (exeuteScript != null) {
 			executeScript();
 		}
-		logger.info("Lookup element {}", elementLocator);
+
+		logger.info("Lookup element {} type {}", elementLocator, locatorType.name());
 		WebElement result = null;
-		if (elementLocator.startsWith("[xpath]")) {
-			result = driver.findElement(By.xpath(extractLocatorStringFrom(elementLocator)));
-		}
-		if (elementLocator.startsWith("[name]")) {
-			result = driver.findElement(By.name(extractLocatorStringFrom(elementLocator)));
-		}
-		if (elementLocator.startsWith("[link]")) {
-			result = driver.findElement(By.linkText(extractLocatorStringFrom(elementLocator)));
-		}
-		if (elementLocator.startsWith("[id]")) {
-			result = driver.findElement(By.id(extractLocatorStringFrom(elementLocator)));
-		}
-		if (elementLocator.startsWith("[css]")) {
-			result = driver.findElement(By.cssSelector(extractLocatorStringFrom(elementLocator)));
-		}
-		if (result == null) {
+		switch (locatorType) {
+		case XPATH:
+			result = driver.findElement(By.xpath(elementLocator));
+			break;
+		case LINK:
+			result = driver.findElement(By.linkText(elementLocator));
+			break;
+		case ID:
+			result = driver.findElement(By.id(elementLocator));
+			break;
+		case CSS:
+			result = driver.findElement(By.cssSelector(elementLocator));
+			break;
+		default:
 			result = driver.findElement(By.name(elementLocator));
+			break;
 		}
+
 		return result;
 	}
 
@@ -529,13 +564,4 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 		}
 	}
 
-	/**
-	 * extracts the Locator
-	 * @param elementLocator Locator for Gui-Widget
-	 * @return substring of given elementLocator to the first index of an "]"
-	 */
-	protected String extractLocatorStringFrom(String elementLocator) {
-		return elementLocator.substring(elementLocator.indexOf(']') + 1);
-	}
-	
 }

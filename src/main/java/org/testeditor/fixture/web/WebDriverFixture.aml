@@ -6,8 +6,8 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	template = "Start " ${element} 
-	method = WebDriverFixture.startBrowser(element)
+	template = "Start " ${browser}
+	method = WebDriverFixture.startBrowser(browser)
 }
 
 interaction type startFireFoxPortable {
@@ -33,48 +33,48 @@ interaction type setActiveBrwoser {
 
 interaction type typeIn {
 	template = "Enter" ${value} "into" ${element} 
-	method = WebDriverFixture.typeInto(element, value)
+	method = WebDriverFixture.typeInto(element, locatorStrategy, value)
 }
 
 interaction type sendEnter {
 	template = "Press enter on" ${element}
-	method = WebDriverFixture.pressEnterOn(element)
+	method = WebDriverFixture.pressEnterOn(element, locatorStrategy)
 }
 
 interaction type clear {
 	template = "Clear" ${element}
-	method = WebDriverFixture.clear(element)
+	method = WebDriverFixture.clear(element, locatorStrategy)
 }
 
 interaction type click {
 	template = "Click" ${element}
-	method = WebDriverFixture.clickOn(element)	
+	method = WebDriverFixture.clickOn(element, locatorStrategy)
 }
 
 interaction type selectInSelection {
 	template = "Select " ${value} "from" ${element}
-	method = WebDriverFixture.selectElementInSelection(element,value)	
+	method = WebDriverFixture.selectElementInSelection(element, locatorStrategy, value)
 }
 
 interaction type getAvailableOptions {
 	template = "Read available " ${element}
-	method = WebDriverFixture.getOptionsInSelection(element)	
+	method = WebDriverFixture.getOptionsInSelection(element, locatorStrategy)
 }
 
 interaction type readValue {
 	template = "Read" ${element}
-	method = WebDriverFixture.readValue(element)	
+	method = WebDriverFixture.readValue(element, locatorStrategy)
 }
 
 interaction type executeScript {
 	template = "Execute script" ${value}
-	method = WebDriverFixture.setExecuteScript(value)	
+	method = WebDriverFixture.setExecuteScript(value)
 }
 
 
 interaction type checkEnabled {
 	template = "Is " ${element} " enabled"
-	method = WebDriverFixture.checkEnabled(element)	
+	method = WebDriverFixture.checkEnabled(element, locatorStrategy)
 }
 
 
