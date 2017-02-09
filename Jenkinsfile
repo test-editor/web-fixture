@@ -14,7 +14,7 @@ nodeWithProperWorkspace {
         }
     }
 
-    // added some additional debug output to get hold of the failure to detect checkout only
+    // { added some additional debug output to get hold of the failure to detect checkout only
     sh "git name-rev --name-only --tags HEAD" // this is used for detection of existing version tag
     sh "git name-rev --name-only --tags HEAD~1" // get some historical tags (if present) 
     sh "git name-rev --name-only --tags HEAD~2" 
@@ -22,6 +22,10 @@ nodeWithProperWorkspace {
     sh "git name-rev --name-only --tags HEAD~4" 
     sh "git name-rev --all" // print all
     sh "git describe --tags" // describe the current tag
+    sh "git status"
+    def tag = bash('git name-rev --name-only --tags HEAD').trim()
+    println tag
+    // } end of added debug information
     
     if (isMaster() && isVersionTag()) {
         // Workaround: we don't want infinite releases.
