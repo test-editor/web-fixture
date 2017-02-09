@@ -58,9 +58,9 @@ public class VmTest {
 		fixture.startFireFoxPortable(pathFirefoxPortable);
 		fixture.waitSeconds(2);
 		fixture.goToUrl(tool.getUrl());
-		fixture.typeInto(tool.getUserName(), "test");
+		fixture.typeInto(tool.getUserName(), LocatorStrategy.NAME, "test");
 		String filename = fixture.screenshot("test");
-		fixture.typeInto(tool.getPasswd(), "test");
+		fixture.typeInto(tool.getPasswd(), LocatorStrategy.NAME, "test");
 		fixture.waitSeconds(2);
 		fixture.closeBrowser();
 

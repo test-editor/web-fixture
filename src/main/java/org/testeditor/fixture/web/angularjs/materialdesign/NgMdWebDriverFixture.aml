@@ -6,8 +6,8 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	template = "Start " ${element} 
-	method = NgMdWebDriverFixture.startBrowser(element)
+	template = "Start " ${browser}
+	method = NgMdWebDriverFixture.startBrowser(browser)
 }
 
 interaction type startFireFoxPortable {
@@ -33,37 +33,37 @@ interaction type setActiveBrwoser {
 
 interaction type typeIn {
 	template = "Enter" ${value} "into" ${element} 
-	method = NgMdWebDriverFixture.typeInto(element, value)
+	method = NgMdWebDriverFixture.typeInto(element, locatorStrategy, value)
 }
 
 interaction type sendEnter {
 	template = "Press enter on" ${element}
-	method = NgMdWebDriverFixture.pressEnterOn(element)
+	method = NgMdWebDriverFixture.pressEnterOn(element, locatorStrategy)
 }
 
 interaction type clear {
 	template = "Clear" ${element}
-	method = NgMdWebDriverFixture.clear(element)
+	method = NgMdWebDriverFixture.clear(element, locatorStrategy)
 }
 
 interaction type click {
 	template = "Click" ${element}
-	method = NgMdWebDriverFixture.clickOn(element)	
+	method = NgMdWebDriverFixture.clickOn(element, locatorStrategy)
 }
 
 interaction type selectInSelection {
 	template = "Select " ${value} "from" ${element}
-	method = NgMdWebDriverFixture.selectElementInSelection(element,value)	
+	method = NgMdWebDriverFixture.selectElementInSelection(element, locatorStrategy, value)
 }
 
 interaction type getAvailableOptions {
 	template = "Read available " ${element}
-	method = NgMdWebDriverFixture.getOptionsInSelection(element)	
+	method = NgMdWebDriverFixture.getOptionsInSelection(element, locatorStrategy)
 }
 
 interaction type readValue {
 	template = "Read" ${element}
-	method = NgMdWebDriverFixture.readValue(element)	
+	method = NgMdWebDriverFixture.readValue(element, locatorStrategy)
 }
 
 
@@ -74,7 +74,7 @@ interaction type executeScript {
 
 interaction type checkEnabled {
 	template = "Is " ${element} " enabled"
-	method = NgMdWebDriverFixture.checkEnabled(element)	
+	method = NgMdWebDriverFixture.checkEnabled(element, locatorStrategy)
 
 }
 

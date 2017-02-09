@@ -71,11 +71,11 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		fixture.waitSeconds(2);
 		fixture.goToUrl(webSite.toString());
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
-		fixture.typeInto(tool.getUserName(), "test_1");
-		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
+		fixture.typeInto(tool.getUserName(), LocatorStrategy.NAME, "test_1");
+		String userName = fixture.getWebElement(tool.getUserName(), LocatorStrategy.ID).getAttribute("value");
 		Assert.assertTrue((userName).equals("test_1"));
-		fixture.typeInto(tool.getPasswd(), "test");
-		String password = fixture.getWebElement("[id]" + (tool.getPasswd())).getAttribute("value");
+		fixture.typeInto(tool.getPasswd(), LocatorStrategy.NAME, "test");
+		String password = fixture.getWebElement(tool.getPasswd(), LocatorStrategy.ID).getAttribute("value");
 		Assert.assertTrue((password).equals("test"));
 		fixture.closeBrowser();
 	}
@@ -115,11 +115,11 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		fixture.waitSeconds(2);
 		fixture.goToUrl(webSite.toString());
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
-		fixture.typeInto(tool.getUserName(), "test_1");
-		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
+		fixture.typeInto(tool.getUserName(), LocatorStrategy.NAME, "test_1");
+		String userName = fixture.getWebElement(tool.getUserName(), LocatorStrategy.ID).getAttribute("value");
 		Assert.assertTrue((userName).equals("test_1"));
-		fixture.typeInto(tool.getPasswd(), "test");
-		String password = fixture.getWebElement("[id]" + (tool.getPasswd())).getAttribute("value");
+		fixture.typeInto(tool.getPasswd(), LocatorStrategy.NAME, "test");
+		String password = fixture.getWebElement(tool.getPasswd(), LocatorStrategy.ID).getAttribute("value");
 		Assert.assertTrue((password).equals("test"));
 		fixture.closeBrowser();	
 		
@@ -161,11 +161,11 @@ public class WebDriverFixtureLocalFirefoxTest  {
 		
 		// Then
 		Assert.assertTrue(fixture.getDriver().getTitle().startsWith(expectedTitle));
-		fixture.typeInto(tool.getUserName(), "test_1");
-		String userName = fixture.getWebElement("[id]" + (tool.getUserName())).getAttribute("value");
+		fixture.typeInto(tool.getUserName(), LocatorStrategy.NAME, "test_1");
+		String userName = fixture.getWebElement(tool.getUserName(), LocatorStrategy.ID).getAttribute("value");
 		Assert.assertTrue((userName).equals("test_1"));
-		fixture.typeInto(tool.getPasswd(), "test");
-		String password = fixture.getWebElement("[id]" + (tool.getPasswd())).getAttribute("value");
+		fixture.typeInto(tool.getPasswd(), LocatorStrategy.NAME, "test");
+		String password = fixture.getWebElement(tool.getPasswd(), LocatorStrategy.ID).getAttribute("value");
 		Assert.assertTrue((password).equals("test"));
 		fixture.closeBrowser();	
 	}
