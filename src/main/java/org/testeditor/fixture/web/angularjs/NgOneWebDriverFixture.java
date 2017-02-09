@@ -18,6 +18,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testeditor.fixture.web.LocatorStrategy;
 import org.testeditor.fixture.web.WebDriverFixture;
 
 import com.paulhammant.ngwebdriver.ByAngular;
@@ -40,16 +41,16 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
 	 * @return {@code WebElement} special handling for Angular tags beginning with "[model"
 	 */
 	@Override
-	protected WebElement getWebElement(String elementLocator) {
+	protected WebElement getWebElement(String elementLocator, LocatorStrategy locatorStrategy) {
 		waitForAngularCompleteOperations();
-		if (elementLocator.startsWith("[model")) {
+		if (locatorStrategy.equals(LocatorStrategy.MODEL)) {
 			proofIfModel(elementLocator);
-			WebElement result = getDriver().findElement(ByAngular.model(extractLocatorStringFrom(elementLocator)));
+			WebElement result = getDriver().findElement(ByAngular.model(elementLocator));
 			if (result != null) {
 				return result;
 			}
 		}
-		return super.getWebElement(elementLocator);
+		return super.getWebElement(elementLocator, locatorStrategy);
 	}
 	
 	
@@ -58,8 +59,8 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
 	 * @return {@code WebElement} special handling for Angular tags beginning with "[model"
 	 */
 	private WebElement proofIfModel(String elementLocator) {
-		if (elementLocator.startsWith("[model(")) {
-			return subStringModel(elementLocator);
+		if (elementLocator.contains("(")) {
+			return findIndexedByModel(elementLocator);
 		}
 		return null;
 	}
@@ -69,11 +70,11 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
 	 * @param elementLocator Locator for Gui-Widget
 	 * @return {@code WebElement} special handling for Angular Gui Widgets
 	 */
-	private WebElement subStringModel(String elementLocator) {
+	private WebElement findIndexedByModel(String elementLocator) {
 		String substring = elementLocator.substring(elementLocator.indexOf("(") + 1);
 		String indexString = substring.substring(0, substring.indexOf(")"));
 		Integer index = Integer.valueOf(indexString);
-		return getDriver().findElements(ByAngular.model(extractLocatorStringFrom(elementLocator))).get(index);
+		return getDriver().findElements(ByAngular.model(elementLocator.substring(elementLocator.indexOf(")")+1))).get(index);
 	}
 
 	
