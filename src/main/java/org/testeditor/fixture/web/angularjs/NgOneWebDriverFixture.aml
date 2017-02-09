@@ -6,8 +6,8 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	template = "Start " ${browser}
-	method = NgOneWebDriverFixture.startBrowser(browser)
+	template = "Start " ${element}
+	method = NgOneWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
