@@ -6,8 +6,8 @@ interaction type wait {
 }
 
 interaction type startBrowser {
-	template = "Start " ${browser}
-	method = NgMdWebDriverFixture.startBrowser(browser)
+	template = "Start " ${element}
+	method = NgMdWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
