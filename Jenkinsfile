@@ -27,7 +27,7 @@ nodeWithProperWorkspace {
     println tag
     // } end of added debug information
     
-    if (isMaster() && isVersionTag()) {
+    if (isMaster() && localIsVersionTag()) {
         // Workaround: we don't want infinite releases.
         echo "Aborting build as the current commit on master is already tagged."
         currentBuild.displayName = "checkout-only"
@@ -65,6 +65,12 @@ nodeWithProperWorkspace {
         }
     }
 
+}
+
+String localIsVersionTag() {
+    def versionPattern = /v\d+.\d+(.\d+)?(\^0)?/
+    def tag = bash('git name-rev --name-only --tags HEAD~1').trim()
+    return tag ==~ versionPattern
 }
 
 String getVersion() {
