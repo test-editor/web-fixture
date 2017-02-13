@@ -207,7 +207,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 				.append(getScreenshotPath()) //
 				.append('/').append(reduceToMaxLen(testcase, SCREENSHOT_FILENAME_MAXLEN))//
 				.append('/').append(dateStr) //
-				.append('/').append(timeStr).append('-') //
+				.append('_').append(timeStr).append('-') //
 				.append(reduceToMaxLen(escapedBaseName, SCREENSHOT_FILENAME_MAXLEN - lenOfFixedElements))//
 				.append(additionalGraphicType);
 		return finalFilenameBuffer.toString();
@@ -289,7 +289,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 //	                  return super.getPasswordAuthentication();
 //	         }});
 		
-		MarionetteDriverManager.getInstance().setup("v0.10.0");
+		MarionetteDriverManager.getInstance().setup();
 		driver = new MarionetteDriver();
 		registerShutdownHook(driver);
 	}
@@ -377,6 +377,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	@FixtureMethod
 	public void closeBrowser() {
 		driver.close();
+		driver.quit();
 	}
 
 	/**
