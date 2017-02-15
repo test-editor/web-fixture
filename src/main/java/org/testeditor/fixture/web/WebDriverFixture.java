@@ -207,7 +207,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 				.append(getScreenshotPath()) //
 				.append('/').append(reduceToMaxLen(testcase, SCREENSHOT_FILENAME_MAXLEN))//
 				.append('/').append(dateStr) //
-				.append('_').append(timeStr).append('-') //
+				.append('/').append(timeStr).append('-') //
 				.append(reduceToMaxLen(escapedBaseName, SCREENSHOT_FILENAME_MAXLEN - lenOfFixedElements))//
 				.append(additionalGraphicType);
 		return finalFilenameBuffer.toString();
