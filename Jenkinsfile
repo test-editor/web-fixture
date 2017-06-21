@@ -49,23 +49,39 @@ nodeWithProperWorkspace {
     }
 
     if (isMaster()) {
+        def preReleaseVersion = getVersion()
         stage('Release') {
-            currentBuild.displayName = getVersion().replaceAll('-SNAPSHOT', '')
+            currentBuild.displayName = preReleaseVersion.replaceAll('-SNAPSHOT', '')
             withGradleEnv {
                 sh 'git config user.email "jenkins@ci.testeditor.org"'
                 sh 'git config user.name "jenkins"'
                 // workaround: cannot push without credentials using HTTPS => push using SSH
                 sh "git remote set-url origin ${getGithubUrlAsSsh()}"
                 withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '1e68e4c1-48a6-428c-8896-42511359493e', passwordVariable: 'BINTRAY_KEY', usernameVariable: 'BINTRAY_USER']]) {
-                    gradle 'release -Prelease.useAutomaticVersion=true'
+                    gradle 'release'
                 }
             }
+        }
             
-            // TODO merge back to develop
+        stage('Increment develop version') {
+            sh "git checkout develop"
+            sh "git fetch origin"
+            sh "git reset --hard origin/develop"
+            def developVersion = getVersion()
+            if (developVersion == preReleaseVersion) {
+                sh "git merge origin/master"
+                withGradleEnv {
+                    gradle 'updateVersion -Prelease.useAutomaticVersion=true'
+                }
+                sh "git add ."
+                sh "git commit -m '[release] set version ${getVersion()}'"
+                sh "git push origin develop"
+            } else {
+                echo "Version on develop not incremented as it differs from the preReleaseVersion."
+            }
         }
     }
 
-}
 
 String localIsVersionTag() {
     def versionPattern = /v\d+.\d+(.\d+)?(\^0)?/
