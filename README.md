@@ -1,15 +1,19 @@
-#web-fixture
+# web-fixture
 
-Fixture used for testing WEB applications.
+[![License](http://img.shields.io/badge/license-EPL-blue.svg?style=flat)](https://www.eclipse.org/legal/epl-v10.html)
+[![Build Status](https://travis-ci.org/test-editor/web-fixture.svg?branch=develop)](https://travis-ci.org/test-editor/web-fixture)
+[![Download](https://api.bintray.com/packages/test-editor/Fixtures/web-fixture/images/download.svg)](https://bintray.com/test-editor/Fixtures/web-fixture/_latestVersion)
 
-You'll find our Wiki at https://testeditor.atlassian.net/wiki, our issue tracker at https://testeditor.atlassian.net and our homepage at http://testeditor.org.
+## Development
 
+### Build
 
-## Changelog
-Version number notation guide: 
-The version number of the webfixture is in the pattern as follows:
+    ./gradlew build
 
-  major.minor.build
+### Release process
 
-### v3.1.2
-Screenshots available in Test-Execution-Console 
+In order to create a release switch to the `master` branch and execute
+
+    ./gradlew release
+
+and enter the new version. After the commit and tag is pushed Travis will automatically build and deploy the tagged version to Bintray.
