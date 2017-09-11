@@ -18,9 +18,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
@@ -46,6 +43,8 @@ import org.testeditor.fixture.core.TestRunReporter;
 import org.testeditor.fixture.core.TestRunReporter.Action;
 import org.testeditor.fixture.core.TestRunReporter.SemanticUnit;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
+
+import com.google.gson.JsonObject;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
@@ -477,21 +476,20 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 	 *            Locator for Gui-Widget
 	 * @param locatorType
 	 *            Type of locator for Gui-Widget
-	 * @return a Map of the values in a Selectionbox
+	 * @return a JsonObject of the values in a Selectionbox
 	 * @throws InterruptedException
 	 */
 	@FixtureMethod
-	public Map<String, String> getOptionsInSelection(String elementLocator, LocatorStrategy locatorType) throws InterruptedException {
+	public JsonObject getOptionsInSelection(String elementLocator, LocatorStrategy locatorType) throws InterruptedException {
+		JsonObject availableOptions = new JsonObject();
 		clickOn(elementLocator, locatorType);
 		Thread.sleep(300);
-		Map<String, String> namesOfAllSelectedOptions = new HashMap<String, String>();
+		
 		Select selection = new Select(getWebElement(elementLocator, locatorType));
-		List<WebElement> allSelectedOptions;
-		allSelectedOptions = selection.getAllSelectedOptions();
-		for (WebElement webElement : allSelectedOptions) {
-			namesOfAllSelectedOptions.put(webElement.getText(), webElement.getText());
+		for (WebElement webElement : selection.getAllSelectedOptions()) {
+			availableOptions.addProperty(webElement.getText(), webElement.getText());
 		}
-		return namesOfAllSelectedOptions;
+		return availableOptions;
 	}
 
 	/**

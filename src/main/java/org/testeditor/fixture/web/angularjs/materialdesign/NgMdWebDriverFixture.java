@@ -12,9 +12,7 @@
  *******************************************************************************/
 package org.testeditor.fixture.web.angularjs.materialdesign;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -25,6 +23,7 @@ import org.testeditor.fixture.core.interaction.FixtureMethod;
 import org.testeditor.fixture.web.LocatorStrategy;
 import org.testeditor.fixture.web.angularjs.NgOneWebDriverFixture;
 
+import com.google.gson.JsonObject;
 import com.paulhammant.ngwebdriver.ByAngular;
 import com.paulhammant.ngwebdriver.ByAngularCssContainingText;
 
@@ -58,12 +57,12 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 	}
 
 	/**
-	 * @return the Options of a selection Field as a {@code Map}
+	 * @return the Options of a selection Field as a {@code JsonObject}
 	 * @param elementLocator Locator for Selection
 	 */
 	@FixtureMethod
-	public Map<String, String> getOptionsInSelection(String elementLocator, LocatorStrategy locatorStrategy) throws InterruptedException {
-		Map<String, String> availableOptions = new HashMap<String, String>();
+	public JsonObject getOptionsInSelection(String elementLocator, LocatorStrategy locatorStrategy) throws InterruptedException {
+		JsonObject availableOptions = new JsonObject();
 		clickOn(elementLocator, locatorStrategy);
 		Thread.sleep(300);
 		waitForAngularCompleteOperations();
@@ -71,7 +70,7 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
 		List<WebElement> options = getDriver().findElements(cssContainingText);
 		for (WebElement element : options) {
 			if (element.isDisplayed()) {
-				availableOptions.put(element.getText(), element.getText());
+				availableOptions.addProperty(element.getText(), element.getText());
 			}
 		}
 		Actions actions = new Actions(getDriver());
