@@ -32,6 +32,7 @@ dependencies {
     compile "org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion"
     compile 'com.paulhammant:ngwebdriver:0.9.5'
     compile 'io.github.bonigarcia:webdrivermanager:1.6.0'
+    compile 'com.google.code.gson:gson:2.8.1'
 }
 
 jar {
