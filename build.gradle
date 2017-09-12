@@ -1,22 +1,16 @@
 plugins {
     id 'maven'
     id 'java'
-    id 'com.jfrog.bintray' version '1.7.1'
-    id 'net.researchgate.release' version '2.4.0'
+    id 'com.jfrog.bintray' version '1.7.3'
+    id 'net.researchgate.release' version '2.6.0'
 }
 
-repositories {
-   
-   /* ressources are not downloadable under url http://jcenter.bintray.com 
-   so the next line is recommended for using core-fixtures 3.0.1 */
-    maven { url "http://dl.bintray.com/test-editor/maven"}
-    jcenter()
- }
+task cleanScreenshotDir(type: Delete) {
+    description = "cleanup any screenshots written"
+    delete fileTree(dir: "${projectDir}/screenshots", include: "**/*.png")
+}
 
-group = 'org.testeditor.fixture'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+test.dependsOn cleanScreenshotDir
 
 def coreFixtureVersion = "3.1.0" 
 def seleniumJavaVersion = "3.0.1"
@@ -35,6 +29,36 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
 }
 
+configurations.all {
+    resolutionStrategy {
+        // fail eagerly on version conflict (includes transitive dependencies)
+        // e.g. multiple different versions of the same dependency (group and name are equal)
+        // failOnVersionConflict()
+    
+        // force certain versions of dependencies (including transitive)
+        //  *append new forced modules:
+        force 'org.slf4j:slf4j-api:1.7.18', "org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion"
+    }
+}
+
+sourceSets.main.resources.srcDirs = [ "src/main/java" ]
+sourceSets.main.resources.includes = [ "**/*.aml" ]
+
+/* 
+ * code below copied from core-fixture
+ */
+repositories {
+    jcenter()
+}
+
+group = 'org.testeditor.fixture'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// show standard out during test to see logging output
+test.testLogging.showStandardStreams = true
+
 jar {
     manifest {
         attributes 'Implementation-Title': "${project.group}.${project.name}",
@@ -43,17 +67,17 @@ jar {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier 'sources'
-	from sourceSets.main.allSource
+    classifier 'sources'
+    from sourceSets.main.allSource
 }
 
 artifacts {
-	archives sourcesJar
+    archives sourcesJar
 }
 
 install {
     repositories.mavenInstaller {
-    	pom.packaging = 'jar'
+        pom.packaging = 'jar'
     }
 }
 
@@ -64,8 +88,6 @@ release {
     tagTemplate = 'v${version}'
 }
 
-afterReleaseBuild.dependsOn bintrayUpload
-
 bintray {
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
@@ -75,36 +97,12 @@ bintray {
         repo = 'Fixtures'
         name = project.name
         userOrg = 'test-editor'
-        websiteUrl = 'http://testeditor.org'
-        vcsUrl = "https://github.com/test-editor/${project.name}.git"
         licenses = ['EPL-1.0']
+        vcsUrl = "https://github.com/test-editor/${project.name}.git"
+        version {
+            name = project.version
+            vcsTag = "v$project.version"
+        }
+        websiteUrl = 'http://testeditor.org'
     }
 }
-
-configurations.all {
-  resolutionStrategy {
-    // fail eagerly on version conflict (includes transitive dependencies)
-    // e.g. multiple different versions of the same dependency (group and name are equal)
-   // failOnVersionConflict()
-    
-        // force certain versions of dependencies (including transitive)
-    //  *append new forced modules:
-    force 'org.slf4j:slf4j-api:1.7.18', 'org.seleniumhq.selenium:selenium-java:2.53.0'
-    }
-}
-
-bintrayUpload.doFirst {
-    // Version is changed during release, we need to set the proper version right before uploading
-    versionName = "$project.version"
-    versionVcsTag = "v$project.version"
-}
-
-sourceSets.main.resources.srcDirs = [ "src/main/java" ]
-sourceSets.main.resources.includes = [ "**/*.aml" ]
-
-task cleanScreenshotDir(type: Delete) {
-    description = "cleanup any screenshots written"
-    delete fileTree(dir: "${projectDir}/screenshots", include: "**/*.png")
-}
-
-test.dependsOn cleanScreenshotDir
