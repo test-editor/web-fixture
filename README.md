@@ -1,7 +1,7 @@
 # web-fixture
 
 [![License](http://img.shields.io/badge/license-EPL-blue.svg?style=flat)](https://www.eclipse.org/legal/epl-v10.html)
-[![Build Status](https://travis-ci.org/test-editor/web-fixture.svg?branch=develop)](https://travis-ci.org/test-editor/web-fixture)
+[![Build Status](https://travis-ci.org/test-editor/web-fixture.svg?branch=master)](https://travis-ci.org/test-editor/web-fixture)
 [![Download](https://api.bintray.com/packages/test-editor/Fixtures/web-fixture/images/download.svg)](https://bintray.com/test-editor/Fixtures/web-fixture/_latestVersion)
 
 ## Development
