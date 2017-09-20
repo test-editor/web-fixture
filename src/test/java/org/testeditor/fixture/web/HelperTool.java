@@ -13,36 +13,65 @@
 package org.testeditor.fixture.web;
 
 import java.io.File;
-
 import org.apache.commons.lang3.SystemUtils;
 
 /**
- * The HelperTool is just a container for convenience methods to proof prerequisites for 
- * different testcases.
+ * The HelperTool is just a container for convenience methods to proof
+ * prerequisites for different testcases.
  */
 public class HelperTool {
-	
-   private static final String pathGeckodriver = "c:\\dev\\tools\\firefox\\geckodriver.exe";
 
-	/**
-	 * @return true if the path to geckodriver is available, false otherwise.
-	 */
-   public static boolean isGeckoDriverPresent() {
-		return new File(pathGeckodriver).exists();
-	}
+    private static String userHome = System.getProperty("user.home");
+    private static String osWindows = "win64";
+    private static String osLinux = "linux64";
+    private static String osMac = "macos";
+    private static String geckodriverVersion = "0.19.0";
+    private static String testPropertyPath = "/.m2/repository/webdriver/geckodriver";
 
-	/**
-	 * @return true if OS = WINDOWS, false otherwise
-	 */
-	public static boolean isOsWindows() {
-		return SystemUtils.IS_OS_WINDOWS;
-	}
+    // This is the standard path where
+    private static final String pathGeckodriver = userHome + testPropertyPath;
 
-	/**
-	 * @return String reperesenting the path to geckodriver.exe 
-	 */
-	public static String getPathgeckodriver() {
-		return pathGeckodriver;
-	}
+    /**
+     * @return true if the path to geckodriver is available, false otherwise.
+     */
+    public static boolean isGeckoDriverPresent() {
+        StringBuilder builder = new StringBuilder(pathGeckodriver);
+        if (isOsWindows()) {
+            builder.append("/").append(osWindows).append("/").append(geckodriverVersion).append("/").append("geckodriver.exe");
+        } else if (isOsLinux()) {
+            builder.append("/").append(osLinux).append("/").append(geckodriverVersion).append("/").append("geckodriver");
+        } else if (isOsMac()) {
+            builder.append("/").append(osMac).append("/").append(geckodriverVersion).append("/").append("geckodriver");
+        }
+        return new File(builder.toString()).exists();
+    }
+
+    /**
+     * @return true if OS = WINDOWS, false otherwise
+     */
+    public static boolean isOsWindows() {
+        return SystemUtils.IS_OS_WINDOWS;
+    }
+
+    /**
+     * @return true if OS = WINDOWS, false otherwise
+     */
+    public static boolean isOsLinux() {
+        return SystemUtils.IS_OS_LINUX;
+    }
+
+    /**
+     * @return true if OS = WINDOWS, false otherwise
+     */
+    public static boolean isOsMac() {
+        return SystemUtils.IS_OS_MAC;
+    }
+
+    /**
+     * @return String reperesenting the path to geckodriver.exe
+     */
+    public static String getPathgeckodriver() {
+        return pathGeckodriver;
+    }
 
 }
