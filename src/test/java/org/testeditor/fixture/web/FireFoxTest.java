@@ -25,7 +25,7 @@ public class FireFoxTest {
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        assumeWindowsPresent();
+        //assumeWindowsPresent();
     }
 
     @Before
@@ -86,7 +86,7 @@ public class FireFoxTest {
         Assume.assumeTrue("This is not a Windows OS - ignoring test", SystemUtils.IS_OS_WINDOWS);
     }
 
-    @Test
+    //@Test
     public void googleTestWithBinary() throws InterruptedException, IOException {
 
         // given
