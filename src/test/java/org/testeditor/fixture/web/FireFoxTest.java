@@ -1,12 +1,9 @@
 package org.testeditor.fixture.web;
 
 import java.io.IOException;
-import org.apache.commons.lang3.SystemUtils;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Assume;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -17,106 +14,95 @@ import org.junit.Test;
  */
 public class FireFoxTest {
 
-    private static String proxyHost;
-    private static String proxyUser;
-    private static String proxyPassword;
+	private static String proxyHost;
+	private static String proxyUser;
+	private static String proxyPassword;
 
-    private WebDriverFixture driver;
+	private WebDriverFixture driver;
 
-    @BeforeClass
-    public static void setupClass() throws IOException {
-        //assumeWindowsPresent();
-    }
+	@Before
+	public void setupTest() throws IOException {
 
-    @Before
-    public void setupTest() throws IOException {
+		// This new may fail, if the driver fixture cannot properly connect to
+		// the started browser instance resulting in driver == null
+		driver = new WebDriverFixture();
+	}
 
-        driver = new WebDriverFixture();
-    }
+	@After
+	public void teardown() {
+		if (driver != null) {
+			driver.closeBrowser();
+		}
+	}
 
-    @After
-    public void teardown() {
-        if (driver != null) {
-            driver.closeBrowser();
-        }
-    }
+	// This test is for local proxy based environment, umcomment and test if
+	// possible.
+	// @Test
+	public void googleTestWithProxyCredentials() throws InterruptedException, IOException {
 
-    // This test is for local proxy based environment, umcomment and test if
-    // possible.
-    // @Test
-    public void googleTestWithProxyCredentials() throws InterruptedException, IOException {
+		// given
 
-        // given
+		// Make sure to set the following environment variables before
+		// executing the tests.
+		getProxyCredentials();
 
-        // Make sure to set the following environment variables before
-        // executing the tests.
-        getProxyCredentials();
+		driver.startBrowser("firefox");
+		driver.goToUrl("https://google.de");
+		driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+		driver.submit("q", LocatorStrategy.NAME);
 
-        driver.startBrowser("firefox");
-        driver.goToUrl("https://google.de");
-        driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
-        driver.submit("q", LocatorStrategy.NAME);
+		// when
+		driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
+		String title = driver.getTitle();
 
-        // when
-        driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
-        String title = driver.getTitle();
+		// then
+		Assert.assertEquals("Test-Editor - Google-Suche", title);
+	}
 
-        // then
-        Assert.assertEquals("Test-Editor - Google-Suche", title);
-    }
+	@Test
+	public void googleTestWithoutProxyCredentials() throws InterruptedException, IOException {
 
-    @Test
-    public void googleTestWithoutProxyCredentials() throws InterruptedException, IOException {
+		// given
+		driver.startBrowser("firefox");
+		driver.goToUrl("https://google.de");
+		driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+		driver.submit("q", LocatorStrategy.NAME);
 
-        // given
-        driver.startBrowser("firefox");
-        driver.goToUrl("https://google.de");
-        driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
-        driver.submit("q", LocatorStrategy.NAME);
+		// when
+		driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
+		String title = driver.getTitle();
 
-        // when
-        driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
-        String title = driver.getTitle();
+		// then
+		Assert.assertEquals("Test-Editor - Google-Suche", title);
+	}
 
-        // then
-        Assert.assertEquals("Test-Editor - Google-Suche", title);
-    }
+	// @Test
+	public void googleTestWithBinary() throws InterruptedException, IOException {
 
-    public static void assumeWindowsPresent() throws IOException {
-        Assume.assumeTrue("This is not a Windows OS - ignoring test", SystemUtils.IS_OS_WINDOWS);
-    }
+		// given
+		driver.startFireFoxPortable("c:/Users/u096310/AppData/Local/Firefox Developer Edition/firefox.exe");
+		driver.goToUrl("https://google.de");
+		driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+		driver.submit("q", LocatorStrategy.NAME);
 
-    //@Test
-    public void googleTestWithBinary() throws InterruptedException, IOException {
+		// when
+		driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
+		String title = driver.getTitle();
 
-        // given
-        driver.startFireFoxPortable("c:/Users/u096310/AppData/Local/Firefox Developer Edition/firefox.exe");
-        driver.goToUrl("https://google.de");
-        driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
-        driver.submit("q", LocatorStrategy.NAME);
+		// then
+		Assert.assertEquals("Test-Editor - Google-Suche", title);
+	}
 
-        // when
-        driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
-        String title = driver.getTitle();
-
-        // then
-        Assert.assertEquals("Test-Editor - Google-Suche", title);
-    }
-
-    private void getProxyCredentials() {
-        proxyHost = System.getenv(WebDriverFixture.HTTP_PROXY_HOST);
-        proxyUser = System.getenv(WebDriverFixture.HTTP_PROXY_USER);
-        proxyPassword = System.getenv(WebDriverFixture.HTTP_PROXY_PASSWORD);
-        Assert.assertNotNull(proxyHost);
-        Assert.assertFalse(proxyHost.isEmpty());
-        Assert.assertNotNull(proxyUser);
-        Assert.assertFalse(proxyUser.isEmpty());
-        Assert.assertNotNull(proxyPassword);
-        Assert.assertFalse(proxyPassword.isEmpty());
-    }
-
-    public void waitSeconds(long timeToWait) throws InterruptedException {
-        Thread.sleep(timeToWait * 1000);
-    }
+	private void getProxyCredentials() {
+		proxyHost = System.getenv(WebDriverFixture.HTTP_PROXY_HOST);
+		proxyUser = System.getenv(WebDriverFixture.HTTP_PROXY_USER);
+		proxyPassword = System.getenv(WebDriverFixture.HTTP_PROXY_PASSWORD);
+		Assert.assertNotNull(proxyHost);
+		Assert.assertFalse(proxyHost.isEmpty());
+		Assert.assertNotNull(proxyUser);
+		Assert.assertFalse(proxyUser.isEmpty());
+		Assert.assertNotNull(proxyPassword);
+		Assert.assertFalse(proxyPassword.isEmpty());
+	}
 
 }

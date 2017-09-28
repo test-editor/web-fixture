@@ -2,11 +2,7 @@ package org.testeditor.fixture.web.drivermanager;
 
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Properties;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -34,23 +30,30 @@ public class InternetExplorerTest {
     private static String firstSiteTitle;
     private static String xPathResult;
     private static String resultSiteTitle;
+    private static String ieFlakinessCapability;
 
     @BeforeClass
     public static void setupClass() throws IOException {
-        assumeWindowsPresent();
+        Assume.assumeTrue("This is not a Windows OS - ignoring test", SystemUtils.IS_OS_WINDOWS);
+        setupTestParameter();
         BrowserManager browserManager = InternetExplorerDriverManager.getInstance();
-        browserManager.proxy(proxyHost);
-        browserManager.proxyUser(proxyUser);
-        browserManager.proxyPass(proxyPassword);
+        if (proxyHost != null && proxyHost.isEmpty()) {
+            browserManager.proxy(proxyHost);
+            browserManager.proxyUser(proxyUser);
+            browserManager.proxyPass(proxyPassword);
+        }
         browserManager.setup();
     }
 
     @Before
     public void setupTest() throws IOException {
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-        capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+        if (ieFlakinessCapability != null && !ieFlakinessCapability.isEmpty()) {
+            capabilities.setCapability(ieFlakinessCapability, true);
+        }
         capabilities.setCapability("requireWindowFocus", true);
 
+        // New fails if IE can not be started.
         driver = new InternetExplorerDriver(capabilities);
     }
 
@@ -62,7 +65,11 @@ public class InternetExplorerTest {
     }
 
     @Test
-    public void test() throws InterruptedException {
+    public void smokeIntegrationTest() throws InterruptedException {
+
+        // given (through class setup)
+
+        // when
         driver.get(testSiteUrl);
         String title = driver.getTitle();
         Assert.assertEquals(firstSiteTitle, title);
@@ -74,6 +81,8 @@ public class InternetExplorerTest {
         webElement.click();
         waitSeconds(1);
         title = driver.getTitle();
+
+        // then
         Assert.assertEquals(resultSiteTitle, title);
 
     }
@@ -86,12 +95,13 @@ public class InternetExplorerTest {
      * To execute these Tests it is necessary to provide a file named
      * "ie_test.properties" specified in the variable "testPropertyPath" below.
      * The content of the property file should contain following key value
-     * pairs.
+     * pairs. See Wiki for "testing new web-fixure".
      * 
      * <pre>
      * PROXY_HOST=your.proxy.system.here
      * PROXY_USER=yourProxyUsernameHere
      * PROXY_PASSWORD=yourProxyPasswordHere
+     * IE_FLAKINESS=quick-search-query
      * TEST_SITE_URL=yourTestSiteUrlHere
      * SEARCH_FIELD_ID=yourSearchFieldToTypeInHere
      * SEARCH_STRING=yourSearchStringHere
@@ -102,37 +112,16 @@ public class InternetExplorerTest {
      * 
      * @throws IOException
      */
-    public static void assumeWindowsPresent() throws IOException {
-        Assume.assumeTrue("This is not a Windows OS - ignoring test", SystemUtils.IS_OS_WINDOWS);
-        String userHome = System.getProperty("user.home");
-        String testPropertyPath = "/.m2/integrationsTest/ie_test.properties";
-
-        Properties prop = new Properties();
-        InputStream inputStream = null;
-
-        inputStream = new FileInputStream(userHome + testPropertyPath);
-        InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
-
-        prop.load(reader);
-
-        proxyHost = prop.getProperty("PROXY_HOST");
-        proxyUser = prop.getProperty("PROXY_USER");
-        proxyPassword = prop.getProperty("PROXY_PASSWORD");
-        xPathResult = prop.getProperty("XPATH_RESULT");
-        searchfieldID = prop.getProperty("SEARCH_FIELD_ID");
-        searchString = prop.getProperty("SEARCH_STRING");
-        testSiteUrl = prop.getProperty("TEST_SITE_URL");
-        firstSiteTitle = prop.getProperty("FIRST_SITE_TITLE");
-        resultSiteTitle = prop.getProperty("RESULT_SITE_TITLE");
-
-        Assert.assertNotNull(proxyHost);
-        Assert.assertNotNull(proxyUser);
-        Assert.assertNotNull(proxyPassword);
-        Assert.assertNotNull(xPathResult);
-        Assert.assertNotNull(searchfieldID);
-        Assert.assertNotNull(searchString);
-        Assert.assertNotNull(testSiteUrl);
-        Assert.assertNotNull(firstSiteTitle);
-        Assert.assertNotNull(resultSiteTitle);
+    public static void setupTestParameter() throws IOException {
+        proxyHost = System.getenv("PROXY_HOST");
+        proxyUser = System.getenv("PROXY_USER");
+        proxyPassword = System.getenv("PROXY_PASSWORD");
+        ieFlakinessCapability = System.getenv("IE_FLAKINESS");
+        testSiteUrl = System.getenv("TEST_SITE_URL");
+        searchfieldID = System.getenv("SEARCH_FIELD_ID");
+        searchString = System.getenv("SEARCH_STRING");
+        firstSiteTitle = System.getenv("FIRST_SITE_TITLE");
+        xPathResult = System.getenv("XPATH_RESULT");
+        resultSiteTitle = System.getenv("RESULT_SITE_TITLE");
     }
 }

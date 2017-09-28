@@ -26,7 +26,6 @@ dependencies {
     compile "org.testeditor.fixture:core-fixture:$coreFixtureVersion"
     compile "org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion"
     compile 'com.paulhammant:ngwebdriver:1.0'
-    // BoniGarcia's WebDriverManager
     compile 'io.github.bonigarcia:webdrivermanager:1.7.2'
     compile 'com.google.code.gson:gson:2.8.1'
 }

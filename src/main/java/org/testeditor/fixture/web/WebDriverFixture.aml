@@ -86,12 +86,10 @@ interaction type executeScript {
 	method = WebDriverFixture.setExecuteScript(value)
 }
 
-
 interaction type checkEnabled {
 	template = "Is " ${element} " enabled"
 	method = WebDriverFixture.checkEnabled(element, locatorStrategy)
 }
-
 
 element type BrowserApplication {
 	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit
@@ -129,8 +127,8 @@ component WebBrowser is GeneralBrowser {
 	element defaultBrowser is BrowserApplication {
 		locator ="default"
 	}
-	element OlderFirefox is BrowserApplication {
-		label = "Firefox(older)"
+	element Firefox is BrowserApplication {
+		label = "Firefox"
 		locator ="firefox"
 	}
 
