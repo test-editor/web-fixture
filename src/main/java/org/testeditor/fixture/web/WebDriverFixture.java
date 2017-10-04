@@ -195,8 +195,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     private String constructScreenshotFilename(String filenameBase, String testcase) {
         String additionalGraphicType = ".png";
-        String escapedBaseName = filenameBase.replaceAll("[^a-zA-Z0-9.-]", "_").replaceAll("_+", "_").replaceAll("_+\\.", ".").replaceAll("\\._+",
-                ".");
+        String escapedBaseName = filenameBase.replaceAll("[^a-zA-Z0-9.-]", "_").replaceAll("_+", "_")
+                .replaceAll("_+\\.", ".").replaceAll("\\._+", ".");
         String timeStr = new SimpleDateFormat("HHmmss.SSS").format(new Date());
         String dateStr = new SimpleDateFormat("YYYYMMdd").format(new Date());
         StringBuffer finalFilenameBuffer = new StringBuffer();
@@ -519,7 +519,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws InterruptedException
      */
     @FixtureMethod
-    public void selectElementInSelection(String elementLocator, LocatorStrategy locatorType, String value) throws InterruptedException {
+    public void selectElementInSelection(String elementLocator, LocatorStrategy locatorType, String value)
+            throws InterruptedException {
         clickOn(elementLocator, locatorType);
         Thread.sleep(300);
         WebElement element = getWebElement(elementLocator, locatorType);
@@ -536,7 +537,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws InterruptedException
      */
     @FixtureMethod
-    public JsonObject getOptionsInSelection(String elementLocator, LocatorStrategy locatorType) throws InterruptedException {
+    public JsonObject getOptionsInSelection(String elementLocator, LocatorStrategy locatorType)
+            throws InterruptedException {
         JsonObject availableOptions = new JsonObject();
         clickOn(elementLocator, locatorType);
         Thread.sleep(300);
