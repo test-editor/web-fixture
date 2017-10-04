@@ -3,6 +3,7 @@ plugins {
     id 'java'
     id 'com.jfrog.bintray' version '1.7.3'
     id 'net.researchgate.release' version '2.6.0'
+    id 'eclipse'
 }
 
 task cleanScreenshotDir(type: Delete) {
@@ -12,8 +13,8 @@ task cleanScreenshotDir(type: Delete) {
 
 test.dependsOn cleanScreenshotDir
 
-def coreFixtureVersion = "3.1.0" 
-def seleniumJavaVersion = "3.0.1"
+def coreFixtureVersion = "3.2.0" 
+def seleniumJavaVersion = "3.5.3"
 
 dependencies {
 	compile 'org.slf4j:slf4j-api:1.7.18'
@@ -24,8 +25,8 @@ dependencies {
     // these are just added for web-fixtures 
     compile "org.testeditor.fixture:core-fixture:$coreFixtureVersion"
     compile "org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion"
-    compile 'com.paulhammant:ngwebdriver:0.9.5'
-    compile 'io.github.bonigarcia:webdrivermanager:1.6.0'
+    compile 'com.paulhammant:ngwebdriver:1.0'
+    compile 'io.github.bonigarcia:webdrivermanager:1.7.2'
     compile 'com.google.code.gson:gson:2.8.1'
 }
 

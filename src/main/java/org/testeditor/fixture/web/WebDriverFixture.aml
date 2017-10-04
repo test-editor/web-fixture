@@ -5,6 +5,11 @@ interaction type wait {
 	method = WebDriverFixture.waitSeconds(seconds)
 }
 
+interaction type waitUntilElementFound {
+    template = "Wait" ${seconds} "seconds until ${element} is found"
+    method = WebDriverFixture.waitUntilElementFound(element, locatorStrategy, seconds)
+}
+
 interaction type startBrowser {
 	template = "Start " ${element}
 	method = WebDriverFixture.startBrowser(element)
@@ -21,12 +26,17 @@ interaction type goToUrl {
 	method = WebDriverFixture.goToUrl(url)
 }
 
+interaction type getTitle {
+    template = "Get title"
+    method = WebDriverFixture.getTitle()
+}
+
 interaction type closeBrowser {
 	template = "Close browser"
 	method = WebDriverFixture.closeBrowser
 }
 
-interaction type setActiveBrwoser {
+interaction type setActiveBrowser {
 	template = "Set active browser" ${browser}
 	method = WebDriverFixture.setDriver(browser)
 }
@@ -39,6 +49,11 @@ interaction type typeIn {
 interaction type sendEnter {
 	template = "Press enter on" ${element}
 	method = WebDriverFixture.pressEnterOn(element, locatorStrategy)
+}
+
+interaction type submit {
+    template = "submit element" ${element}
+    method = WebDriverFixture.submit(element, locatorStrategy)
 }
 
 interaction type clear {
@@ -71,57 +86,52 @@ interaction type executeScript {
 	method = WebDriverFixture.setExecuteScript(value)
 }
 
-
 interaction type checkEnabled {
 	template = "Is " ${element} " enabled"
 	method = WebDriverFixture.checkEnabled(element, locatorStrategy)
 }
 
-
 element type BrowserApplication {
-	interactions = startBrowser, startFireFoxPortable, executeScript
+	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit
 }
 
 element type field {
-	interactions = typeIn, sendEnter
+	interactions = typeIn, sendEnter, waitUntilElementFound
 }
 
 element type button {
-	interactions = click, sendEnter, checkEnabled
+	interactions = click, sendEnter, checkEnabled, waitUntilElementFound
 }
 
 element type selection {
-	interactions = click, sendEnter, selectInSelection, getAvailableOptions
+	interactions = click, sendEnter, selectInSelection, getAvailableOptions, waitUntilElementFound
 }
 
 element type dateTimePicker {
-	interactions = click, readValue
+	interactions = click, readValue, waitUntilElementFound
 }
 
 element type labelElement {
-	interactions = readValue
+	interactions = readValue, waitUntilElementFound
 }
 
 component type GeneralBrowser {
-	interactions = wait, goToUrl, closeBrowser, setActiveBrwoser
+	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser
 }
 
 component type Page {
-	interactions = wait
+	interactions = wait, waitUntilElementFound, submit, getTitle
 }
 
 component WebBrowser is GeneralBrowser {
 	element defaultBrowser is BrowserApplication {
 		locator ="default"
 	}
-	element OlderFirefox is BrowserApplication {
-		label = "Firefox(older)"
+	element Firefox is BrowserApplication {
+		label = "Firefox"
 		locator ="firefox"
 	}
-	element Firefox is BrowserApplication {
-		label = "Firefox(47 and above)"
-		locator ="modernfirefox"
-	}
+
 	element IE is BrowserApplication {
 		label = "Internet Explorer"
 		locator ="ie"

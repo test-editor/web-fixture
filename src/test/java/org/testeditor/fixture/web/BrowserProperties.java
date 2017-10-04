@@ -16,7 +16,6 @@ package org.testeditor.fixture.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,10 +49,6 @@ public class BrowserProperties {
 		System.setProperty(WebDriverFixture.HTTP_PROXY_USER, proxyUserValue);
 		System.setProperty(WebDriverFixture.HTTP_PROXY_PASSWORD, proxyPasswordValue);
 		System.setProperty(WebDriverFixture.HTTP_PROXY_HOST, PROXY_HOST_HTTP_VALUE);
-		System.setProperty(WebDriverFixture.HTTP_PROXY_PORT, PROXY_PORT_HTTP_VALUE);
-		System.setProperty(WebDriverFixture.HTTPS_PROXY_HOST, PROXY_HOST_HTTPS_VALUE);
-		System.setProperty(WebDriverFixture.HTTPS_PROXY_PORT, PROXY_PORT_HTTPS_VALUE);
-		System.setProperty(WebDriverFixture.HTTP_NON_PROXY_HOSTS, proxyNonProxyValue);
 	}
 
 	private void loadProperties() throws IOException {
@@ -61,14 +56,6 @@ public class BrowserProperties {
 		logger.info("loading proxy properties from input file");
 		try (InputStream input = getClass().getClassLoader().getResourceAsStream(PROPERTIES_FILE)) {
 			prop.load(input);
-			// get the property values for these variables for testing firefox
-			// with proxy settings
-			// logger.info(prop.getProperty("PROXY_VALUE"));
-			// logger.info(prop.getProperty("PROXY_PORT"));
-			// logger.info(prop.getProperty("PROXY_USER"));
-			// logger.info(prop.getProperty("PROXY_PASSWORD"));
-			// logger.info(prop.getProperty("PROXY_NONPROXY"));
-			// set properties
 			setProperties(prop);
 		}
 	}
