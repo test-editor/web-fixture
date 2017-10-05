@@ -6,7 +6,7 @@ interaction type wait {
 }
 
 interaction type waitUntilElementFound {
-    template = "Wait" ${seconds} "seconds until ${element} is found"
+    template = "Wait" ${seconds} "seconds until" ${element} "is found"
     method = WebDriverFixture.waitUntilElementFound(element, locatorStrategy, seconds)
 }
 
