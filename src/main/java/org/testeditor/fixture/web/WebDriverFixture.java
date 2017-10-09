@@ -394,6 +394,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         // drive.close() leads to exception with Selenium V. 3.5.3 and Firefox
         // 55.0.3 preferred method -> just driver.quit();
         driver.quit();
+        driver = null;
     }
 
     /**
