@@ -17,6 +17,9 @@ import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import java.awt.DisplayMode;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -254,7 +258,6 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         FirefoxOptions options = new FirefoxOptions();
         options.setBinary(binary);
         driver = new FirefoxDriver(options);
-        configureDriver();
         return driver;
     }
 
@@ -266,7 +269,6 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private void launchChrome() {
         setupDrivermanager(ChromeDriverManager.getInstance());
         driver = new ChromeDriver();
-        configureDriver();
         registerShutdownHook(driver);
     }
 
@@ -278,7 +280,6 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private void launchFirefox() {
         setupDrivermanager(FirefoxDriverManager.getInstance());
         driver = new FirefoxDriver();
-        configureDriver();
         registerShutdownHook(driver);
     }
 
@@ -372,6 +373,18 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     protected void configureDriver() {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        // because executing tests results in problems on travis build
+        DisplayMode displayMode = getDisplayMode();
+        int width = displayMode.getWidth();
+        int height = displayMode.getHeight();
+        logger.debug("Screen-Width: " + width + " Screen-Height: " + height) ;
+        driver.manage().window().setSize(new Dimension(width,height));
+    }
+    
+    
+    private DisplayMode getDisplayMode() {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        return gd.getDisplayMode();
     }
 
     /**

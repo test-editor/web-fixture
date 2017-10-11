@@ -80,7 +80,7 @@ public class FireFoxTest {
 	public void googleTestWithBinary() throws InterruptedException, IOException {
 
 		// given
-		driver.startFireFoxPortable("c:/Users/u096310/AppData/Local/Firefox Developer Edition/firefox.exe");
+		driver.startBrowser("firefox");
 		driver.goToUrl("https://google.de");
 		driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
 		driver.submit("q", LocatorStrategy.NAME);
