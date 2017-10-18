@@ -252,8 +252,6 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     public WebDriver startFireFoxPortable(String browserPath) {
         logger.info("Starting firefox portable: {}", browserPath);
         setupDrivermanager(FirefoxDriverManager.getInstance());
-        File file = new File(browserPath);
-        boolean exists = file.exists();
         FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
         FirefoxOptions options = new FirefoxOptions();
         options.setBinary(binary);
