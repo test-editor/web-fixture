@@ -6,6 +6,8 @@ plugins {
     id 'eclipse'
 }
 
+apply from: 'code-style/codestyle.gradle'
+
 task cleanScreenshotDir(type: Delete) {
     description = "cleanup any screenshots written"
     delete fileTree(dir: "${projectDir}/screenshots", include: "**/*.png")
