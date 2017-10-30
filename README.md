@@ -5,9 +5,10 @@
 [![Download](https://api.bintray.com/packages/test-editor/Fixtures/web-fixture/images/download.svg)](https://bintray.com/test-editor/Fixtures/web-fixture/_latestVersion)
 
 ## Development
-
+    
 ### Build
 
+    git submodule update --init --recursive
     ./gradlew build
 
 ### Release process

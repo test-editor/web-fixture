@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2016 Signal Iduna Corporation and others.
+ * Copyright (c) 2012 - 2017 Signal Iduna Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  * akquinet AG
  * itemis AG
  *******************************************************************************/
+
 package org.testeditor.fixture.web;
 
 import com.google.gson.JsonObject;
@@ -77,8 +78,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private String exeuteScript = null;
 
     /**
-     * specifies the time to wait (in seconds) before an action will be
-     * performed.
+     * specifies the time to wait (in seconds) before an action will be performed.
      * 
      * @param timeToWait
      * @throws InterruptedException
@@ -120,38 +120,39 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * 
      * <ul>
      * <li><b>default</b> -opens a specific browser (On Windows -> Internet
-     * Explorer, on others -> Firefox), but Firefox will only work for versions
-     * > 55.0.3</li>
+     * Explorer, on others -> Firefox), but Firefox will only work for versions >
+     * 55.0.3</li>
      * <li><b>firefox</b> - starts a locally installed firefox instance with
      * {@code GeckoDriver}</li>
      * <li><b>ie</b> - opens Microsoft Windows Internet Explorer</li>
      * <li><b>chrome</b> - opens Google Chrome</li>
      * </ul>
      * 
-     * @param browser
-     *            String literal for used browser
+     * @param browser String literal for used browser
      * @return {@code WebDriver}
      */
     @FixtureMethod
     public WebDriver startBrowser(String browser) {
         logger.info("Starting browser: {}", browser);
         switch (browser) {
-        case "default":
-            if (SystemUtils.IS_OS_WINDOWS) {
-                launchIE();
-            } else {
+            case "default":
+                if (SystemUtils.IS_OS_WINDOWS) {
+                    launchInternetExplorer();
+                } else {
+                    launchFirefox();
+                }
+                break;
+            case "firefox":
                 launchFirefox();
-            }
-            break;
-        case "firefox":
-            launchFirefox();
-            break;
-        case "ie":
-            launchIE();
-            break;
-        case "chrome":
-            launchChrome();
-            break;
+                break;
+            case "ie":
+                launchInternetExplorer();
+                break;
+            case "chrome":
+                launchChrome();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown browser: " + browser);
         }
         configureDriver();
         return driver;
@@ -217,11 +218,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * Write a screenshot of the current ui into a file, based on the basic
-     * filenameBase provided. The final filename is constructed using the
-     * testcase a hash of the fixture itself and a shortened timestamp.
+     * filenameBase provided. The final filename is constructed using the testcase a
+     * hash of the fixture itself and a shortened timestamp.
      * 
-     * @param filenameBase
-     *            user definable part of the final filename
+     * @param filenameBase user definable part of the final filename
      */
     @FixtureMethod
     public String screenshot(String filenameBase) {
@@ -242,8 +242,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     /**
-     * starts Firefox Portable. This works for Versions < 47.0. preferably
-     * Firefox ESR 45.4.0
+     * starts Firefox Portable. This works for Versions < 47.0. preferably Firefox
+     * ESR 45.4.0
      * 
      * @param browserPath
      * @return {@code WebDriver}
@@ -260,8 +260,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     /**
-     * launches Google Chrome with the ChromeDriverManager, this will be
-     * downloaded automatically and will be saved in the directory
+     * launches Google Chrome with the ChromeDriverManager, this will be downloaded
+     * automatically and will be saved in the directory
      * /~USER_HOME/m2/repository/webdriver/ in every according OS.
      */
     private void launchChrome() {
@@ -282,11 +282,11 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     /**
-     * launches Windows Internet Explorer with IEDriverServerManager, this will
-     * be downloaded automatically and will be saved in the directory
+     * launches Windows Internet Explorer with IEDriverServerManager, this will be
+     * downloaded automatically and will be saved in the directory
      * /~USER_HOME/m2/repository/webdriver/ in every according OS.
      */
-    private void launchIE() {
+    private void launchInternetExplorer() {
         setupDrivermanager(InternetExplorerDriverManager.getInstance());
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
         setCapabilities(capabilities);
@@ -320,20 +320,19 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * To download the correct version of the WebDriver-Server for each browser
-     * manufacturer for using W3C WebDriver-compatible clients to interact with,
-     * we need proxy credentials if "System under Test" is located behind a
-     * proxy. Because of this reason there is a pleasant way to download the
-     * corresponding WebDriver-Server with the help of the <a href=
+     * manufacturer for using W3C WebDriver-compatible clients to interact with, we
+     * need proxy credentials if "System under Test" is located behind a proxy.
+     * Because of this reason there is a pleasant way to download the corresponding
+     * WebDriver-Server with the help of the <a href=
      * "https://github.com/bonigarcia/webdrivermanager">WebDriverManager</a>
-     * developed by Boni Garcia, which provides an ability performing a download
-     * in an automated way. The proxy credentials should be provided as "System
+     * developed by Boni Garcia, which provides an ability performing a download in
+     * an automated way. The proxy credentials should be provided as "System
      * Environment Variables" before the execution of tests.
      * <p>
      * 
      * There are 3 variables to be provided so far.<br>
      * 
-     * Here is an example for naming the proxy variables e.g. on a linux
-     * system<br>
+     * Here is an example for naming the proxy variables e.g. on a linux system<br>
      * 
      * <pre>
      * 1.)  export http.proxyHost     = my.proxy.url
@@ -341,8 +340,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * 3.)  export http.proxyUser     = myProxyUser
      * </pre>
      * 
-     * @param browserManager
-     *            The specific BrowserManager of a browser.
+     * @param browserManager The specific BrowserManager of a browser.
      */
     private void settingProxyCredentials(BrowserManager browserManager) {
         browserManager.proxy(httpProxyHost);
@@ -353,8 +351,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * ShutdownHook for teardown of started Browsermanager
      * 
-     * @param driver
-     *            Webdriver to be used
+     * @param driver Webdriver to be used
      */
     private void registerShutdownHook(final WebDriver driver) {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -375,11 +372,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         DisplayMode displayMode = getDisplayMode();
         int width = displayMode.getWidth();
         int height = displayMode.getHeight();
-        logger.debug("Screen-Width: " + width + " Screen-Height: " + height) ;
-        driver.manage().window().setSize(new Dimension(width,height));
+        logger.debug("Screen-Width: " + width + " Screen-Height: " + height);
+        driver.manage().window().setSize(new Dimension(width, height));
     }
-    
-    
+
     private DisplayMode getDisplayMode() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         return gd.getDisplayMode();
@@ -388,8 +384,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * opens a specified URL in the browser
      * 
-     * @param url
-     *            - an URL-String which represents the Web-Site to open in the
+     * @param url - an URL-String which represents the Web-Site to open in the
      *            browser. example: url = "http://www.google.com"
      */
     @FixtureMethod
@@ -412,13 +407,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * This method waits explicitly for a WebElement in the DOM-Object until the
      * given timeOut is reached before an Exception is thrown.
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
-     * @param timeOutInSeconds
-     *            The max timeout in seconds when an element is expected before
-     *            a NotFoundException will be thrown.
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
+     * @param timeOutInSeconds The max timeout in seconds when an element is
+     *            expected before a NotFoundException will be thrown.
      */
     @FixtureMethod
     public void waitUntilElementFound(String elementLocator, LocatorStrategy locatorType, int timeOutInSeconds) {
@@ -429,10 +421,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * press enter on a specified Gui-Widget
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void pressEnterOn(String elementLocator, LocatorStrategy locatorType) {
@@ -443,12 +433,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * type into text fields on a specified Gui-Widget
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
-     * @param value
-     *            String which is set into the textfield
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
+     * @param value String which is set into the textfield
      */
     @FixtureMethod
     public void typeInto(String elementLocator, LocatorStrategy locatorType, String value) {
@@ -459,10 +446,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * empties the textfield
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void clear(String elementLocator, LocatorStrategy locatorType) {
@@ -473,10 +458,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * click on a specified Gui-Widget
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void clickOn(String elementLocator, LocatorStrategy locatorType) {
@@ -495,10 +478,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * Submits WebElements like forms ore whole websites
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void submit(String elementLocator, LocatorStrategy locatorType) {
@@ -508,10 +489,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return value of a label
      */
     @FixtureMethod
@@ -522,12 +501,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
-     * @param value
-     *            to be selected in a Selectionbox
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
+     * @param value to be selected in a Selectionbox
      * @throws InterruptedException
      */
     @FixtureMethod
@@ -541,10 +517,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return a JsonObject of the values in a Selectionbox
      * @throws InterruptedException
      */
@@ -564,10 +538,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLoacator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLoacator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return true if a checkable Gui-Widget is checked, false otherwise.
      */
     @FixtureMethod
@@ -577,10 +549,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     /**
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return {@code WebElement} where the Locator String begins in a specific
      *         manner.
      */
@@ -593,31 +563,31 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         return driver.findElement(getBy(elementLocator, locatorType));
     }
 
-    public By getBy(String elementLocator, LocatorStrategy locatorType) {
+    private By getBy(String elementLocator, LocatorStrategy locatorType) {
         By result = null;
         switch (locatorType) {
-        case XPATH:
-            result = By.xpath(elementLocator);
-            break;
-        case LINK:
-            result = By.linkText(elementLocator);
-            break;
-        case ID:
-            result = By.id(elementLocator);
-            break;
-        case CSS:
-            result = By.cssSelector(elementLocator);
-            break;
-        default:
-            result = By.name(elementLocator);
-            break;
+            case XPATH:
+                result = By.xpath(elementLocator);
+                break;
+            case LINK:
+                result = By.linkText(elementLocator);
+                break;
+            case ID:
+                result = By.id(elementLocator);
+                break;
+            case CSS:
+                result = By.cssSelector(elementLocator);
+                break;
+            default:
+                result = By.name(elementLocator);
+                break;
         }
         return result;
     }
 
     /**
-     * executes a given Javascript file. Name or respectively path of script
-     * must be set before within method {@code setExecuteScript()}.
+     * executes a given Javascript file. Name or respectively path of script must be
+     * set before within method {@code setExecuteScript()}.
      */
     private void executeScript() {
         try {
