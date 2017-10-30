@@ -137,7 +137,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         switch (browser) {
             case "default":
                 if (SystemUtils.IS_OS_WINDOWS) {
-                    launchIE();
+                    launchInternetExplorer();
                 } else {
                     launchFirefox();
                 }
@@ -146,11 +146,13 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
                 launchFirefox();
                 break;
             case "ie":
-                launchIE();
+                launchInternetExplorer();
                 break;
             case "chrome":
                 launchChrome();
                 break;
+            default:
+                throw new IllegalArgumentException("Unknown browser: " + browser);
         }
         configureDriver();
         return driver;
@@ -284,7 +286,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * downloaded automatically and will be saved in the directory
      * /~USER_HOME/m2/repository/webdriver/ in every according OS.
      */
-    private void launchIE() {
+    private void launchInternetExplorer() {
         setupDrivermanager(InternetExplorerDriverManager.getInstance());
         DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
         setCapabilities(capabilities);
@@ -561,7 +563,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         return driver.findElement(getBy(elementLocator, locatorType));
     }
 
-    public By getBy(String elementLocator, LocatorStrategy locatorType) {
+    private By getBy(String elementLocator, LocatorStrategy locatorType) {
         By result = null;
         switch (locatorType) {
             case XPATH:
