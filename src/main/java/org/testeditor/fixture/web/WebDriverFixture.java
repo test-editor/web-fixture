@@ -63,9 +63,9 @@ import org.testeditor.fixture.core.interaction.FixtureMethod;
 public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     // Proxy keys
-    public static final String HTTP_PROXY_HOST = "http.proxyHost";
-    public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
-    public static final String HTTP_PROXY_USER = "http.proxyUser";
+    public static final String HTTP_PROXY_HOST = "http_proxyHost";
+    public static final String HTTP_PROXY_PASSWORD = "http_proxyPassword";
+    public static final String HTTP_PROXY_USER = "http_proxyUser";
 
     // Proxy values
     private static String httpProxyHost;
