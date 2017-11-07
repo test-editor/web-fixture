@@ -57,7 +57,7 @@ public class FirefoxTest {
         String title = driver.getTitle();
 
         // then
-        Assert.assertEquals("Test-Editor - Google-Suche", title);
+        Assert.assertTrue(title.startsWith("Test-Editor - Google"));
     }
 
 }
