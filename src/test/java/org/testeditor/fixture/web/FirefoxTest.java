@@ -55,6 +55,7 @@ public class FirefoxTest {
         // when
         driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
         String title = driver.getTitle();
+	System.out.println("######"title);
 
         // then
         Assert.assertEquals("Test-Editor - Google-Suche", title);
