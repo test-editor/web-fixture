@@ -15,8 +15,6 @@ package org.testeditor.fixture.web.json;
 
 import java.util.List;
 
-import com.google.gson.JsonObject;
-
 public class BrowserSetupElement {
 
     private String browserSetupElementName;
@@ -24,10 +22,9 @@ public class BrowserSetupElement {
     private String osVersion;
     private String browserName;
     private String browserVersion;
-    private JsonObject capabilitiesAsJsonObject; 
     
-    List<Capability> capabilities ;
-    List<Option> options;
+    List<BrowserSetting> capabilities ;
+    List<BrowserSetting> options;
     
     public String getBrowserSetupName() {
         return browserSetupElementName;
@@ -69,35 +66,22 @@ public class BrowserSetupElement {
         this.browserVersion = browserVersion;
     }
     
-    public List<Capability> getCapabilities() {
+    public List<BrowserSetting> getCapabilities() {
         return capabilities;
     }
     
-    public void setCapabilities(List<Capability> capabilities) {
+    public void setCapabilities(List<BrowserSetting> capabilities) {
         this.capabilities = capabilities;
     }
     
-    public List<Option> getOptions() {
+    public List<BrowserSetting> getOptions() {
         return options;
     }
     
-    public void setOptions(List<Option> options) {
+    public void setOptions(List<BrowserSetting> options) {
         this.options = options;
     }
 
-    /**
-     * @return the capabilitiesAsJsonObject
-     */
-    public JsonObject getCapabilitiesAsJsonObject() {
-        return capabilitiesAsJsonObject;
-    }
-
-    /**
-     * @param capabilitiesAsJsonObject the capabilitiesAsJsonObject to set
-     */
-    public void setCapabilitiesAsJsonObject(JsonObject capabilitiesAsJsonObject) {
-        this.capabilitiesAsJsonObject = capabilitiesAsJsonObject;
-    }
 
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -106,7 +90,7 @@ public class BrowserSetupElement {
     public String toString() {
         return "BrowserSetupElement [browserSetupElementName=" + browserSetupElementName + ", osName=" + osName
                 + ", osVersion=" + osVersion + ", browserName=" + browserName + ", browserVersion=" + browserVersion
-                + ", capabilitiesAsJsonObject=" + capabilitiesAsJsonObject + ", capabilities=" + capabilities
+                + ", capabilitiesAsJsonObject=" + ", capabilities=" + capabilities
                 + ", options=" + options + "]";
     }
     

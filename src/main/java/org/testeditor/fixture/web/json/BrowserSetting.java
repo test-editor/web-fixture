@@ -13,24 +13,20 @@
 
 package org.testeditor.fixture.web.json;
 
-import java.lang.reflect.Type;
-
-public class Capability {
-
+public class BrowserSetting {
+    
     private String key;
     private Object value;
-    private Type type;
-    
+   
     /**
      * 
      * @param key
      * @param value
-     * @param type
      */
-    public Capability(String key , Object value, Type type) {
+    public BrowserSetting(String key , Object value) {
         this.key = key;
         this.value = value;
-        this.type = type;
+
     }
     
     public String getKey() {
@@ -40,14 +36,7 @@ public class Capability {
     public Object getValue() {
         return value;
     }
-
-    public Type getType() {
-        return type;
-    }
     
-    public void setType(Type type) {
-        this.type = type;
-    }
 
     @Override
     public String toString() {
@@ -55,3 +44,5 @@ public class Capability {
     }
 
 }
+
+
