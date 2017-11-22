@@ -28,7 +28,6 @@ public class FileReader {
     
     private static final Logger logger = LoggerFactory.getLogger(WebDriverFixture.class);
 
-
     /**
      * Opens a file defined as fileName and read the content line by line.
      * 
@@ -45,8 +44,10 @@ public class FileReader {
             result = CharStreams.toString(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         } catch (IOException e) {
             logger.error("The file with the name {} can not be read in the resource folder. {}" , fileName, e);
+            throw new RuntimeException();
         } catch (NullPointerException e) {
             logger.error("The file with the name {} can not be found in the resource folder. {}", fileName, e);
+            throw new RuntimeException();
         }
         return result;
     }

@@ -21,10 +21,10 @@ public class CapabilityTest {
     @Test
     public void capabilityTest() throws Exception {
         
-        Capability capabilityInt = new Capability("This is an Integer", 1, Integer.class); 
-        Capability capabilityString = new Capability("This is a String", "world", String.class); 
-        Capability capabilityDouble = new Capability("This is a Double", 0.2, Double.class);
-        Capability capabilityBoolean = new Capability("This is a Boolean", true, Boolean.class);
+        BrowserSetting capabilityInt = new BrowserSetting("This is an Integer", 1); 
+        BrowserSetting capabilityString = new BrowserSetting("This is a String", "world"); 
+        BrowserSetting capabilityDouble = new BrowserSetting("This is a Double", 0.2);
+        BrowserSetting capabilityBoolean = new BrowserSetting("This is a Boolean", true);
         
         Assert.assertTrue("Value is not an integer", (Integer) capabilityInt.getValue() == 1);
         Assert.assertTrue("Value is not a String", capabilityString.getValue().equals("world")) ;

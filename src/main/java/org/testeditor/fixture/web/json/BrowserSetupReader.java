@@ -28,6 +28,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class BrowserSetupReader {
+    
+    private static final String optionsString = "options";
+    private static final String capabilitiesString = "capabilities"; 
 
     /**
      * Reads all available elements. An element is a {@link BrowserSetupElement} like operating system "os" with the 
@@ -49,11 +52,11 @@ public class BrowserSetupReader {
     private void extractElements(ArrayList<BrowserSetupElement> allSetupElements) {
        
         for (BrowserSetupElement browserSetupElement : allSetupElements) {
-            List<Capability> capabilities = new ArrayList<Capability>();
-            List<Option> options = new ArrayList<Option>();
-            JsonObject jsonObject = browserSetupElement.getCapabilitiesAsJsonObject();
-            setOptions(browserSetupElement, options, jsonObject);  
-            setCapabilities(browserSetupElement, capabilities, jsonObject);  
+            List<BrowserSetting> capabilities = new ArrayList<BrowserSetting>();
+            List<BrowserSetting> options = new ArrayList<BrowserSetting>();
+            JsonObject jsonObject = browserSetupElement.getSettingsAsJsonObject();
+            setBrowserSetting(browserSetupElement, options, jsonObject, optionsString);  
+            setBrowserSetting(browserSetupElement, capabilities, jsonObject, capabilitiesString);  
             setOsName(browserSetupElement, jsonObject);
             setOsVersion(browserSetupElement, jsonObject);
             setBrowserName(browserSetupElement, jsonObject);
@@ -61,32 +64,21 @@ public class BrowserSetupReader {
         }
     }
 
-    private void setCapabilities(BrowserSetupElement browserSetupElement, List<Capability> capabilities,
-            JsonObject jsonObject) {
-        JsonElement capabilitiesAsJSonElement = jsonObject.get("capabilities");
-        if (capabilitiesAsJSonElement != null) {
-            Set<Map.Entry<String, JsonElement>> capabilityEntries = capabilitiesAsJSonElement.getAsJsonObject()
-                    .entrySet();
-            for (Map.Entry<String, JsonElement> capabilityEntry : capabilityEntries) {
-                Capability capabilitiy = createCapability(capabilityEntry);
-                
-                capabilities.add(capabilitiy);
-                browserSetupElement.setCapabilities(capabilities);
-            }
-        }
-    }
-
-    private void setOptions(BrowserSetupElement browserSetupElement, List<Option> options, JsonObject jsonObject) {
-        JsonElement optionsAsJSonElement = jsonObject.get("options");
+    private void setBrowserSetting(BrowserSetupElement browserSetupElement, List<BrowserSetting> settings, 
+            JsonObject jsonObject, String settingType) {
+        JsonElement optionsAsJSonElement = jsonObject.get(settingType);
         if (optionsAsJSonElement != null) {
-            Set<Map.Entry<String, JsonElement>> optionEntries = optionsAsJSonElement.getAsJsonObject()
+            Set<Map.Entry<String, JsonElement>> settingEntries = optionsAsJSonElement.getAsJsonObject()
                     .entrySet();
-            for (Map.Entry<String, JsonElement> optionEntry : optionEntries) {
-                
-                Option option = createOption(optionEntry);
-                if (option != null) {
-                    options.add(option);
-                    browserSetupElement.setOptions(options);
+            for (Map.Entry<String, JsonElement> settingEntry : settingEntries) {
+                BrowserSetting setting = createSettting(settingEntry);
+                if (setting != null) {
+                    settings.add(setting);
+                    if (settingType.equals(capabilitiesString)) {
+                        browserSetupElement.setCapabilities(settings);
+                    } else if (settingType.equals(optionsString)) {
+                        browserSetupElement.setOptions(settings);
+                    }
                 }
             }
         }
@@ -120,37 +112,19 @@ public class BrowserSetupReader {
         }
     }
 
-    private Option createOption(Entry<String, JsonElement> optionEntry) {
-        Option option = null;
-        String key = optionEntry.getKey();
-        JsonElement value = optionEntry.getValue();
-        JsonPrimitive optionAsJsonPrimitive = value.getAsJsonPrimitive();
-        if (optionAsJsonPrimitive.isString()) {
-            option = new Option(key, value.getAsString(), String.class);
-            
-        } else if (optionAsJsonPrimitive.isBoolean()) {
-            option = new Option(key, value.getAsBoolean(), Boolean.TYPE);
-            
-        } else if (optionAsJsonPrimitive.isNumber()) {
-            option = new Option(key, value.getAsInt(), Integer.TYPE);
+    private BrowserSetting createSettting(Entry<String, JsonElement> browserSettingEntry) {
+        BrowserSetting browserSetting = null;
+        String key = browserSettingEntry.getKey();
+        JsonElement value = browserSettingEntry.getValue();
+        JsonPrimitive browserSettingAsJsonPrimitive = value.getAsJsonPrimitive();
+        if (browserSettingAsJsonPrimitive.isString()) {
+            browserSetting = new BrowserSetting(key, value.getAsString());
+        } else if (browserSettingAsJsonPrimitive.isBoolean()) {
+            browserSetting = new BrowserSetting(key, value.getAsBoolean());
+        } else if (browserSettingAsJsonPrimitive.isNumber()) {
+            browserSetting = new BrowserSetting(key, value.getAsInt());
         }
-        return option;
-    }
-
-    private Capability createCapability(Entry<String, JsonElement> capabilityEntry) {
-        Capability capability = null;
-        String key = capabilityEntry.getKey();
-        JsonElement value = capabilityEntry.getValue();
-        JsonPrimitive capabilityAsJsonPrimitive = value.getAsJsonPrimitive();
-        if (capabilityAsJsonPrimitive.isString()) {
-            capability = new Capability(key, value.getAsString(), String.class);
-        } else if (capabilityAsJsonPrimitive.isBoolean()) {
-            capability = new Capability(key, value.getAsBoolean(), Boolean.TYPE);
-            
-        } else if (capabilityAsJsonPrimitive.isNumber()) {
-            capability = new Capability(key, value.getAsInt(), Integer.TYPE);
-        }
-        return capability;
+        return browserSetting;
     }
     
     private ArrayList<BrowserSetupElement> getAllSetupElements(JsonObject jsonObject) {
@@ -163,7 +137,7 @@ public class BrowserSetupReader {
             browserSetupElement.setBrowserSetupName(setupEntry.getKey());
             JsonElement value = setupEntry.getValue();
             allJsonObjects.add(value.getAsJsonObject());
-            browserSetupElement.setCapabilitiesAsJsonObject(value.getAsJsonObject());
+            browserSetupElement.setSettingsAsJsonObject(value.getAsJsonObject());
             browserSetupElements.add(browserSetupElement);
         }
         return browserSetupElements;
