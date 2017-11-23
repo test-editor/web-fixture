@@ -1,0 +1,3 @@
+firefox-cap1 = "abcdüöß"
+firefox-cap2 = 8
+firefox-cap3 = true
