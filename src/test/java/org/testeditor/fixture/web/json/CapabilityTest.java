@@ -19,7 +19,7 @@ import org.junit.Test;
 public class CapabilityTest {
     
     @Test
-    public void capabilityTest() throws Exception {
+    public void capabilityTestPositive() throws Exception {
         
         BrowserSetting capabilityInt = new BrowserSetting("This is an Integer", 1); 
         BrowserSetting capabilityString = new BrowserSetting("This is a String", "world"); 
@@ -31,5 +31,5 @@ public class CapabilityTest {
         Assert.assertTrue("Value is not a double", (Double) capabilityDouble.getValue() == 0.2);
         Assert.assertTrue("Value is not a boolean", (Boolean) capabilityBoolean.getValue() == true);
     }
-
+    
 }

@@ -22,7 +22,6 @@ public class BrowserSetting {
      * 
      * @param key
      * @param value
-     * @param type
      */
     public BrowserSetting(String key , Object value) {
         this.key = key;

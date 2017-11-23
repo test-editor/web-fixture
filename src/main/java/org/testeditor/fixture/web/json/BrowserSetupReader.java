@@ -39,80 +39,74 @@ public class BrowserSetupReader {
      * @param fileName of the BrowserElements
      * @return All Browser or OS specific settings for starting a browser in a test environment.  
      */
-    public ArrayList<BrowserSetupElement> readElements(String fileName) {
+    public List<BrowserSetupElement> readElements(String fileName) {
         FileReader reader = new FileReader();
         String jsonString = reader.getFileContentAsString(fileName);
         Gson gson = new GsonBuilder().create();
         JsonObject obj = gson.fromJson(jsonString, JsonObject.class);
-        ArrayList<BrowserSetupElement> allSetupElements = getAllSetupElements(obj);
-        extractElements(allSetupElements);
+        List<BrowserSetupElement> allSetupElements = getAllSetupElements(obj);
         return allSetupElements;
+        
     }
     
-    private void extractElements(ArrayList<BrowserSetupElement> allSetupElements) {
-       
-        for (BrowserSetupElement browserSetupElement : allSetupElements) {
-            List<BrowserSetting> capabilities = new ArrayList<BrowserSetting>();
-            List<BrowserSetting> options = new ArrayList<BrowserSetting>();
-            JsonObject jsonObject = browserSetupElement.getSettingsAsJsonObject();
-            setBrowserSetting(browserSetupElement, options, jsonObject, optionsString);  
-            setBrowserSetting(browserSetupElement, capabilities, jsonObject, capabilitiesString);  
-            setOsName(browserSetupElement, jsonObject);
-            setOsVersion(browserSetupElement, jsonObject);
-            setBrowserName(browserSetupElement, jsonObject);
-            setBrowserVersion(browserSetupElement, jsonObject);
-        }
+    private void completeElementSettings(BrowserSetupElement browserSetupElement , 
+            JsonObject jsonObject) {
+        List<BrowserSetting> capabilities = new ArrayList<BrowserSetting>();
+        List<BrowserSetting> options = new ArrayList<BrowserSetting>();
+        setBrowserSetting(browserSetupElement, options, jsonObject.get(optionsString));  
+        browserSetupElement.setOptions(options);
+        setBrowserSetting(browserSetupElement, capabilities, jsonObject.get(capabilitiesString));  
+        browserSetupElement.setCapabilities(capabilities);
+        setOsNameIfPresent(browserSetupElement, jsonObject);
+        setOsVersionIfPresent(browserSetupElement, jsonObject);
+        setBrowserNameIfPresent(browserSetupElement, jsonObject);
+        setBrowserVersionIfPresent(browserSetupElement, jsonObject);
     }
+    
 
     private void setBrowserSetting(BrowserSetupElement browserSetupElement, List<BrowserSetting> settings, 
-            JsonObject jsonObject, String settingType) {
-        JsonElement optionsAsJSonElement = jsonObject.get(settingType);
+            JsonElement optionsAsJSonElement) {
         if (optionsAsJSonElement != null) {
             Set<Map.Entry<String, JsonElement>> settingEntries = optionsAsJSonElement.getAsJsonObject()
                     .entrySet();
             for (Map.Entry<String, JsonElement> settingEntry : settingEntries) {
-                BrowserSetting setting = createSettting(settingEntry);
+                BrowserSetting setting = createBrowserSettting(settingEntry);
                 if (setting != null) {
                     settings.add(setting);
-                    if (settingType.equals(capabilitiesString)) {
-                        browserSetupElement.setCapabilities(settings);
-                    } else if (settingType.equals(optionsString)) {
-                        browserSetupElement.setOptions(settings);
-                    }
                 }
             }
         }
     }
     
-    private void setBrowserVersion(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
+    private void setBrowserVersionIfPresent(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
         JsonElement browserVersion = jsonObject.get("browser-version");
         if (browserVersion != null) {
             browserSetupElement.setBrowserVersion(browserVersion.getAsString());
         }
     }
 
-    private void setBrowserName(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
+    private void setBrowserNameIfPresent(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
         JsonElement browser = jsonObject.get("browser");
         if (browser != null) {
             browserSetupElement.setBrowserName(browser.getAsString());
         }
     }
 
-    private void setOsVersion(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
+    private void setOsVersionIfPresent(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
         JsonElement osVersion = jsonObject.get("os-version");
         if (osVersion != null) {
             browserSetupElement.setOsVersion(osVersion.getAsString());
         }
     }
 
-    private void setOsName(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
+    private void setOsNameIfPresent(BrowserSetupElement browserSetupElement, JsonObject jsonObject) {
         JsonElement os = jsonObject.get("os");
         if (os != null) {
             browserSetupElement.setOsName(os.getAsString());
         }
     }
 
-    private BrowserSetting createSettting(Entry<String, JsonElement> browserSettingEntry) {
+    private BrowserSetting createBrowserSettting(Entry<String, JsonElement> browserSettingEntry) {
         BrowserSetting browserSetting = null;
         String key = browserSettingEntry.getKey();
         JsonElement value = browserSettingEntry.getValue();
@@ -127,17 +121,15 @@ public class BrowserSetupReader {
         return browserSetting;
     }
     
-    private ArrayList<BrowserSetupElement> getAllSetupElements(JsonObject jsonObject) {
+    private List<BrowserSetupElement> getAllSetupElements(JsonObject jsonObject) {
         BrowserSetupElement browserSetupElement;
-        ArrayList<BrowserSetupElement> browserSetupElements = new ArrayList<BrowserSetupElement>();
-        ArrayList<JsonObject> allJsonObjects = new ArrayList<JsonObject>();
+        List<BrowserSetupElement> browserSetupElements = new ArrayList<BrowserSetupElement>();
         Set<Map.Entry<String, JsonElement>> setupEntries = jsonObject.entrySet();
         for (Map.Entry<String, JsonElement> setupEntry : setupEntries) {
             browserSetupElement = new BrowserSetupElement(); 
             browserSetupElement.setBrowserSetupName(setupEntry.getKey());
             JsonElement value = setupEntry.getValue();
-            allJsonObjects.add(value.getAsJsonObject());
-            browserSetupElement.setSettingsAsJsonObject(value.getAsJsonObject());
+            completeElementSettings(browserSetupElement, value.getAsJsonObject());
             browserSetupElements.add(browserSetupElement);
         }
         return browserSetupElements;

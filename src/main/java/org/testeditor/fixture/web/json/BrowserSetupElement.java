@@ -15,8 +15,6 @@ package org.testeditor.fixture.web.json;
 
 import java.util.List;
 
-import com.google.gson.JsonObject;
-
 public class BrowserSetupElement {
 
     private String browserSetupElementName;
@@ -24,7 +22,6 @@ public class BrowserSetupElement {
     private String osVersion;
     private String browserName;
     private String browserVersion;
-    private JsonObject settingsAsJsonObject; 
     
     List<BrowserSetting> capabilities ;
     List<BrowserSetting> options;
@@ -85,19 +82,6 @@ public class BrowserSetupElement {
         this.options = options;
     }
 
-    /**
-     * @return the capabilitiesAsJsonObject
-     */
-    public JsonObject getSettingsAsJsonObject() {
-        return settingsAsJsonObject;
-    }
-
-    /**
-     * @param settingsAsJsonObject the settingsAsJsonObject to set
-     */
-    public void setSettingsAsJsonObject(JsonObject settingsAsJsonObject) {
-        this.settingsAsJsonObject = settingsAsJsonObject;
-    }
 
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -106,7 +90,7 @@ public class BrowserSetupElement {
     public String toString() {
         return "BrowserSetupElement [browserSetupElementName=" + browserSetupElementName + ", osName=" + osName
                 + ", osVersion=" + osVersion + ", browserName=" + browserName + ", browserVersion=" + browserVersion
-                + ", capabilitiesAsJsonObject=" + settingsAsJsonObject + ", capabilities=" + capabilities
+               + ", capabilitiesAsJsonObject=" + ", capabilities=" + capabilities
                 + ", options=" + options + "]";
     }
     

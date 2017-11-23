@@ -6,6 +6,7 @@
     },
     "windows-section" : {
         "os" : "WINDOWS",
+        "browser" : "safari",
         "options" : {
             "windows-option" : "value1",
             "windows-option2" : 80,
