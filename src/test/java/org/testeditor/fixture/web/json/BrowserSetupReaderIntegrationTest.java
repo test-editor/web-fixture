@@ -27,7 +27,7 @@ public class BrowserSetupReaderIntegrationTest {
         BrowserSetupReader browserSetupReader = new BrowserSetupReader();
         
         // when
-        List<BrowserSetupElement> browserSetupElements = browserSetupReader.readElements("browserSetup.json");
+        List<BrowserSetupElement> browserSetupElements = browserSetupReader.readElements("browserSetupTest.json");
         
         // First element
         BrowserSetupElement firstBrowserSetupElement = browserSetupElements.get(0);

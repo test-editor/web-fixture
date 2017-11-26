@@ -1,36 +1,30 @@
 {
-    "proxy section" : {
-        "capabilities" : {
-            "httpProxyUrl": "http://mysystem.proxy.server:100"
-        }
-    },
-    "windows-section" : {
+    "windows-ie-section" : {
         "os" : "WINDOWS",
-        "browser" : "safari",
-        "options" : {
-            "windows-option" : "value1",
-            "windows-option2" : 80,
-            "windows-option3" : true
-        },
-        "capabilities" : { }
-    },
-    "chromium 52 under window 10" : {
-        "os": "WINDOWS",
-        "os-version" : "10.0",
-        "browser" : "chrome",
-        "browser-version" : "52.0",
+        "browser" : "internet explorer",
         "capabilities" : {
-            "chromium-cap1" : "value1",
-            "chromium-cap2" : 80,
-            "chromium-cap3" : false
+        "ignoreProtectedModeSettings" : true ,
+        "requireWindowFocus" : true
         }
     },
-    "general firefox section" : {
-        "browser": "firefox",
-        "capabilities" : {
-            "firefox-cap1" : "value1",
-            "firefox-cap2" : 80,
-            "firefox-cap3" : true
+    "windows-firefox-section" : {
+        "os" : "WINDOWS",
+        "browser" : "firefox",
+        "options" : {
+            "network.proxy.type" : 5 ,
+            "network.proxy.http" : "http://mysystem_win.proxy.server" ,
+            "network.proxy.http_port" : 101 
+        }
+    },
+    "linux-firefox-section" : {
+        "os" : "LINUX",
+        "browser" : "firefox",
+        "options" : {
+            "network.proxy.type" : 5 ,
+            "network.proxy.http" : "http://mysystem_linux.proxy.server" ,
+            "network.proxy.http_port" : 102 ,
+            "network.proxy.ssl" : "http://mysystem_linux.proxy.server" ,
+            "network.proxy.ssl_port" : 103 
         }
     }
 }

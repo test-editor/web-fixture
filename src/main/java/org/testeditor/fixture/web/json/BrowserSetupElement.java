@@ -90,7 +90,7 @@ public class BrowserSetupElement {
     public String toString() {
         return "BrowserSetupElement [browserSetupElementName=" + browserSetupElementName + ", osName=" + osName
                 + ", osVersion=" + osVersion + ", browserName=" + browserName + ", browserVersion=" + browserVersion
-               + ", capabilitiesAsJsonObject=" + ", capabilities=" + capabilities
+               + ", capabilities=" + capabilities
                 + ", options=" + options + "]";
     }
     
