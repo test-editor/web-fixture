@@ -46,8 +46,8 @@ public class FileReader {
             logger.error("The file with the name {} can not be read in the resource folder. {}" , fileName, e);
             throw new RuntimeException();
         } catch (NullPointerException e) {
-            logger.error("The file with the name {} can not be found in the resource folder. {}", fileName, e);
-            throw new RuntimeException();
+            logger.error("The file with the name {} can not be found in the resource folder.", fileName);
+            result = "";
         }
         return result;
     }
