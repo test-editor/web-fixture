@@ -5,7 +5,7 @@
         }
     },
     "windows-section" : {
-        "os" : "WINDOWS",
+        "os" : "VISTA",
         "browser" : "safari",
         "options" : {
             "windows-option" : "value1",
@@ -15,7 +15,7 @@
         "capabilities" : { }
     },
     "chromium 52 under window 10" : {
-        "os": "WINDOWS",
+        "os": "VISTA",
         "os-version" : "10.0",
         "browser" : "chrome",
         "browser-version" : "52.0",

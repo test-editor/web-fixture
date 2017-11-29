@@ -73,7 +73,7 @@ public class BrowserSetupReaderIntegrationTest {
         Assert.assertEquals(80, capabilities2.get(1).getValue());
         Assert.assertEquals(false, capabilities2.get(2).getValue());
         Assert.assertTrue(options2.isEmpty());
-        Assert.assertEquals("WINDOWS", osName2);
+        Assert.assertEquals("VISTA", osName2);
         Assert.assertEquals("10.0", osVersion2);
     }
 
