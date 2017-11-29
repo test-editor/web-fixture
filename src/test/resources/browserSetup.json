@@ -1,19 +1,26 @@
 {
     "windows-ie-section" : {
-        "os" : "WINDOWS",
+        "os" : "VISTA",
         "browser" : "internet explorer",
         "capabilities" : {
-        "ignoreProtectedModeSettings" : true ,
-        "requireWindowFocus" : true
+        	"ignoreProtectedModeSettings" : true ,
+        	"requireWindowFocus" : true
         }
     },
     "windows-firefox-section" : {
-        "os" : "WINDOWS",
+        "os" : "VISTA",
         "browser" : "firefox",
         "options" : {
             "network.proxy.type" : 5 ,
             "network.proxy.http" : "http://mysystem_win.proxy.server" ,
             "network.proxy.http_port" : 101 
+        }
+    },
+    "windows-firefox-section-Without-os" : {
+        "browser" : "firefox",
+        "options" : {
+            "network.proxy.ssl" : "http://mysystem_winssl.proxy.server" ,
+            "network.proxy.ssl_port" : 108 
         }
     },
     "linux-firefox-section" : {

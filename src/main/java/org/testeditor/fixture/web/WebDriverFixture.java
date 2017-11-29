@@ -279,7 +279,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private void launchChrome() {
         setupDrivermanager(ChromeDriverManager.getInstance());
         String browserName = BrowserType.CHROME;
-        final DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
         Object chromeCapability = populateBrowserSettings(desiredCapabilities, browserName);
         desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeCapability);
         driver = new ChromeDriver(desiredCapabilities);
@@ -294,7 +294,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private void launchFirefox() {
         setupDrivermanager(FirefoxDriverManager.getInstance());
         String browserName = BrowserType.FIREFOX;
-        final DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
         Object firefoxOptions = populateBrowserSettings(desiredCapabilities, browserName);
         desiredCapabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
         driver = new FirefoxDriver(desiredCapabilities);
@@ -318,28 +318,32 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private void setCapabilitiesForIe(DesiredCapabilities desiredCapabilities, String browserName) {
         List<BrowserSetting> capabilities = new ArrayList<>();
         List<BrowserSetting> options = new ArrayList<>();
-        populateBrowserSpecificSettings(browserName, capabilities, options);
-        populateCapabilities(desiredCapabilities, capabilities);
+        populateWithBrowserSpecificSettings(browserName, capabilities, options);
+        populateWithAdditionalCapabilities(desiredCapabilities, capabilities);
     }
 
     private Object populateBrowserSettings(DesiredCapabilities desiredCapabilities, String browserName) {
         List<BrowserSetting> capabilities = new ArrayList<>();
         List<BrowserSetting> options = new ArrayList<>();
-        // über den Browser die cap und options holen
-        populateBrowserSpecificSettings(browserName, capabilities, options);
-        // set all capabilities Capabilities
-        populateCapabilities(desiredCapabilities, capabilities);
+        // specifying capabilities and options with the aid of the browser type.
+        populateWithBrowserSpecificSettings(browserName, capabilities, options);
+        // adding not browser specific capabilities
+        populateWithAdditionalCapabilities(desiredCapabilities, capabilities);
         Object browserspecificOptions = null;
         // set options per browser
         switch (browserName) {
             case BrowserType.FIREFOX:
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
-                populateOptions(options, firefoxOptions);
+                // Specific method because Firefox Options consists of key value pairs
+                // with different data types. 
+                populateFirefoxOption(options, firefoxOptions);
                 browserspecificOptions = firefoxOptions;
                 break;
             case BrowserType.CHROME:
                 ChromeOptions chromeOptions = new ChromeOptions();
-                populateOptions(options, chromeOptions);
+                // Specific method because a ChromeOption is just a String like 
+                // "allow-outdated-plugins" or "load-extension=/path/to/unpacked_extension"
+                populateChromeOption(options, chromeOptions);
                 browserspecificOptions = chromeOptions;
                 break;
             default:
@@ -347,14 +351,6 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
 
         return browserspecificOptions;
-    }
-
-    private void populateOptions(List<BrowserSetting> options, Object browserSpecificOptions) {
-        if (browserSpecificOptions instanceof FirefoxOptions) {
-            populateFirefoxOption(options, (FirefoxOptions) browserSpecificOptions);
-        } else if (browserSpecificOptions instanceof ChromeOptions) {
-            populateChromeOption(options, (ChromeOptions) browserSpecificOptions);
-        } // there are no IE-Options available so far.
     }
 
     private void populateChromeOption(List<BrowserSetting> options, ChromeOptions chromeOptions) {
@@ -397,7 +393,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
     }
 
-    private void populateCapabilities(final DesiredCapabilities desiredCapabilities,
+    private void populateWithAdditionalCapabilities(final DesiredCapabilities desiredCapabilities,
             List<BrowserSetting> capabilities) {
         if (capabilities != null && !capabilities.isEmpty()) {
             capabilities.forEach((capability) -> {
@@ -406,7 +402,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
     }
 
-    private void populateBrowserSpecificSettings(String browserName, List<BrowserSetting> capabilities,
+    private void populateWithBrowserSpecificSettings(String browserName, List<BrowserSetting> capabilities,
             List<BrowserSetting> options) {
 
         List<BrowserSetupElement> browserSettings = BrowserSettingsManager.getBrowserSettings();

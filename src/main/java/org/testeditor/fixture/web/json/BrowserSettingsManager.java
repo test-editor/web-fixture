@@ -20,6 +20,8 @@ import org.openqa.selenium.Platform;
 
 public class BrowserSettingsManager {
 
+    private static final String FILE_NAME = "browserSetup.json";
+
     /**
      * 
      * @return a List of BrowserSetupElements like :
@@ -38,30 +40,22 @@ public class BrowserSettingsManager {
      * </code>
      */
     public static List<BrowserSetupElement> getBrowserSettings() {
-        List<BrowserSetupElement> settings = new ArrayList<>();
+        
         BrowserSetupReader reader = new BrowserSetupReader();
-        List<BrowserSetupElement> elements = reader.readElements("browserSetup.json");
+        List<BrowserSetupElement> elements = reader.readElements(FILE_NAME);
 
         Platform currentPlattform = Platform.getCurrent();
-        switch (currentPlattform) {
-            case VISTA:
-                settings = separateBrowserSettingsForOs(elements, Platform.WINDOWS);
-                separateBrowserSettingsOsUnspecific(settings, elements);
-                break;
-            case LINUX:
-                settings = separateBrowserSettingsForOs(elements, Platform.LINUX);
-                separateBrowserSettingsOsUnspecific(settings, elements);
-                break;
-            case MAC:
-                settings = separateBrowserSettingsForOs(elements, Platform.MAC);
-                separateBrowserSettingsOsUnspecific(settings, elements);
-                break;
+        return getBrowserSpecificSetting(elements, currentPlattform);
 
-            default:
-                throw new RuntimeException("The current OS where the tests are executed is not supported!");
-        }
+    }
+    
+    
+    private static List<BrowserSetupElement> getBrowserSpecificSetting(List<BrowserSetupElement> 
+        elements,Platform platform) {
+        List<BrowserSetupElement> settings = new ArrayList<>();    
+        settings = separateBrowserSettingsForOs(elements, platform);
+        separateBrowserSettingsOsUnspecific(settings, elements);
         return settings;
-
     }
 
     private static void separateBrowserSettingsOsUnspecific(List<BrowserSetupElement> settings,
@@ -80,7 +74,7 @@ public class BrowserSettingsManager {
         List<BrowserSetupElement> settings = new ArrayList<>();
         elements.forEach((browserSetupElement) -> {
             String osName = browserSetupElement.getOsName();
-            if (osName == null || osName.equalsIgnoreCase(platform.name())) {
+            if (osName != null && osName.equalsIgnoreCase(platform.name())) {
                 settings.add(browserSetupElement);
             }
         });
