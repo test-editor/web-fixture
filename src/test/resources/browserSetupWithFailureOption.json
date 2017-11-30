@@ -30,9 +30,7 @@
         "options" : {
             "network.proxy.type" : 5 ,
             "network.proxy.http" : "http://mysystem_linux.proxy.server" ,
-            "network.proxy.http_port" : 102 ,
-            "network.proxy.ssl" : "http://mysystem_linux.proxy.server" ,
-            "network.proxy.ssl_port" : 103 
+            "network.proxy.http_port" : 102 
         }
     }
 }

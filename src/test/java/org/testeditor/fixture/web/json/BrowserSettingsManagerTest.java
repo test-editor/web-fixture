@@ -79,15 +79,15 @@ public class BrowserSettingsManagerTest {
             Assert.assertEquals("firefox-section-without-os",browserSettings.get(2).getBrowserSetupName());
         } else if (Platform.getCurrent().equals(Platform.LINUX)) {
             Assert.assertEquals(2, browserSettings.size());
-            Assert.assertEquals("firefox-section-without-os",browserSettings.get(0).getBrowserSetupName());
-            Assert.assertEquals("firefox", browserSettings.get(0).getBrowserName());
-            Assert.assertEquals("linux-firefox-section",browserSettings.get(1).getBrowserSetupName());
+            Assert.assertEquals("linux-firefox-section",browserSettings.get(0).getBrowserSetupName());
+            Assert.assertEquals("firefox-section-without-os",browserSettings.get(1).getBrowserSetupName());
             Assert.assertEquals("firefox", browserSettings.get(1).getBrowserName());
+            Assert.assertEquals("firefox", browserSettings.get(0).getBrowserName());
         } else if (Platform.getCurrent().equals(Platform.MAC)) {
             Assert.assertEquals(2, browserSettings.size());
-            Assert.assertEquals("firefox-section-without-os",browserSettings.get(0).getBrowserSetupName());
+            Assert.assertEquals("mac-firefox-section",browserSettings.get(0).getBrowserSetupName());
+            Assert.assertEquals("firefox-section-without-os",browserSettings.get(1).getBrowserSetupName());
             Assert.assertEquals("firefox", browserSettings.get(0).getBrowserName());
-            Assert.assertEquals("mac-firefox-section",browserSettings.get(1).getBrowserSetupName());
             Assert.assertEquals("firefox", browserSettings.get(1).getBrowserName());
         }
     }    
