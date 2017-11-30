@@ -41,10 +41,13 @@ public class BrowserSetupReader {
      */
     public List<BrowserSetupElement> readElements(String fileName) {
         FileReader reader = new FileReader();
+        List<BrowserSetupElement> allSetupElements = new ArrayList<>();
         String jsonString = reader.getFileContentAsString(fileName);
-        Gson gson = new GsonBuilder().create();
-        JsonObject obj = gson.fromJson(jsonString, JsonObject.class);
-        List<BrowserSetupElement> allSetupElements = getAllSetupElements(obj);
+        if (jsonString != null && !jsonString.isEmpty()) {
+            Gson gson = new GsonBuilder().create();
+            JsonObject obj = gson.fromJson(jsonString, JsonObject.class);
+            allSetupElements = getAllSetupElements(obj);
+        }
         return allSetupElements;
         
     }
