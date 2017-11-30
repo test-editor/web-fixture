@@ -16,10 +16,10 @@
             "network.proxy.http_port" : 101 
         }
     },
-    "windows-firefox-section-Without-os" : {
+    "firefox-section-Without-os" : {
         "browser" : "firefox",
         "capabilities" : {
-        	"my.cap" : 8 ,
+        	  "my.cap" : 8 ,
             "network.proxy.ssl" : "http://mysystem_winssl.proxy.server" ,
             "network.proxy.ssl_port" : 108 
         }
@@ -27,6 +27,9 @@
     "linux-firefox-section" : {
         "os" : "LINUX",
         "browser" : "firefox",
+        "capabilities" : {
+            "my.cap" : 5 
+        },
         "options" : {
             "network.proxy.type" : 5 ,
             "network.proxy.http" : "http://mysystem_linux.proxy.server" ,

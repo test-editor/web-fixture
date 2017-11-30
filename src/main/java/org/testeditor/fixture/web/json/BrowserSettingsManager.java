@@ -14,14 +14,14 @@
 package org.testeditor.fixture.web.json;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.Platform;
 
 public class BrowserSettingsManager {
 
-    private static final String CAPABILITIES = "capabilities";
-    private static final String OPTIONS = "options";
     private static final String FILE_NAME = "browserSetup.json";
     
 
@@ -43,13 +43,10 @@ public class BrowserSettingsManager {
      * </code>
      */
     public static List<BrowserSetupElement> getBrowserSettings() {
-        
         BrowserSetupReader reader = new BrowserSetupReader();
         List<BrowserSetupElement> elements = reader.readElements(FILE_NAME);
-        
         Platform currentPlattform = Platform.getCurrent();
-        checkRedundantElements(elements,currentPlattform);
-        return getBrowserSpecificSetting(elements, currentPlattform);
+        return checkedElementsForDuplicate(elements,currentPlattform);
     }
     
     /**
@@ -60,86 +57,148 @@ public class BrowserSettingsManager {
      *          A List of BrowserSetupElement
      */
     protected static List<BrowserSetupElement> getBrowserSettings(String fileName) {
-        
         BrowserSetupReader reader = new BrowserSetupReader();
         List<BrowserSetupElement> elements = reader.readElements(fileName);
-        
         Platform currentPlattform = Platform.getCurrent();
-        checkRedundantElements(elements,currentPlattform);
-        return getBrowserSpecificSetting(elements, currentPlattform);
+        return checkedElementsForDuplicate(elements,currentPlattform);
     }
     
-    protected static void checkRedundantElements(List<BrowserSetupElement> elements, Platform platform) {
-        List<BrowserSetting> duplicateSettings = new ArrayList<>();
-        
+    protected static List<BrowserSetupElement> checkedElementsForDuplicate(List<BrowserSetupElement> elements,
+            Platform platform) {
         List<BrowserSetupElement> separatedBrowserSettingsForOs = separateBrowserSettingsForOs(elements, platform);
         List<BrowserSetupElement> separateBrowserSettingsOsUnspecific = separateBrowserSettingsOsUnspecific(elements);
-        List<BrowserSetting> capabilitiesOsUnspecific = getBrowserSettingList(separateBrowserSettingsOsUnspecific,
-            CAPABILITIES); 
-        List<BrowserSetting> capabilitiesOsSpecific = getBrowserSettingList(separatedBrowserSettingsForOs,
-            CAPABILITIES); 
-        List<BrowserSetting> optionsOsUnspecific = getBrowserSettingList(separateBrowserSettingsOsUnspecific, 
-            OPTIONS);  
-        List<BrowserSetting> optionsOsSpecific = getBrowserSettingList(separatedBrowserSettingsForOs, 
-            OPTIONS);  
-        
-        // Look for duplicate capability entries and exit test when found. 
-        determineDuplicateEntries(duplicateSettings, capabilitiesOsUnspecific, capabilitiesOsSpecific);
-        // Look for duplicate option entries and exit test when found.
-        determineDuplicateEntries(duplicateSettings, optionsOsUnspecific, optionsOsSpecific);
-        
-        if (duplicateSettings.size() > 0) {
-            throw new RuntimeException("Duplicate entries existing in configuration file " 
-                + FILE_NAME + ". Entries are: " + duplicateSettings);
-        }
+        Map<String,Object> capabilitiesOsUnspecific = separateCapabilities(separateBrowserSettingsOsUnspecific); 
+        separateCapabilities(capabilitiesOsUnspecific,separatedBrowserSettingsForOs); 
+        Map<String,Object> optionsOsUnspecific = separateOptions(separateBrowserSettingsOsUnspecific);  
+        separateOptions(optionsOsUnspecific,separatedBrowserSettingsForOs); 
+        separatedBrowserSettingsForOs.addAll(separateBrowserSettingsOsUnspecific);
+        return separatedBrowserSettingsForOs;
     }
     
-    protected static void determineDuplicateEntries(List<BrowserSetting> duplicateSettings, 
-            List<BrowserSetting> settingOsUnspecific, List<BrowserSetting> settingOsSpecific) {
-        for (BrowserSetting browserSetting : settingOsUnspecific) {
-            String capabilityName = browserSetting.getKey();
-            for (BrowserSetting browserSettingDuplicate : settingOsSpecific) {
-                String duplicateCapabilityName = browserSettingDuplicate.getKey();
-                if (capabilityName.equalsIgnoreCase(duplicateCapabilityName)) {
-                    duplicateSettings.add(browserSetting);
-                    duplicateSettings.add(browserSettingDuplicate);
-                } 
-            }
-        }
-    }
+    // just not deleted for your opinion. One method instead of 2 for options and capabilities
+    //    protected static Map<String,Object> separateBrowserSettings(List<BrowserSetupElement> 
+    //        separateBrowserSettingsOsUnspecific, String browserSettingType) {
+    //        Map<String,Object> browserSettings = new HashMap();
+    //        separateBrowserSettingsOsUnspecific.forEach((bsetting) -> { 
+    //            if (browserSettingType.equals(OPTIONS)) {
+    //                bsetting.getOptions().forEach((option) ->  { 
+    //                    browserSettings.put(option.getKey(), option.getValue());
+    //                } 
+    //                );
+    //            
+    //            } else if (browserSettingType.equals(CAPABILITIES)) {
+    //                bsetting.getCapabilities().forEach((capability) ->  { 
+    //                    browserSettings.put(capability.getKey(), capability.getValue());
+    //                    } 
+    //                );
+    //            }  
+    //        
+    //        }   
+    //        ); 
+    //        return browserSettings;
+    //    }
     
-    protected static List<BrowserSetting> getBrowserSettingList(List<BrowserSetupElement> 
-        separateBrowserSettingsOsUnspecific, String browserSettingType) {
-        List<BrowserSetting> browserSettingList = new ArrayList<>();
+    protected static Map<String,Object> separateOptions(List<BrowserSetupElement> 
+        separateBrowserSettingsOsUnspecific) {
+        Map<String,Object> browserSettings = new HashMap();
         separateBrowserSettingsOsUnspecific.forEach((bsetting) -> { 
-            if (browserSettingType.equals(OPTIONS)) {
-                bsetting.getOptions().forEach((option) ->  { 
-                    BrowserSetting setting = new BrowserSetting(option.getKey(), option.getValue());
-                    browserSettingList.add(setting);
+            bsetting.getOptions().forEach((option) ->  { 
+                browserSettings.put(option.getKey(), option.getValue());
+            } 
+            );
+        });
+        return browserSettings;
+    }
+    
+    protected static Map<String,Object> separateOptions(Map<String,Object> osUnspecificSettings,
+            List<BrowserSetupElement> separateBrowserSettingsOsspecific) {
+        Map<String,Object> browserSettings = new HashMap();
+        separateBrowserSettingsOsspecific.forEach((bsetting) -> { 
+                bsetting.getOptions().forEach((option) ->  {
+                    String key = option.getKey();
+                    if (osUnspecificSettings.containsKey(key)) {
+                        throw new RuntimeException("Duplicate entries existing in configuration file " 
+                            + FILE_NAME + ". Entries are: [" + key + " - " + option.getValue() + ", " 
+                            + key + " - " + osUnspecificSettings.get(key) + "]");
+                    } else {
+                        browserSettings.put(option.getKey(), option.getValue());
+                    }
                 } 
                 );
-            
-            } else if (browserSettingType.equals(CAPABILITIES)) {
-                bsetting.getCapabilities().forEach((capability) ->  { 
-                    BrowserSetting setting = new BrowserSetting(capability.getKey(), capability.getValue());
-                    browserSettingList.add(setting);
-                    } 
-                );
-            }  
-        
         }   
         ); 
-        return browserSettingList;
+        return browserSettings;
     }
     
-    protected static List<BrowserSetupElement> getBrowserSpecificSetting(List<BrowserSetupElement> 
-        elements,Platform platform) {
-        List<BrowserSetupElement> settings = new ArrayList<>();    
-        settings = separateBrowserSettingsForOs(elements, platform);
-        settings.addAll(separateBrowserSettingsOsUnspecific(elements));
-        return settings;
+    protected static Map<String,Object> separateCapabilities(List<BrowserSetupElement> 
+        separateBrowserSettingsOsUnspecific) {
+        Map<String,Object> browserSettings = new HashMap();
+        separateBrowserSettingsOsUnspecific.forEach((bsetting) -> { 
+            bsetting.getCapabilities().forEach((capability) ->  { 
+                browserSettings.put(capability.getKey(), capability.getValue());
+            } 
+            );
+        });
+        return browserSettings;
     }
-
+    
+    // just not deleted for your opinion. One method instead of 2 for options and capabilities    
+    //    protected static Map<String,Object> separateBrowserSettings(Map<String,Object> osUnspecificSettings,
+    //            List<BrowserSetupElement> separateBrowserSettingsOsspecific, String browserSettingType) {
+    //        Map<String,Object> browserSettings = new HashMap();
+    //        separateBrowserSettingsOsspecific.forEach((bsetting) -> { 
+    //            if (browserSettingType.equals(OPTIONS)) {
+    //                bsetting.getOptions().forEach((option) ->  {
+    //                    String key = option.getKey();
+    //                    if (osUnspecificSettings.containsKey(key)) {
+    //                        throw new RuntimeException("Duplicate entries existing in configuration file " 
+    //                            + FILE_NAME + ". Entries are: [" + key + " - " + option.getValue() + ", " 
+    //                            + key + " - " + osUnspecificSettings.get(key) + "]");
+    //                    } else {
+    //                        browserSettings.put(option.getKey(), option.getValue());
+    //                    }
+    //                } 
+    //                );
+    //        
+    //            } else if (browserSettingType.equals(CAPABILITIES)) {
+    //                bsetting.getCapabilities().forEach((capability) ->  { 
+    //                    String key = capability.getKey();
+    //                    if (osUnspecificSettings.containsKey(key)) {
+    //                        throw new RuntimeException("Duplicate entries existing in configuration file " 
+    //                            + FILE_NAME + ". Entries are: [" + key + " - " + capability.getValue() + ", " 
+    //                            + key + " - " + osUnspecificSettings.get(key) + "]");
+    //                    } else {
+    //                        browserSettings.put(capability.getKey(), capability.getValue());
+    //                    }
+    //                } 
+    //                );
+    //            }  
+    //    
+    //        }   
+    //        ); 
+    //        return browserSettings;
+    //    }
+    
+    protected static Map<String,Object> separateCapabilities(Map<String,Object> osUnspecificSettings,
+            List<BrowserSetupElement> separateBrowserSettingsOsspecific) {
+        Map<String,Object> browserSettings = new HashMap();
+        separateBrowserSettingsOsspecific.forEach((bsetting) -> { 
+                bsetting.getCapabilities().forEach((capability) ->  { 
+                    String key = capability.getKey();
+                    if (osUnspecificSettings.containsKey(key)) {
+                        throw new RuntimeException("Duplicate entries existing in configuration file " 
+                            + FILE_NAME + ". Entries are: [" + key + " - " + capability.getValue() + ", " 
+                            + key + " - " + osUnspecificSettings.get(key) + "]");
+                    } else {
+                        browserSettings.put(capability.getKey(), capability.getValue());
+                    }
+                } 
+                );
+        }   
+        ); 
+        return browserSettings;
+    }
+    
     protected static List<BrowserSetupElement> separateBrowserSettingsOsUnspecific(List<BrowserSetupElement> elements) {
         List<BrowserSetupElement> settings = new ArrayList<>();
         elements.forEach((browserSetupElement) -> {
