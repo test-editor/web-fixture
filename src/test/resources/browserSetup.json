@@ -1,36 +1,37 @@
 {
-    "proxy section" : {
+    "windows-ie-section" : {
+        "os" : "VISTA",
+        "browser" : "internet explorer",
         "capabilities" : {
-            "httpProxyUrl": "http://mysystem.proxy.server:100"
+        	"ignoreProtectedModeSettings" : true ,
+        	"requireWindowFocus" : true
         }
     },
-    "windows-section" : {
-        "os" : "WINDOWS",
-        "browser" : "safari",
+    "windows-firefox-section" : {
+        "os" : "VISTA",
+        "browser" : "firefox",
         "options" : {
-            "windows-option" : "value1",
-            "windows-option2" : 80,
-            "windows-option3" : true
-        },
-        "capabilities" : { }
-    },
-    "chromium 52 under window 10" : {
-        "os": "WINDOWS",
-        "os-version" : "10.0",
-        "browser" : "chrome",
-        "browser-version" : "52.0",
-        "capabilities" : {
-            "chromium-cap1" : "value1",
-            "chromium-cap2" : 80,
-            "chromium-cap3" : false
+            "network.proxy.type" : 5 ,
+            "network.proxy.http" : "http://mysystem_win.proxy.server" ,
+            "network.proxy.http_port" : 101 
         }
     },
-    "general firefox section" : {
-        "browser": "firefox",
-        "capabilities" : {
-            "firefox-cap1" : "value1",
-            "firefox-cap2" : 80,
-            "firefox-cap3" : true
+    "windows-firefox-section-Without-os" : {
+        "browser" : "firefox",
+        "options" : {
+            "network.proxy.ssl" : "http://mysystem_winssl.proxy.server" ,
+            "network.proxy.ssl_port" : 108 
+        }
+    },
+    "linux-firefox-section" : {
+        "os" : "LINUX",
+        "browser" : "firefox",
+        "options" : {
+            "network.proxy.type" : 5 ,
+            "network.proxy.http" : "http://mysystem_linux.proxy.server" ,
+            "network.proxy.http_port" : 102 ,
+            "network.proxy.ssl" : "http://mysystem_linux.proxy.server" ,
+            "network.proxy.ssl_port" : 103 
         }
     }
 }
