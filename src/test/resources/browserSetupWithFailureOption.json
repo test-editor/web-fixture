@@ -19,6 +19,7 @@
     "windows-firefox-section-Without-os" : {
         "browser" : "firefox",
         "options" : {
+        	"network.proxy.type" : 8 ,
             "network.proxy.ssl" : "http://mysystem_winssl.proxy.server" ,
             "network.proxy.ssl_port" : 108 
         }
@@ -35,4 +36,3 @@
         }
     }
 }
-
