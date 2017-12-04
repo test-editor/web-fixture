@@ -42,11 +42,11 @@ public class BrowserSettingsManager {
 
      * </code>
      */
-    public static List<BrowserSetupElement> getBrowserSettings() {
+    public List<BrowserSetupElement> getBrowserSettings() {
         BrowserSetupReader reader = new BrowserSetupReader();
         List<BrowserSetupElement> elements = reader.readElements(FILE_NAME);
-        Platform currentPlattform = Platform.getCurrent();
-        return checkedElementsForDuplicate(elements,currentPlattform);
+        Platform currentPlattform = getCurrentPlatform();
+        return getBrowserElementsWithoutDuplicateEntries(elements,currentPlattform);
     }
     
     /**
@@ -56,23 +56,30 @@ public class BrowserSettingsManager {
      * @return 
      *          A List of BrowserSetupElement
      */
-    protected static List<BrowserSetupElement> getBrowserSettings(String fileName) {
+    protected List<BrowserSetupElement> getBrowserSettings(String fileName) {
         BrowserSetupReader reader = new BrowserSetupReader();
         List<BrowserSetupElement> elements = reader.readElements(fileName);
-        Platform currentPlattform = Platform.getCurrent();
-        return checkedElementsForDuplicate(elements,currentPlattform);
+        Platform currentPlattform = getCurrentPlatform();
+        return getBrowserElementsWithoutDuplicateEntries(elements,currentPlattform);
+    }
+
+    protected Platform getCurrentPlatform() {
+        return Platform.getCurrent();
     }
     
-    protected static List<BrowserSetupElement> checkedElementsForDuplicate(List<BrowserSetupElement> elements,
-            Platform platform) {
-        List<BrowserSetupElement> separatedBrowserSettingsForOs = separateBrowserSettingsForOs(elements, platform);
-        List<BrowserSetupElement> separateBrowserSettingsOsUnspecific = separateBrowserSettingsOsUnspecific(elements);
-        Map<String,Object> capabilitiesOsUnspecific = separateCapabilities(separateBrowserSettingsOsUnspecific); 
-        separateCapabilities(capabilitiesOsUnspecific,separatedBrowserSettingsForOs); 
-        Map<String,Object> optionsOsUnspecific = separateOptions(separateBrowserSettingsOsUnspecific);  
-        separateOptions(optionsOsUnspecific,separatedBrowserSettingsForOs); 
-        separatedBrowserSettingsForOs.addAll(separateBrowserSettingsOsUnspecific);
-        return separatedBrowserSettingsForOs;
+    protected List<BrowserSetupElement> getBrowserElementsWithoutDuplicateEntries(
+            List<BrowserSetupElement> elements,Platform platform) {
+        List<BrowserSetupElement> browserSetupElementsOsSpecific = getBrowserSetupElementsOsSpecific(elements, 
+                platform);
+        List<BrowserSetupElement> browserSetupElementOsUnspecific = getBrowserSetupElementsOsUnspecific(elements);
+        Map<String,Object> capabilitiesOsUnspecific = copyCapabilitiesIntoMap(new HashMap(), 
+                browserSetupElementOsUnspecific); 
+        copyCapabilitiesIntoMap(capabilitiesOsUnspecific,browserSetupElementsOsSpecific); 
+        Map<String,Object> optionsOsUnspecific = copyOptionsIntoMap(new HashMap(), 
+                browserSetupElementOsUnspecific);  
+        copyOptionsIntoMap(optionsOsUnspecific,browserSetupElementsOsSpecific); 
+        browserSetupElementsOsSpecific.addAll(browserSetupElementOsUnspecific);
+        return browserSetupElementsOsSpecific;
     }
     
     // just not deleted for your opinion. One method instead of 2 for options and capabilities
@@ -98,49 +105,25 @@ public class BrowserSettingsManager {
     //        return browserSettings;
     //    }
     
-    protected static Map<String,Object> separateOptions(List<BrowserSetupElement> 
-        separateBrowserSettingsOsUnspecific) {
-        Map<String,Object> browserSettings = new HashMap();
-        separateBrowserSettingsOsUnspecific.forEach((bsetting) -> { 
-            bsetting.getOptions().forEach((option) ->  { 
-                browserSettings.put(option.getKey(), option.getValue());
-            } 
-            );
-        });
-        return browserSettings;
-    }
-    
-    protected static Map<String,Object> separateOptions(Map<String,Object> osUnspecificSettings,
-            List<BrowserSetupElement> separateBrowserSettingsOsspecific) {
-        Map<String,Object> browserSettings = new HashMap();
-        separateBrowserSettingsOsspecific.forEach((bsetting) -> { 
+    protected Map<String,Object> copyOptionsIntoMap(Map<String,Object> browserSettingsMap,
+        List<BrowserSetupElement> browserSetupElements) {
+        browserSetupElements.forEach((bsetting) -> { 
                 bsetting.getOptions().forEach((option) ->  {
                     String key = option.getKey();
-                    if (osUnspecificSettings.containsKey(key)) {
+                    if (browserSettingsMap.containsKey(key)) {
                         throw new RuntimeException("Duplicate entries existing in configuration file " 
                             + FILE_NAME + ". Entries are: [" + key + " - " + option.getValue() + ", " 
-                            + key + " - " + osUnspecificSettings.get(key) + "]");
+                            + key + " - " + browserSettingsMap.get(key) + "]");
                     } else {
-                        browserSettings.put(option.getKey(), option.getValue());
+                        browserSettingsMap.put(key, option.getValue());
                     }
                 } 
                 );
         }   
         ); 
-        return browserSettings;
+        return browserSettingsMap;
     }
     
-    protected static Map<String,Object> separateCapabilities(List<BrowserSetupElement> 
-        separateBrowserSettingsOsUnspecific) {
-        Map<String,Object> browserSettings = new HashMap();
-        separateBrowserSettingsOsUnspecific.forEach((bsetting) -> { 
-            bsetting.getCapabilities().forEach((capability) ->  { 
-                browserSettings.put(capability.getKey(), capability.getValue());
-            } 
-            );
-        });
-        return browserSettings;
-    }
     
     // just not deleted for your opinion. One method instead of 2 for options and capabilities    
     //    protected static Map<String,Object> separateBrowserSettings(Map<String,Object> osUnspecificSettings,
@@ -179,27 +162,26 @@ public class BrowserSettingsManager {
     //        return browserSettings;
     //    }
     
-    protected static Map<String,Object> separateCapabilities(Map<String,Object> osUnspecificSettings,
-            List<BrowserSetupElement> separateBrowserSettingsOsspecific) {
-        Map<String,Object> browserSettings = new HashMap();
+    protected Map<String,Object> copyCapabilitiesIntoMap(Map<String,Object> browserSettingsMap,
+        List<BrowserSetupElement> separateBrowserSettingsOsspecific) {
         separateBrowserSettingsOsspecific.forEach((bsetting) -> { 
                 bsetting.getCapabilities().forEach((capability) ->  { 
                     String key = capability.getKey();
-                    if (osUnspecificSettings.containsKey(key)) {
+                    if (browserSettingsMap.containsKey(key)) {
                         throw new RuntimeException("Duplicate entries existing in configuration file " 
                             + FILE_NAME + ". Entries are: [" + key + " - " + capability.getValue() + ", " 
-                            + key + " - " + osUnspecificSettings.get(key) + "]");
+                            + key + " - " + browserSettingsMap.get(key) + "]");
                     } else {
-                        browserSettings.put(capability.getKey(), capability.getValue());
+                        browserSettingsMap.put(key, capability.getValue());
                     }
                 } 
                 );
         }   
         ); 
-        return browserSettings;
+        return browserSettingsMap;
     }
     
-    protected static List<BrowserSetupElement> separateBrowserSettingsOsUnspecific(List<BrowserSetupElement> elements) {
+    protected List<BrowserSetupElement> getBrowserSetupElementsOsUnspecific(List<BrowserSetupElement> elements) {
         List<BrowserSetupElement> settings = new ArrayList<>();
         elements.forEach((browserSetupElement) -> {
             String osName = browserSetupElement.getOsName();
@@ -210,7 +192,7 @@ public class BrowserSettingsManager {
         return settings;
     }
 
-    protected static List<BrowserSetupElement> separateBrowserSettingsForOs(List<BrowserSetupElement> elements,
+    protected List<BrowserSetupElement> getBrowserSetupElementsOsSpecific(List<BrowserSetupElement> elements,
             Platform platform) {
         List<BrowserSetupElement> settings = new ArrayList<>();
         elements.forEach((browserSetupElement) -> {

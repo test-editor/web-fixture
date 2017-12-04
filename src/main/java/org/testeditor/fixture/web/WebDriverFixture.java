@@ -404,8 +404,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     private void populateWithBrowserSpecificSettings(String browserName, List<BrowserSetting> capabilities,
             List<BrowserSetting> options) {
-
-        List<BrowserSetupElement> browserSettings = BrowserSettingsManager.getBrowserSettings();
+        BrowserSettingsManager manager = new BrowserSettingsManager();
+        List<BrowserSetupElement> browserSettings = manager.getBrowserSettings();
         browserSettings.forEach((setting) -> {
             if (setting.getBrowserName().equalsIgnoreCase(browserName)) {
                 capabilities.addAll(setting.getCapabilities());
