@@ -16,7 +16,7 @@ task cleanScreenshotDir(type: Delete) {
 test.dependsOn cleanScreenshotDir
 
 def coreFixtureVersion = "3.2.0" 
-def seleniumJavaVersion = "3.7.1"
+def seleniumJavaVersion = "3.5.3"
 
 dependencies {
 	compile 'org.slf4j:slf4j-api:1.7.18'
