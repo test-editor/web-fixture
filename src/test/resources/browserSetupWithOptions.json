@@ -16,7 +16,7 @@
             "network.proxy.http_port" : 101 
         }
     },
-    "windows-firefox-section-Without-os" : {
+    "firefox-section-without-os" : {
         "browser" : "firefox",
         "options" : {
             "network.proxy.ssl" : "http://mysystem_winssl.proxy.server" ,
@@ -28,9 +28,20 @@
         "browser" : "firefox",
         "options" : {
             "network.proxy.type" : 5 ,
-            "network.proxy.http" : "http://mysystem_linux.proxy.server" ,
-            "network.proxy.http_port" : 102 
+            "network.proxy.http" : "http://mysystem_win.proxy.server" ,
+            "network.proxy.http_port" : 101 
+        }
+    },
+    "mac-firefox-section" : {
+        "os" : "MAC",
+        "browser" : "firefox",
+        "options" : {
+            "network.proxy.type" : 5 ,
+            "network.proxy.http" : "http://mysystem_win.proxy.server" ,
+            "network.proxy.http_port" : 101 
         }
     }
+    
+    
 }
 

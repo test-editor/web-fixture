@@ -10,15 +10,16 @@
     "windows-firefox-section" : {
         "os" : "VISTA",
         "browser" : "firefox",
-        "options" : {
-            "network.proxy.type" : 5 ,
+        "capabilities" : {
+            "my.cap" : 5 ,
             "network.proxy.http" : "http://mysystem_win.proxy.server" ,
             "network.proxy.http_port" : 101 
         }
     },
-    "windows-firefox-section-Without-os" : {
+    "firefox-section-Without-os" : {
         "browser" : "firefox",
-        "options" : {
+        "capabilities" : {
+        	  "my.cap" : 8 ,
             "network.proxy.ssl" : "http://mysystem_winssl.proxy.server" ,
             "network.proxy.ssl_port" : 108 
         }
@@ -26,11 +27,15 @@
     "linux-firefox-section" : {
         "os" : "LINUX",
         "browser" : "firefox",
+        "capabilities" : {
+            "my.cap" : 5 
+        },
         "options" : {
             "network.proxy.type" : 5 ,
             "network.proxy.http" : "http://mysystem_linux.proxy.server" ,
-            "network.proxy.http_port" : 102 
+            "network.proxy.http_port" : 102 ,
+            "network.proxy.ssl" : "http://mysystem_linux.proxy.server" ,
+            "network.proxy.ssl_port" : 103 
         }
     }
 }
-
