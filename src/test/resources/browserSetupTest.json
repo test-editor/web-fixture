@@ -1,0 +1,36 @@
+{
+    "proxy section" : {
+        "capabilities" : {
+            "httpProxyUrl": "http://mysystem.proxy.server:100"
+        }
+    },
+    "windows-section" : {
+        "os" : "VISTA",
+        "browser" : "safari",
+        "options" : {
+            "windows-option" : "value1",
+            "windows-option2" : 80,
+            "windows-option3" : true
+        },
+        "capabilities" : { }
+    },
+    "chromium 52 under window 10" : {
+        "os": "VISTA",
+        "os-version" : "10.0",
+        "browser" : "chrome",
+        "browser-version" : "52.0",
+        "capabilities" : {
+            "chromium-cap1" : "value1",
+            "chromium-cap2" : 80,
+            "chromium-cap3" : false
+        }
+    },
+    "general firefox section" : {
+        "browser": "firefox",
+        "capabilities" : {
+            "firefox-cap1" : "value1",
+            "firefox-cap2" : 80,
+            "firefox-cap3" : true
+        }
+    }
+}

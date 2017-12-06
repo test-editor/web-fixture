@@ -13,11 +13,6 @@
 
 package org.testeditor.fixture.web;
 
-import com.google.gson.JsonObject;
-import io.github.bonigarcia.wdm.BrowserManager;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.FirefoxDriverManager;
-import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -26,8 +21,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
@@ -38,10 +36,12 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -54,6 +54,16 @@ import org.testeditor.fixture.core.TestRunReporter;
 import org.testeditor.fixture.core.TestRunReporter.Action;
 import org.testeditor.fixture.core.TestRunReporter.SemanticUnit;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
+import org.testeditor.fixture.web.json.BrowserSetting;
+import org.testeditor.fixture.web.json.BrowserSettingsManager;
+import org.testeditor.fixture.web.json.BrowserSetupElement;
+
+import com.google.gson.JsonObject;
+
+import io.github.bonigarcia.wdm.BrowserManager;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 
 /**
  * The {@code WebDriverFixture} class represents methods for automating
@@ -128,7 +138,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * <li><b>chrome</b> - opens Google Chrome</li>
      * </ul>
      * 
-     * @param browser String literal for used browser
+     * @param browser
+     *            String literal for used browser
      * @return {@code WebDriver}
      */
     @FixtureMethod
@@ -221,7 +232,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * filenameBase provided. The final filename is constructed using the testcase a
      * hash of the fixture itself and a shortened timestamp.
      * 
-     * @param filenameBase user definable part of the final filename
+     * @param filenameBase
+     *            user definable part of the final filename
      */
     @FixtureMethod
     public String screenshot(String filenameBase) {
@@ -266,7 +278,11 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchChrome() {
         setupDrivermanager(ChromeDriverManager.getInstance());
-        driver = new ChromeDriver();
+        String browserName = BrowserType.CHROME;
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
+        Object chromeCapability = populateBrowserSettings(desiredCapabilities, browserName);
+        desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeCapability);
+        driver = new ChromeDriver(desiredCapabilities);
         registerShutdownHook(driver);
     }
 
@@ -277,7 +293,11 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchFirefox() {
         setupDrivermanager(FirefoxDriverManager.getInstance());
-        driver = new FirefoxDriver();
+        String browserName = BrowserType.FIREFOX;
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
+        Object firefoxOptions = populateBrowserSettings(desiredCapabilities, browserName);
+        desiredCapabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
+        driver = new FirefoxDriver(desiredCapabilities);
         registerShutdownHook(driver);
     }
 
@@ -288,15 +308,110 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchInternetExplorer() {
         setupDrivermanager(InternetExplorerDriverManager.getInstance());
-        DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-        setCapabilities(capabilities);
-        driver = new InternetExplorerDriver(capabilities);
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.internetExplorer();
+        setCapabilitiesForIe(desiredCapabilities);
+        driver = new InternetExplorerDriver(desiredCapabilities);
         registerShutdownHook(driver);
     }
 
-    private void setCapabilities(DesiredCapabilities capabilities) {
-        capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-        capabilities.setCapability("requireWindowFocus", true);
+    private void setCapabilitiesForIe(DesiredCapabilities desiredCapabilities) {
+        List<BrowserSetting> capabilities = new ArrayList<>();
+        List<BrowserSetting> options = new ArrayList<>();
+        populateWithBrowserSpecificSettings(BrowserType.IE, capabilities, options);
+        populateWithAdditionalCapabilities(desiredCapabilities, capabilities);
+    }
+
+    private Object populateBrowserSettings(DesiredCapabilities desiredCapabilities, String browserName) {
+        List<BrowserSetting> capabilities = new ArrayList<>();
+        List<BrowserSetting> options = new ArrayList<>();
+        // specifying capabilities and options with the aid of the browser type.
+        populateWithBrowserSpecificSettings(browserName, capabilities, options);
+        // adding not browser specific capabilities
+        populateWithAdditionalCapabilities(desiredCapabilities, capabilities);
+        Object browserspecificOptions = null;
+        // set options per browser
+        switch (browserName) {
+            case BrowserType.FIREFOX:
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                // Specific method because Firefox Options consists of key value pairs
+                // with different data types. 
+                populateFirefoxOption(options, firefoxOptions);
+                browserspecificOptions = firefoxOptions;
+                break;
+            case BrowserType.CHROME:
+                ChromeOptions chromeOptions = new ChromeOptions();
+                // Specific method because a ChromeOption is just a String like 
+                // "allow-outdated-plugins" or "load-extension=/path/to/unpacked_extension"
+                populateChromeOption(options, chromeOptions);
+                browserspecificOptions = chromeOptions;
+                break;
+            default:
+                break;
+        }
+
+        return browserspecificOptions;
+    }
+
+    private void populateChromeOption(List<BrowserSetting> options, ChromeOptions chromeOptions) {
+        if (options != null && !options.isEmpty()) {
+            options.forEach((option) -> {
+                chromeOptions.addArguments((String) option.getValue());
+            });
+        }
+
+    }
+
+    private void populateFirefoxOption(List<BrowserSetting> options, FirefoxOptions firefoxOptions) {
+        if (options != null && !options.isEmpty()) {
+            options.forEach((option) -> {
+                Object value = option.getValue();
+                switch (value.getClass().getSimpleName()) {
+                    case "String":
+                        firefoxOptions.addPreference(option.getKey(), (String) option.getValue());
+                        break;
+
+                    case "Integer":
+                        firefoxOptions.addPreference(option.getKey(), (Integer) option.getValue());
+                        break;
+
+                    case "Boolean":
+                        firefoxOptions.addPreference(option.getKey(), (Boolean) option.getValue());
+                        break;
+
+                    default:
+                        logger.error("Only Strings, Integer or Boolean values are allowed for Option values.");
+                        throw new RuntimeException(
+                                "Only Strings, Integer or Boolean values are allowed for Option values but was: "
+                                        + value.getClass().getSimpleName());
+
+                }
+
+            }
+
+            );
+        }
+    }
+
+    private void populateWithAdditionalCapabilities(final DesiredCapabilities desiredCapabilities,
+            List<BrowserSetting> capabilities) {
+        if (capabilities != null && !capabilities.isEmpty()) {
+            capabilities.forEach((capability) -> {
+                desiredCapabilities.setCapability(capability.getKey(), capability.getValue());
+            });
+        }
+    }
+
+    private void populateWithBrowserSpecificSettings(String browserName, List<BrowserSetting> capabilities,
+            List<BrowserSetting> options) {
+        BrowserSettingsManager manager = new BrowserSettingsManager();
+        List<BrowserSetupElement> browserSettings = manager.getBrowserSettings();
+        browserSettings.forEach((setting) -> {
+            if (setting.getBrowserName().equalsIgnoreCase(browserName)) {
+                capabilities.addAll(setting.getCapabilities());
+                options.addAll(setting.getOptions());
+            }
+        });
+
     }
 
     private void setupDrivermanager(BrowserManager manager) {
@@ -340,7 +455,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * 3.)  export http.proxyUser     = myProxyUser
      * </pre>
      * 
-     * @param browserManager The specific BrowserManager of a browser.
+     * @param browserManager
+     *            The specific BrowserManager of a browser.
      */
     private void settingProxyCredentials(BrowserManager browserManager) {
         browserManager.proxy(httpProxyHost);
@@ -351,7 +467,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * ShutdownHook for teardown of started Browsermanager
      * 
-     * @param driver Webdriver to be used
+     * @param driver
+     *            Webdriver to be used
      */
     private void registerShutdownHook(final WebDriver driver) {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -384,7 +501,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * opens a specified URL in the browser
      * 
-     * @param url - an URL-String which represents the Web-Site to open in the
+     * @param url
+     *            - an URL-String which represents the Web-Site to open in the
      *            browser. example: url = "http://www.google.com"
      */
     @FixtureMethod
@@ -407,10 +525,13 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * This method waits explicitly for a WebElement in the DOM-Object until the
      * given timeOut is reached before an Exception is thrown.
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
-     * @param timeOutInSeconds The max timeout in seconds when an element is
-     *            expected before a NotFoundException will be thrown.
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
+     * @param timeOutInSeconds
+     *            The max timeout in seconds when an element is expected before a
+     *            NotFoundException will be thrown.
      */
     @FixtureMethod
     public void waitUntilElementFound(String elementLocator, LocatorStrategy locatorType, int timeOutInSeconds) {
@@ -421,8 +542,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * press enter on a specified Gui-Widget
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void pressEnterOn(String elementLocator, LocatorStrategy locatorType) {
@@ -433,9 +556,12 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * type into text fields on a specified Gui-Widget
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
-     * @param value String which is set into the textfield
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
+     * @param value
+     *            String which is set into the textfield
      */
     @FixtureMethod
     public void typeInto(String elementLocator, LocatorStrategy locatorType, String value) {
@@ -446,8 +572,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * empties the textfield
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void clear(String elementLocator, LocatorStrategy locatorType) {
@@ -458,8 +586,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * click on a specified Gui-Widget
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void clickOn(String elementLocator, LocatorStrategy locatorType) {
@@ -478,8 +608,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * Submits WebElements like forms ore whole websites
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      */
     @FixtureMethod
     public void submit(String elementLocator, LocatorStrategy locatorType) {
@@ -489,8 +621,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      * @return value of a label
      */
     @FixtureMethod
@@ -501,9 +635,12 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
-     * @param value to be selected in a Selectionbox
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
+     * @param value
+     *            to be selected in a Selectionbox
      * @throws InterruptedException
      */
     @FixtureMethod
@@ -517,8 +654,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      * @return a JsonObject of the values in a Selectionbox
      * @throws InterruptedException
      */
@@ -538,8 +677,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLoacator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLoacator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      * @return true if a checkable Gui-Widget is checked, false otherwise.
      */
     @FixtureMethod
@@ -549,8 +690,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     /**
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
+     * @param elementLocator
+     *            Locator for Gui-Widget
+     * @param locatorType
+     *            Type of locator for Gui-Widget
      * @return {@code WebElement} where the Locator String begins in a specific
      *         manner.
      */
