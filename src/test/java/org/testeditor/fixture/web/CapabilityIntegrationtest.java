@@ -16,7 +16,6 @@ package org.testeditor.fixture.web;
 
 import java.io.File;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
@@ -24,6 +23,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
+import static org.junit.Assert.assertEquals;
 
 public class CapabilityIntegrationtest {
     
@@ -47,14 +48,14 @@ public class CapabilityIntegrationtest {
 
         // then
         readCapabilitiesFromProfile(fixture);
-        Assert.assertEquals(proxyHttpExpected, proxyHttp);
-        Assert.assertEquals(proxySslExpected, proxySsl);
-        Assert.assertEquals(proxySslPortExpected, proxySslPort);
-        Assert.assertEquals(proxyTypeExpected, proxyType);
+        assertEquals(proxyHttpExpected, proxyHttp);
+        assertEquals(proxySslExpected, proxySsl);
+        assertEquals(proxySslPortExpected, proxySslPort);
+        assertEquals(proxyTypeExpected, proxyType);
         
     }
    
-    public void readCapabilitiesFromProfile(WebDriverFixture fixture) {
+    private void readCapabilitiesFromProfile(WebDriverFixture fixture) {
         WebDriver driver = fixture.getDriver();
         Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
         String profilePath = (String) cap.getCapability("moz:profile");
