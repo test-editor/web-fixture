@@ -308,17 +308,16 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchInternetExplorer() {
         setupDrivermanager(InternetExplorerDriverManager.getInstance());
-        String browserName = BrowserType.IE;
         DesiredCapabilities desiredCapabilities = DesiredCapabilities.internetExplorer();
-        setCapabilitiesForIe(desiredCapabilities, browserName);
+        setCapabilitiesForIe(desiredCapabilities);
         driver = new InternetExplorerDriver(desiredCapabilities);
         registerShutdownHook(driver);
     }
 
-    private void setCapabilitiesForIe(DesiredCapabilities desiredCapabilities, String browserName) {
+    private void setCapabilitiesForIe(DesiredCapabilities desiredCapabilities) {
         List<BrowserSetting> capabilities = new ArrayList<>();
         List<BrowserSetting> options = new ArrayList<>();
-        populateWithBrowserSpecificSettings(browserName, capabilities, options);
+        populateWithBrowserSpecificSettings(BrowserType.IE, capabilities, options);
         populateWithAdditionalCapabilities(desiredCapabilities, capabilities);
     }
 

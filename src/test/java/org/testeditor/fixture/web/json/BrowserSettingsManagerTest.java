@@ -16,9 +16,9 @@ package org.testeditor.fixture.web.json;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.spy;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -77,11 +77,11 @@ public class BrowserSettingsManagerTest {
             "browserSetupWithOptions.json"));
     
         // then
-        Assert.assertEquals(3, browserSettings.size());
-        Assert.assertEquals("firefox", browserSettings.get(1).getBrowserName());
-        Assert.assertEquals("windows-firefox-section",browserSettings.get(1).getBrowserSetupName());
-        Assert.assertEquals(null, browserSettings.get(2).getOsName());
-        Assert.assertEquals("firefox-section-without-os",browserSettings.get(2).getBrowserSetupName());
+        assertEquals(3, browserSettings.size());
+        assertEquals("firefox", browserSettings.get(1).getBrowserName());
+        assertEquals("windows-firefox-section",browserSettings.get(1).getBrowserSetupName());
+        assertEquals(null, browserSettings.get(2).getOsName());
+        assertEquals("firefox-section-without-os",browserSettings.get(2).getBrowserSetupName());
     } 
     
     @Test
@@ -97,11 +97,11 @@ public class BrowserSettingsManagerTest {
             "browserSetupWithOptions.json"));
         
         // then
-        Assert.assertEquals(2, browserSettings.size());
-        Assert.assertEquals("linux-firefox-section",browserSettings.get(0).getBrowserSetupName());
-        Assert.assertEquals("firefox-section-without-os",browserSettings.get(1).getBrowserSetupName());
-        Assert.assertEquals("firefox", browserSettings.get(1).getBrowserName());
-        Assert.assertEquals("firefox", browserSettings.get(0).getBrowserName());
+        assertEquals(2, browserSettings.size());
+        assertEquals("linux-firefox-section",browserSettings.get(0).getBrowserSetupName());
+        assertEquals("firefox-section-without-os",browserSettings.get(1).getBrowserSetupName());
+        assertEquals("firefox", browserSettings.get(1).getBrowserName());
+        assertEquals("firefox", browserSettings.get(0).getBrowserName());
     }
     
     @Test
@@ -117,11 +117,11 @@ public class BrowserSettingsManagerTest {
             "browserSetupWithOptions.json"));
         
         // then
-        Assert.assertEquals(2, browserSettings.size());
-        Assert.assertEquals("mac-firefox-section",browserSettings.get(0).getBrowserSetupName());
-        Assert.assertEquals("firefox-section-without-os",browserSettings.get(1).getBrowserSetupName());
-        Assert.assertEquals("firefox", browserSettings.get(0).getBrowserName());
-        Assert.assertEquals("firefox", browserSettings.get(1).getBrowserName());
+        assertEquals(2, browserSettings.size());
+        assertEquals("mac-firefox-section",browserSettings.get(0).getBrowserSetupName());
+        assertEquals("firefox-section-without-os",browserSettings.get(1).getBrowserSetupName());
+        assertEquals("firefox", browserSettings.get(0).getBrowserName());
+        assertEquals("firefox", browserSettings.get(1).getBrowserName());
     }
 
 }
