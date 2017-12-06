@@ -14,8 +14,9 @@
 
 package org.testeditor.fixture.web;
 
-import java.io.File;
+import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import org.junit.Test;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
@@ -23,8 +24,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.RemoteWebDriver;
-
-import static org.junit.Assert.assertEquals;
 
 public class CapabilityIntegrationtest {
     
