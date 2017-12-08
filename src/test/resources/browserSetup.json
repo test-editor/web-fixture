@@ -16,7 +16,7 @@
             "network.proxy.http_port" : 101 
         }
     },
-    "windows-firefox-section-Without-os" : {
+    "firefox-section-Without-os" : {
         "browser" : "firefox",
         "options" : {
             "network.proxy.ssl" : "http://mysystem_ssl.proxy.server" ,
