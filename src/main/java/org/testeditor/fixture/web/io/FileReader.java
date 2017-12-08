@@ -43,10 +43,10 @@ public class FileReader {
         try {
             result = CharStreams.toString(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         } catch (IOException e) {
-            logger.error("The file with the name {} can not be read in the resource folder. {}" , fileName, e);
+            logger.info("The file with the name {} can not be read in the resource folder. {}" , fileName, e);
             throw new RuntimeException();
         } catch (NullPointerException e) {
-            logger.error("The file with the name {} can not be found in the resource folder.", fileName);
+            logger.info("The file with the name {} can not be found in the resource folder.", fileName);
             result = "";
         }
         return result;
