@@ -18,3 +18,7 @@ In order to create a release switch to the `master` branch and execute
     ./gradlew release
 
 and enter the new version. After the commit and tag is pushed Travis will automatically build and deploy the tagged version to Bintray.
+
+### Browser Setup
+
+please refer to [Documentation for browser specific testing with options and capabilities](docs/BROWSERSETUP.md)
