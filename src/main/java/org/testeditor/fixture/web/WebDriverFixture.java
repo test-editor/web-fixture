@@ -459,6 +459,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      *            The specific BrowserManager of a browser.
      */
     private void settingProxyCredentials(BrowserManager browserManager) {
+        logger.debug("Proxy Credentials for Browsermanager (proxyHost: {} ; proxyUser: {})", httpProxyHost, 
+                httpProxyUser); 
         browserManager.proxy(httpProxyHost);
         browserManager.proxyUser(httpProxyUser);
         browserManager.proxyPass(httpProxyPassword);
