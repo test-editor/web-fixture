@@ -60,10 +60,10 @@ import org.testeditor.fixture.web.json.BrowserSetupElement;
 
 import com.google.gson.JsonObject;
 
-import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * The {@code WebDriverFixture} class represents methods for automating
@@ -414,7 +414,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     }
 
-    private void setupDrivermanager(BrowserManager manager) {
+    private void setupDrivermanager(WebDriverManager manager) {
         if (areProxyCredentialsAvailable()) {
             settingProxyCredentials(manager);
         }
@@ -458,7 +458,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @param browserManager
      *            The specific BrowserManager of a browser.
      */
-    private void settingProxyCredentials(BrowserManager browserManager) {
+    private void settingProxyCredentials(WebDriverManager browserManager) {
         logger.debug("Proxy Credentials for Browsermanager (proxyHost: {} ; proxyUser: {})", httpProxyHost, 
                 httpProxyUser); 
         browserManager.proxy(httpProxyHost);
