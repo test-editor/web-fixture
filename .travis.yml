@@ -1,6 +1,6 @@
 language: java
 addons:
-  firefox: "56.0"
+  firefox: "58.0"
   apt:
     packages:
       - xvfb
