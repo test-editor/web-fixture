@@ -6,8 +6,6 @@ addons:
       - xvfb
 sudo: false
 before_install:
- # firefox will polute log with warnings/errors   
-  - sudo apt-get install dbus dbus-x11 
  # Use a virtual display.
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
