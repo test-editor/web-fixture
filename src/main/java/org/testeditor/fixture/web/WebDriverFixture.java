@@ -41,8 +41,8 @@ import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.BrowserType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -278,11 +278,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchChrome() {
         setupDrivermanager(ChromeDriverManager.getInstance());
-        String browserName = BrowserType.CHROME;
-        DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
-        Object chromeCapability = populateBrowserSettings(desiredCapabilities, browserName);
-        desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeCapability);
-        driver = new ChromeDriver(desiredCapabilities);
+        ChromeOptions chromeOptions = populateBrowserSettingsForChrome();
+        driver = new ChromeDriver(chromeOptions);
         registerShutdownHook(driver);
     }
 
@@ -293,11 +290,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchFirefox() {
         setupDrivermanager(FirefoxDriverManager.getInstance());
-        String browserName = BrowserType.FIREFOX;
-        DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-        Object firefoxOptions = populateBrowserSettings(desiredCapabilities, browserName);
-        desiredCapabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
-        driver = new FirefoxDriver(desiredCapabilities);
+        FirefoxOptions firefoxOptions = populateBrowserSettingsForFirefox();
+        driver = new FirefoxDriver(firefoxOptions);
         registerShutdownHook(driver);
     }
 
@@ -308,61 +302,62 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchInternetExplorer() {
         setupDrivermanager(InternetExplorerDriverManager.getInstance());
-        DesiredCapabilities desiredCapabilities = DesiredCapabilities.internetExplorer();
-        setCapabilitiesForIe(desiredCapabilities);
-        driver = new InternetExplorerDriver(desiredCapabilities);
+        InternetExplorerOptions ieOptions = populateBrowserSettingsForInternetExplorer();
+        driver = new InternetExplorerDriver(ieOptions);
         registerShutdownHook(driver);
     }
 
-    private void setCapabilitiesForIe(DesiredCapabilities desiredCapabilities) {
-        List<BrowserSetting> capabilities = new ArrayList<>();
-        List<BrowserSetting> options = new ArrayList<>();
-        populateWithBrowserSpecificSettings(BrowserType.IE, capabilities, options);
-        populateWithAdditionalCapabilities(desiredCapabilities, capabilities);
-    }
-
-    private Object populateBrowserSettings(DesiredCapabilities desiredCapabilities, String browserName) {
-        List<BrowserSetting> capabilities = new ArrayList<>();
+    private ChromeOptions populateBrowserSettingsForChrome() {
         List<BrowserSetting> options = new ArrayList<>();
         // specifying capabilities and options with the aid of the browser type.
-        populateWithBrowserSpecificSettings(browserName, capabilities, options);
-        // adding not browser specific capabilities
-        populateWithAdditionalCapabilities(desiredCapabilities, capabilities);
-        Object browserspecificOptions = null;
-        // set options per browser
-        switch (browserName) {
-            case BrowserType.FIREFOX:
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                // Specific method because Firefox Options consists of key value pairs
-                // with different data types. 
-                populateFirefoxOption(options, firefoxOptions);
-                browserspecificOptions = firefoxOptions;
-                break;
-            case BrowserType.CHROME:
-                ChromeOptions chromeOptions = new ChromeOptions();
-                // Specific method because a ChromeOption is just a String like 
-                // "allow-outdated-plugins" or "load-extension=/path/to/unpacked_extension"
-                populateChromeOption(options, chromeOptions);
-                browserspecificOptions = chromeOptions;
-                break;
-            default:
-                break;
-        }
-
-        return browserspecificOptions;
+        populateWithBrowserSpecificSettings(BrowserType.CHROME, options);
+        ChromeOptions chromeOptions = new ChromeOptions();
+        // Specific method because a ChromeOption is just a String like 
+        // "allow-outdated-plugins" or "load-extension=/path/to/unpacked_extension"
+        populateChromeOption(options, chromeOptions);
+        return chromeOptions;
     }
-
+    
+    private FirefoxOptions populateBrowserSettingsForFirefox() {
+        List<BrowserSetting> options = new ArrayList<>();
+        // specifying capabilities and options with the aid of the browser type.
+        populateWithBrowserSpecificSettings(BrowserType.FIREFOX, options);
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        // Specific method because Firefox Options consists of key value pairs
+        // with different data types. 
+        populateFirefoxOption(options, firefoxOptions);
+        return firefoxOptions;
+    }
+    
+    private InternetExplorerOptions populateBrowserSettingsForInternetExplorer() {
+        List<BrowserSetting> options = new ArrayList<>();
+        // specifying capabilities and options with the aid of the browser type.
+        populateWithBrowserSpecificSettings(BrowserType.IE, options);
+        // Specific method because an InternetExplorerOption is just a key value like 
+        // "ignoreProtectedModeSettings = true" or "requireWindowFocus = true"
+        InternetExplorerOptions ieOptions = new InternetExplorerOptions();
+        populateIeOptions(options, ieOptions);
+        return ieOptions;
+    }
+    
     private void populateChromeOption(List<BrowserSetting> options, ChromeOptions chromeOptions) {
-        if (options != null && !options.isEmpty()) {
+        if (options != null) {
             options.forEach((option) -> {
                 chromeOptions.addArguments((String) option.getValue());
             });
         }
-
     }
 
+    private void populateIeOptions(List<BrowserSetting> options, InternetExplorerOptions ieOptions) {
+        if (options != null) {
+            options.forEach((option) -> {
+                ieOptions.setCapability(option.getKey(), option.getValue());
+            });
+        }
+    }
+    
     private void populateFirefoxOption(List<BrowserSetting> options, FirefoxOptions firefoxOptions) {
-        if (options != null && !options.isEmpty()) {
+        if (options != null) {
             options.forEach((option) -> {
                 Object value = option.getValue();
                 switch (value.getClass().getSimpleName()) {
@@ -392,22 +387,13 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
     }
 
-    private void populateWithAdditionalCapabilities(final DesiredCapabilities desiredCapabilities,
-            List<BrowserSetting> capabilities) {
-        if (capabilities != null && !capabilities.isEmpty()) {
-            capabilities.forEach((capability) -> {
-                desiredCapabilities.setCapability(capability.getKey(), capability.getValue());
-            });
-        }
-    }
 
-    private void populateWithBrowserSpecificSettings(String browserName, List<BrowserSetting> capabilities,
+    private void populateWithBrowserSpecificSettings(String browserName, 
             List<BrowserSetting> options) {
         BrowserSettingsManager manager = new BrowserSettingsManager();
         List<BrowserSetupElement> browserSettings = manager.getBrowserSettings();
         browserSettings.forEach((setting) -> {
             if (setting.getBrowserName().equalsIgnoreCase(browserName)) {
-                capabilities.addAll(setting.getCapabilities());
                 options.addAll(setting.getOptions());
             }
         });
