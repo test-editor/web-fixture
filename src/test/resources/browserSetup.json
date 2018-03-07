@@ -2,7 +2,7 @@
     "windows-ie-section" : {
         "os" : "VISTA",
         "browser" : "internet explorer",
-        "capabilities" : {
+        "options" : {
         	"ignoreProtectedModeSettings" : true ,
         	"requireWindowFocus" : true
         }
