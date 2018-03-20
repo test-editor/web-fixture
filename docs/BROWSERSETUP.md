@@ -28,8 +28,7 @@ Each element consists of
 ![browserEntry](/images/browserEntry.png)  
 * an optional browser setting entry for options   
 ![options](/images/options.png)       
-* an optional browser setting entry for capabilities  
-![capabilities](/images/capabilities.png)
+
 
 ### Browser Settings
 #### Key "os"  
@@ -41,15 +40,15 @@ and for the Linux OS the proxy type varies (1 instead of 5 see screenshot proxyT
   
 #### Key "browser"
 When a test should run with browser-specific settings the key for "browser" must be set.  
-For the specific browser names, please refer to the Selenium web site under [DesiredCapabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities).   
+For the specific browser names, please refer to the Selenium web site under [DesiredCapabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities)  
 When no browser entry is specified, that means all options and capabilities are defined for all browser vendors.  
  
 #### Key "options"
 When a test should run with browser-specific option settings the key for "options" must be set.  
-For the browser-specific values please refer to the particular browser vendor.
+For the browser-specific values please refer to the particular browser vendor. 
+
 
 #### Key "capabilities"
-When a test should run with browser-specific capability settings the key for "capabilities" must be set.  
-see screenshot capabilities.  
-![capabilities](/images/capabilities.png).  
-Please refer for the browser-specific values to the Selenium web site under [DesiredCapabilities](https://github.com/SeleniumHQ/selenium/wiki/DesiredCapabilities). 
+Capabilities existed in the past but were dropped in favor of options. Every Capability can now be specified as an Option see above.  
+
+Capabilities are deprecated and will be removed in Selenium-Java-API later.  see [Capabilities](https://github.com/seleniumhq/selenium/commit/a4ac624ec94d70834198009e50491e4dca4e841b) 
