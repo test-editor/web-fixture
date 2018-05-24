@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
@@ -53,6 +54,7 @@ import org.testeditor.fixture.core.TestRunReportable;
 import org.testeditor.fixture.core.TestRunReporter;
 import org.testeditor.fixture.core.TestRunReporter.Action;
 import org.testeditor.fixture.core.TestRunReporter.SemanticUnit;
+import org.testeditor.fixture.core.TestRunReporter.Status;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
 import org.testeditor.fixture.web.json.BrowserSetting;
 import org.testeditor.fixture.web.json.BrowserSettingsManager;
@@ -175,7 +177,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     @Override
-    public void reported(SemanticUnit unit, Action action, String msg) {
+    public void reported(SemanticUnit unit, Action action, String msg, String id, Status status, 
+            Map<String, String> variables) {
         if (unit == SemanticUnit.TEST && action == Action.ENTER) {
             runningTest = msg;
         }

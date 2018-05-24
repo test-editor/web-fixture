@@ -15,7 +15,8 @@ task cleanScreenshotDir(type: Delete) {
 
 test.dependsOn cleanScreenshotDir
 
-def coreFixtureVersion = "3.2.1" 
+//def coreFixtureVersion = "3.2.1"
+def coreFixtureVersion = "4.0.1" 
 def seleniumJavaVersion = "3.10.0"
 
 dependencies {
