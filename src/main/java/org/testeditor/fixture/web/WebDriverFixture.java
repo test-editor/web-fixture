@@ -49,6 +49,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.core.TestRunListener;
 import org.testeditor.fixture.core.TestRunReportable;
 import org.testeditor.fixture.core.TestRunReporter;
@@ -187,6 +188,21 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
     }
 
+    @Override
+    public void reportAssertionExit(AssertionError e) {
+        screenshot("ASSERTION-FAILED");
+    }
+
+    @Override
+    public void reportExceptionExit(Exception e) {
+        screenshot("EXCEPTION");
+    }
+
+    @Override
+    public void reportFixtureExit(FixtureException e) {
+        screenshot("FIXTURE-EXCEPTION");
+    }
+
     private String runningTest = null;
     private static final int SCREENSHOT_FILENAME_MAXLEN = 128;
 
@@ -201,7 +217,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     private boolean screenshotShouldBeMade(SemanticUnit unit, Action action, String msg) {
         // configurable through maven build?
-        return ((action == Action.ENTER) || unit == SemanticUnit.TEST) && driver != null;
+        return ((action == Action.LEAVE) || unit == SemanticUnit.TEST) && driver != null;
     }
 
     private String reduceToMaxLen(String base, int maxLen) {
