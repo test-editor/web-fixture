@@ -20,6 +20,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
 import org.testeditor.fixture.web.LocatorStrategy;
 import org.testeditor.fixture.web.angularjs.NgOneWebDriverFixture;
@@ -43,9 +44,10 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
      */
     @FixtureMethod
     public void selectElementInSelection(String elementLocator, LocatorStrategy locatorStrategy, String value)
-            throws InterruptedException {
+            throws FixtureException {
         clickOn(elementLocator, locatorStrategy);
-        Thread.sleep(300);
+        wrappedSleep(300, "select element in selection interrupted", keyValues("elementLocator", elementLocator,
+                "locatorStrategy", locatorStrategy.toString(), "value", value));
         waitForAngularCompleteOperations();
         ByAngularCssContainingText cssContainingText = ByAngular.cssContainingText("md-option", value);
         List<WebElement> options = getDriver().findElements(cssContainingText);
@@ -63,10 +65,11 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
      */
     @FixtureMethod
     public JsonObject getOptionsInSelection(String elementLocator, LocatorStrategy locatorStrategy)
-            throws InterruptedException {
+            throws FixtureException {
         JsonObject availableOptions = new JsonObject();
         clickOn(elementLocator, locatorStrategy);
-        Thread.sleep(300);
+        wrappedSleep(300, "get option in selection interrupted",
+                keyValues("elementLocator", elementLocator, "locatorStrategy", locatorStrategy.toString()));
         waitForAngularCompleteOperations();
         ByAngularCssContainingText cssContainingText = ByAngular.cssContainingText("md-option", "");
         List<WebElement> options = getDriver().findElements(cssContainingText);
