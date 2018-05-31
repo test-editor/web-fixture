@@ -46,7 +46,7 @@ public class FileReader {
         } catch (IOException e) {
             logger.info("The file with the name {} can not be read in the resource folder. {}" , fileName, e);
             throw new FixtureException("file could not be found in resource folder",
-                    WebDriverFixture.keyValues("fileName", fileName));
+                    FixtureException.keyValues("fileName", fileName));
         } catch (NullPointerException e) {
             logger.info("The file with the name {} can not be found in the resource folder.", fileName);
             result = "";

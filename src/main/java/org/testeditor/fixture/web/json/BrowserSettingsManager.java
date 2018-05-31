@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.openqa.selenium.Platform;
 import org.testeditor.fixture.core.FixtureException;
-import org.testeditor.fixture.web.WebDriverFixture;
 
 public class BrowserSettingsManager {
 
@@ -80,21 +79,26 @@ public class BrowserSettingsManager {
         return browserSetupElementsOsSpecific;
     }
 
+    private void copyInto(List<BrowserSetting> browserSettings, Map<String, Object> browserSettingsMap)
+            throws FixtureException {
+        for (BrowserSetting browserSetting : browserSettings) {
+            String key = browserSetting.getKey();
+            if (browserSettingsMap.containsKey(key)) {
+                throw new FixtureException("Duplicate entries existing in configuration file",
+                        FixtureException.keyValues("file", FILE_NAME, //
+                                "offendingKey", key, //
+                                "value1", browserSetting.getValue(), //
+                                "value2", browserSettingsMap.get(key)));
+            } else {
+                browserSettingsMap.put(key, browserSetting.getValue());
+            }
+        }
+    }
+
     protected Map<String, Object> copyOptionsIntoMap(Map<String, Object> browserSettingsMap,
             List<BrowserSetupElement> browserSetupElements) throws FixtureException {
         for (BrowserSetupElement bsetting : browserSetupElements) {
-            for (BrowserSetting option : bsetting.getOptions()) {
-                String key = option.getKey();
-                if (browserSettingsMap.containsKey(key)) {
-                    throw new FixtureException("Duplicate entries existing in configuration file",
-                            WebDriverFixture.keyValues("file", FILE_NAME, //
-                                    "offendingKey", key, //
-                                    "valueOption", option.getValue(), //
-                                    "valueBrowserSettingsMap", browserSettingsMap.get(key)));
-                } else {
-                    browserSettingsMap.put(key, option.getValue());
-                }
-            }
+            copyInto(bsetting.getOptions(), browserSettingsMap);
         }
         return browserSettingsMap;
     }
@@ -102,18 +106,7 @@ public class BrowserSettingsManager {
     protected Map<String, Object> copyCapabilitiesIntoMap(Map<String, Object> browserSettingsMap,
             List<BrowserSetupElement> separateBrowserSettingsOsspecific) throws FixtureException {
         for (BrowserSetupElement bsetting : separateBrowserSettingsOsspecific) {
-            for (BrowserSetting capability : bsetting.getCapabilities()) {
-                String key = capability.getKey();
-                if (browserSettingsMap.containsKey(key)) {
-                    throw new FixtureException("Duplicate entries existing in configuration file",
-                            WebDriverFixture.keyValues("file", FILE_NAME, //
-                                    "offendingKey", key, //
-                                    "valueCapability", capability.getValue(), //
-                                    "valueBrowserSettingsMap", browserSettingsMap.get(key)));
-                } else {
-                    browserSettingsMap.put(key, capability.getValue());
-                }
-            }
+            copyInto(bsetting.getCapabilities(), browserSettingsMap);
         }
         return browserSettingsMap;
     }

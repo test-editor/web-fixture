@@ -41,8 +41,8 @@ public class BrowserSettingsManagerTest {
         thrown.expect(FixtureException.class);
         thrown.expectMessage("Duplicate entries existing in configuration file");
         thrown.expect(fixtureExceptionMatcher("file", "browserSetup.json", //
-                "valueCapability", 5, //
-                "valueBrowserSettingsMap", 8, //
+                "value1", 5, //
+                "value2", 8, //
                 "offendingKey", "my.cap"));
         BrowserSettingsManager manager = new BrowserSettingsManager();
         manager.getBrowserSettings("browserSetupWithFailureCapability.json");
@@ -59,8 +59,8 @@ public class BrowserSettingsManagerTest {
         thrown.expect(FixtureException.class);
         thrown.expectMessage("Duplicate entries existing in configuration file");
         thrown.expect(fixtureExceptionMatcher("file", "browserSetup.json", //
-                "valueOption", 5, //
-                "valueBrowserSettingsMap", 8, //
+                "value1", 5, //
+                "value2", 8, //
                 "offendingKey", "network.proxy.type"));
 
         BrowserSettingsManager manager = new BrowserSettingsManager();

@@ -53,7 +53,7 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
                 result = getDriver().findElement(ByAngular.model(elementLocator));
             } catch (NoSuchElementException e) {
                 throw new FixtureException("element not found by angular locator", //
-                        keyValues("elementLocator", elementLocator, //
+                        FixtureException.keyValues("elementLocator", elementLocator, //
                                 "locatorStrategy", locatorStrategy.toString()),
                         e);
             }
@@ -91,11 +91,11 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
             modelString = elementLocator.substring(elementLocator.indexOf(")") + 1);
         } catch (IndexOutOfBoundsException e) {
             throw new FixtureException("angular gui widget element locator not for the form '..(:digit:+):model:", //
-                    keyValues("elementLocator", elementLocator), e);
+                    FixtureException.keyValues("elementLocator", elementLocator), e);
         } catch (NumberFormatException e) {
             throw new FixtureException("angular gui widget element locator contains no number in brackets," + //
                     " expected form '..(:digit:+):model:", //
-                    keyValues("elementLocator", elementLocator), e);
+                    FixtureException.keyValues("elementLocator", elementLocator), e);
         }
         List<WebElement> elements = null;
         try {
@@ -103,7 +103,7 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
             return elements.get(elementIndex);
         } catch (IndexOutOfBoundsException e) {
             throw new FixtureException("angular gui widget element of given index not found", //
-                    keyValues("elementLocator", elementLocator, //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
                             "elementIndex", elementIndex, "foundElements", Integer.valueOf(elements.size())),
                     e);
         }

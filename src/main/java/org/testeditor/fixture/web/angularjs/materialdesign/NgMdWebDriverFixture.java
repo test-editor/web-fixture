@@ -46,8 +46,8 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
     public void selectElementInSelection(String elementLocator, LocatorStrategy locatorStrategy, String value)
             throws FixtureException {
         clickOn(elementLocator, locatorStrategy);
-        wrappedSleep(300, "select element in selection interrupted", keyValues("elementLocator", elementLocator,
-                "locatorStrategy", locatorStrategy.toString(), "value", value));
+        wrappedSleep(300, "select element in selection interrupted", FixtureException.keyValues("elementLocator",
+                elementLocator, "locatorStrategy", locatorStrategy.toString(), "value", value));
         waitForAngularCompleteOperations();
         ByAngularCssContainingText cssContainingText = ByAngular.cssContainingText("md-option", value);
         List<WebElement> options = getDriver().findElements(cssContainingText);
@@ -68,8 +68,8 @@ public class NgMdWebDriverFixture extends NgOneWebDriverFixture {
             throws FixtureException {
         JsonObject availableOptions = new JsonObject();
         clickOn(elementLocator, locatorStrategy);
-        wrappedSleep(300, "get option in selection interrupted",
-                keyValues("elementLocator", elementLocator, "locatorStrategy", locatorStrategy.toString()));
+        wrappedSleep(300, "get option in selection interrupted", FixtureException.keyValues("elementLocator",
+                elementLocator, "locatorStrategy", locatorStrategy.toString()));
         waitForAngularCompleteOperations();
         ByAngularCssContainingText cssContainingText = ByAngular.cssContainingText("md-option", "");
         List<WebElement> options = getDriver().findElements(cssContainingText);

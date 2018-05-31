@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -103,7 +102,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     @FixtureMethod
     public void waitSeconds(long timeToWait) throws FixtureException {
-        wrappedSleep(timeToWait * 1000, "wait interrupted", keyValues());
+        wrappedSleep(timeToWait * 1000, "wait interrupted", FixtureException.keyValues());
     }
 
     /**
@@ -174,7 +173,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
                 launchChrome();
                 break;
             default:
-                throw new FixtureException("Unknown browser.", keyValues("browser", browser));
+                throw new FixtureException("Unknown browser.", FixtureException.keyValues("browser", browser));
         }
         configureDriver();
         return driver;
@@ -558,7 +557,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             webDriverWait.until(ExpectedConditions.presenceOfElementLocated(getBy(elementLocator, locatorType)));
         } catch (TimeoutException e) {
             throw new FixtureException("timeout during wait for element", //
-                    keyValues("elementLocator", elementLocator, //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "timeout", Long.valueOf(timeOutInSeconds)),
                     e);
@@ -577,8 +576,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         try {
             element.submit();
         } catch (NoSuchElementException e) {
-            throw new FixtureException("element seems not to be part of a form and cannot pre pressed enter on", //
-                    keyValues("elementLocator", elementLocator, //
+            throw new FixtureException("element seems not to be part of a form so enter cannot be pressed on it", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "element", element.toString(), //
                             "pageSource", driver.getPageSource()),
@@ -599,8 +598,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         try {
             element.sendKeys(value);
         } catch (IllegalArgumentException e) {
-            throw new FixtureException("keys to send cannot be null", //
-                    keyValues("elementLocator", elementLocator, //
+            throw new FixtureException("string to be typed into element cannot be null", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "element", element.toString()), //
                     e);
@@ -632,7 +631,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             element.click();
         } catch (StaleElementReferenceException e) {
             throw new FixtureException("element to click seems to no longer exist", //
-                    keyValues("elementLocator", elementLocator, //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "element", element.toString(), //
                             "pageSource", driver.getPageSource()),
@@ -661,7 +660,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             element.submit();
         } catch (NoSuchElementException e) {
             throw new FixtureException("element seems not to be part of a form and cannot be submitted", //
-                    keyValues("elementLocator", elementLocator, //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "element", element.toString(), //
                             "pageSource", driver.getPageSource()),
@@ -692,21 +691,21 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     public void selectElementInSelection(String elementLocator, LocatorStrategy locatorType, String value)
             throws FixtureException {
         clickOn(elementLocator, locatorType);
-        wrappedSleep(300, "sleep after click on element was interrupted",
-                keyValues("elementLocator", elementLocator, "locatorType", locatorType.toString(), "value", value));
+        wrappedSleep(300, "sleep after click on element was interrupted", FixtureException.keyValues("elementLocator",
+                elementLocator, "locatorType", locatorType.toString(), "value", value));
         WebElement element = getWebElement(elementLocator, locatorType);
         try {
             new Select(element).selectByVisibleText(value);
         } catch (NoSuchElementException e) {
             throw new FixtureException(
                     "element could not be selected by visible text (option not part of this selection)", //
-                    keyValues("elementLoactor", elementLocator, //
+                    FixtureException.keyValues("elementLoactor", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "value", value, "element", element.toString()),
                     e);
         } catch (UnexpectedTagNameException e) {
             throw new FixtureException("element expected to be tag SELECT", //
-                    keyValues("elementLoactor", elementLocator, //
+                    FixtureException.keyValues("elementLoactor", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "value", value, //
                             "element", element.toString()),
@@ -727,7 +726,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         JsonObject availableOptions = new JsonObject();
         clickOn(elementLocator, locatorType);
         wrappedSleep(300, "sleep after get options in selection was interrupted",
-                keyValues("elementLocator", elementLocator, "locatorType", locatorType.toString()));
+                FixtureException.keyValues("elementLocator", elementLocator, "locatorType", locatorType.toString()));
         Select selection = new Select(getWebElement(elementLocator, locatorType));
         for (WebElement webElement : selection.getAllSelectedOptions()) {
             availableOptions.addProperty(webElement.getText(), webElement.getText());
@@ -764,7 +763,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             result = driver.findElement(getBy(elementLocator, locatorType));
         } catch (NoSuchElementException exception) {
             throw new FixtureException("element could not be located on the current page", //
-                    keyValues("elementLocator", elementLocator, //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), "pageSource", driver.getPageSource(), "url",
                             driver.getCurrentUrl(), "title", driver.getTitle()));
         }
@@ -811,25 +810,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         } catch (IOException e) {
             logger.error("Can't read java script", e);
             throw new FixtureException("could not execute javascript", //
-                    keyValues("executeScript", exeuteScript), e);
+                    FixtureException.keyValues("executeScript", exeuteScript), e);
         }
-    }
-
-    /**
-     * generate a map compatible to FixtureException calls by combining the even
-     * numbered portion of the var args into key, value pairs
-     * 
-     * @param objects
-     * @return
-     */
-    public static Map<String, Object> keyValues(Object... objects) {
-        HashMap<String, Object> result = new HashMap<>();
-
-        for (int i = 0; i < objects.length / 2; i++) {
-            result.put(objects[i * 2].toString(), objects[i * 2 + 1]);
-        }
-
-        return result;
     }
 
     protected void wrappedSleep(long ms, String msg, Map<String, Object> keyValueMap) throws FixtureException {
