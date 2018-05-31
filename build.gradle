@@ -29,8 +29,8 @@ dependencies {
     // these are just added for web-fixtures
     compile "org.testeditor.fixture:core-fixture:$coreFixtureVersion"
     compile "org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion"
-    compile 'com.paulhammant:ngwebdriver:1.0'
-    compile 'io.github.bonigarcia:webdrivermanager:2.2.0'
+    compile 'com.paulhammant:ngwebdriver:1.1.3'
+    compile 'io.github.bonigarcia:webdrivermanager:2.2.1'
     compile 'com.google.code.gson:gson:2.8.2'
 }
 
