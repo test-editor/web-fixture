@@ -93,8 +93,8 @@ public class NgOneWebDriverFixture extends WebDriverFixture {
             throw new FixtureException("angular gui widget element locator not for the form '..(:digit:+):model:", //
                     keyValues("elementLocator", elementLocator), e);
         } catch (NumberFormatException e) {
-            throw new FixtureException(
-                    "angular gui widget element locator contains no number in brackets, expected form '..(:digit:+):model:", //
+            throw new FixtureException("angular gui widget element locator contains no number in brackets," + //
+                    " expected form '..(:digit:+):model:", //
                     keyValues("elementLocator", elementLocator), e);
         }
         List<WebElement> elements = null;

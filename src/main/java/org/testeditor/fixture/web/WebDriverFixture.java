@@ -192,23 +192,23 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             runningTest = msg;
         }
         if (screenshotShouldBeMade(unit, action, msg)) {
-            _screenshot(msg + '.' + action.name());
+            makeScreenshot(msg + '.' + action.name());
         }
     }
 
     @Override
     public void reportAssertionExit(AssertionError e) {
-        _screenshot("ASSERTION-ERROR");
+        makeScreenshot("ASSERTION-ERROR");
     }
 
     @Override
     public void reportExceptionExit(Exception e) {
-        _screenshot("EXCEPTION");
+        makeScreenshot("EXCEPTION");
     }
 
     @Override
     public void reportFixtureExit(FixtureException e) {
-        _screenshot("FIXTURE-EXCEPTION");
+        makeScreenshot("FIXTURE-EXCEPTION");
     }
 
     private String runningTest = null;
@@ -263,10 +263,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     @FixtureMethod
     public String screenshot(String filenameBase) throws FixtureException {
-        return _screenshot(filenameBase);
+        return makeScreenshot(filenameBase);
     }
 
-    protected String _screenshot(String filenameBase) {
+    protected String makeScreenshot(String filenameBase) {
         String testcase = getCurrentTestCase();
         String finalFilename = constructScreenshotFilename(filenameBase, testcase);
         if (driver != null) {
@@ -815,6 +815,13 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
     }
 
+    /**
+     * generate a map compatible to FixtureException calls by combining the even
+     * numbered portion of the var args into key, value pairs
+     * 
+     * @param objects
+     * @return
+     */
     public static Map<String, Object> keyValues(Object... objects) {
         HashMap<String, Object> result = new HashMap<>();
 

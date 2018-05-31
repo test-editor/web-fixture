@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.testeditor.fixture.core.FixtureException;
 
 /**
  * 
@@ -38,14 +39,14 @@ public class FirefoxTest {
     }
 
     @After
-    public void teardown() {
+    public void teardown() throws FixtureException {
         if (driver != null) {
             driver.closeBrowser();
         }
     }
 
     @Test
-    public void googleTest() throws InterruptedException, IOException {
+    public void googleTest() throws FixtureException {
         // given
         driver.startBrowser("firefox");
         driver.goToUrl("https://google.de");
