@@ -32,8 +32,11 @@ import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -46,6 +49,7 @@ import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.UnexpectedTagNameException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,8 +101,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws InterruptedException
      */
     @FixtureMethod
-    public void waitSeconds(long timeToWait) throws InterruptedException {
-        Thread.sleep(timeToWait * 1000);
+    public void waitSeconds(long timeToWait) throws FixtureException {
+        wrappedSleep(timeToWait * 1000, "wait interrupted", FixtureException.keyValues());
     }
 
     /**
@@ -114,8 +118,12 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @param driver
      */
     @FixtureMethod
-    public void setDriver(WebDriver driver) {
-        this.driver = driver;
+    public void setDriver(WebDriver driver) throws FixtureException {
+        if (driver == null) {
+            throw new FixtureException("WebDriver cannot be null", new IllegalArgumentException());
+        } else {
+            this.driver = driver;
+        }
     }
 
     /**
@@ -124,7 +132,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @param exec
      */
     @FixtureMethod
-    public void setExecuteScript(String exec) {
+    public void setExecuteScript(String exec) throws FixtureException {
         exeuteScript = exec;
     }
 
@@ -141,12 +149,11 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * <li><b>chrome</b> - opens Google Chrome</li>
      * </ul>
      * 
-     * @param browser
-     *            String literal for used browser
+     * @param browser String literal for used browser
      * @return {@code WebDriver}
      */
     @FixtureMethod
-    public WebDriver startBrowser(String browser) {
+    public WebDriver startBrowser(String browser) throws FixtureException {
         logger.info("Starting browser: {}", browser);
         switch (browser) {
             case "default":
@@ -166,7 +173,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
                 launchChrome();
                 break;
             default:
-                throw new IllegalArgumentException("Unknown browser: " + browser);
+                throw new FixtureException("Unknown browser.", FixtureException.keyValues("browser", browser));
         }
         configureDriver();
         return driver;
@@ -178,29 +185,29 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     @Override
-    public void reported(SemanticUnit unit, Action action, String msg, String id, Status status, 
+    public void reported(SemanticUnit unit, Action action, String msg, String id, Status status,
             Map<String, String> variables) {
         if (unit == SemanticUnit.TEST && action == Action.ENTER) {
             runningTest = msg;
         }
         if (screenshotShouldBeMade(unit, action, msg)) {
-            screenshot(msg + '.' + action.name());
+            makeScreenshot(msg + '.' + action.name());
         }
     }
 
     @Override
     public void reportAssertionExit(AssertionError e) {
-        screenshot("ASSERTION-FAILED");
+        makeScreenshot("ASSERTION-ERROR");
     }
 
     @Override
     public void reportExceptionExit(Exception e) {
-        screenshot("EXCEPTION");
+        makeScreenshot("EXCEPTION");
     }
 
     @Override
     public void reportFixtureExit(FixtureException e) {
-        screenshot("FIXTURE-EXCEPTION");
+        makeScreenshot("FIXTURE-EXCEPTION");
     }
 
     private String runningTest = null;
@@ -251,11 +258,14 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * filenameBase provided. The final filename is constructed using the testcase a
      * hash of the fixture itself and a shortened timestamp.
      * 
-     * @param filenameBase
-     *            user definable part of the final filename
+     * @param filenameBase user definable part of the final filename
      */
     @FixtureMethod
-    public String screenshot(String filenameBase) {
+    public String screenshot(String filenameBase) throws FixtureException {
+        return makeScreenshot(filenameBase);
+    }
+
+    protected String makeScreenshot(String filenameBase) {
         String testcase = getCurrentTestCase();
         String finalFilename = constructScreenshotFilename(filenameBase, testcase);
         if (driver != null) {
@@ -280,7 +290,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @return {@code WebDriver}
      */
     @FixtureMethod
-    public WebDriver startFireFoxPortable(String browserPath) {
+    public WebDriver startFireFoxPortable(String browserPath) throws FixtureException {
         logger.info("Starting firefox portable: {}", browserPath);
         setupDrivermanager(FirefoxDriverManager.getInstance());
         FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
@@ -294,8 +304,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * launches Google Chrome with the ChromeDriverManager, this will be downloaded
      * automatically and will be saved in the directory
      * /~USER_HOME/m2/repository/webdriver/ in every according OS.
+     * 
+     * @throws FixtureException
      */
-    private void launchChrome() {
+    private void launchChrome() throws FixtureException {
         setupDrivermanager(ChromeDriverManager.getInstance());
         ChromeOptions chromeOptions = populateBrowserSettingsForChrome();
         driver = new ChromeDriver(chromeOptions);
@@ -306,8 +318,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * launches Firefox with FirefoxDriverManager, this will be downloaded
      * automatically and will be saved in the directory
      * /~USER_HOME/m2/repository/webdriver/ in every according OS.
+     * 
+     * @throws FixtureException
      */
-    private void launchFirefox() {
+    private void launchFirefox() throws FixtureException {
         setupDrivermanager(FirefoxDriverManager.getInstance());
         FirefoxOptions firefoxOptions = populateBrowserSettingsForFirefox();
         driver = new FirefoxDriver(firefoxOptions);
@@ -318,47 +332,49 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * launches Windows Internet Explorer with IEDriverServerManager, this will be
      * downloaded automatically and will be saved in the directory
      * /~USER_HOME/m2/repository/webdriver/ in every according OS.
+     * 
+     * @throws FixtureException
      */
-    private void launchInternetExplorer() {
+    private void launchInternetExplorer() throws FixtureException {
         setupDrivermanager(InternetExplorerDriverManager.getInstance());
         InternetExplorerOptions ieOptions = populateBrowserSettingsForInternetExplorer();
         driver = new InternetExplorerDriver(ieOptions);
         registerShutdownHook(driver);
     }
 
-    private ChromeOptions populateBrowserSettingsForChrome() {
+    private ChromeOptions populateBrowserSettingsForChrome() throws FixtureException {
         List<BrowserSetting> options = new ArrayList<>();
         // specifying capabilities and options with the aid of the browser type.
         populateWithBrowserSpecificSettings(BrowserType.CHROME, options);
         ChromeOptions chromeOptions = new ChromeOptions();
-        // Specific method because a ChromeOption is just a String like 
+        // Specific method because a ChromeOption is just a String like
         // "allow-outdated-plugins" or "load-extension=/path/to/unpacked_extension"
         populateChromeOption(options, chromeOptions);
         return chromeOptions;
     }
-    
-    private FirefoxOptions populateBrowserSettingsForFirefox() {
+
+    private FirefoxOptions populateBrowserSettingsForFirefox() throws FixtureException {
         List<BrowserSetting> options = new ArrayList<>();
         // specifying capabilities and options with the aid of the browser type.
         populateWithBrowserSpecificSettings(BrowserType.FIREFOX, options);
         FirefoxOptions firefoxOptions = new FirefoxOptions();
         // Specific method because Firefox Options consists of key value pairs
-        // with different data types. 
+        // with different data types.
         populateFirefoxOption(options, firefoxOptions);
         return firefoxOptions;
     }
-    
-    private InternetExplorerOptions populateBrowserSettingsForInternetExplorer() {
+
+    private InternetExplorerOptions populateBrowserSettingsForInternetExplorer() throws FixtureException {
         List<BrowserSetting> options = new ArrayList<>();
         // specifying capabilities and options with the aid of the browser type.
         populateWithBrowserSpecificSettings(BrowserType.IE, options);
-        // Specific method because an InternetExplorerOption is just a key value like 
+        // Specific method because an InternetExplorerOption is just a key value like
         // "ignoreProtectedModeSettings = true" or "requireWindowFocus = true"
         InternetExplorerOptions ieOptions = new InternetExplorerOptions();
         populateIeOptions(options, ieOptions);
         return ieOptions;
     }
-    
+
     private void populateChromeOption(List<BrowserSetting> options, ChromeOptions chromeOptions) {
         if (options != null) {
             options.forEach((option) -> {
@@ -374,7 +390,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             });
         }
     }
-    
+
     private void populateFirefoxOption(List<BrowserSetting> options, FirefoxOptions firefoxOptions) {
         if (options != null) {
             options.forEach((option) -> {
@@ -406,9 +422,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
     }
 
-
-    private void populateWithBrowserSpecificSettings(String browserName, 
-            List<BrowserSetting> options) {
+    private void populateWithBrowserSpecificSettings(String browserName, List<BrowserSetting> options)
+            throws FixtureException {
         BrowserSettingsManager manager = new BrowserSettingsManager();
         List<BrowserSetupElement> browserSettings = manager.getBrowserSettings();
         browserSettings.forEach((setting) -> {
@@ -460,12 +475,11 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * 3.)  export http.proxyUser     = myProxyUser
      * </pre>
      * 
-     * @param browserManager
-     *            The specific BrowserManager of a browser.
+     * @param browserManager The specific BrowserManager of a browser.
      */
     private void settingProxyCredentials(WebDriverManager browserManager) {
-        logger.debug("Proxy Credentials for Browsermanager (proxyHost: {} ; proxyUser: {})", httpProxyHost, 
-                httpProxyUser); 
+        logger.debug("Proxy Credentials for Browsermanager (proxyHost: {} ; proxyUser: {})", httpProxyHost,
+                httpProxyUser);
         browserManager.proxy(httpProxyHost);
         browserManager.proxyUser(httpProxyUser);
         browserManager.proxyPass(httpProxyPassword);
@@ -474,8 +488,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * ShutdownHook for teardown of started Browsermanager
      * 
-     * @param driver
-     *            Webdriver to be used
+     * @param driver Webdriver to be used
      */
     private void registerShutdownHook(final WebDriver driver) {
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -508,12 +521,11 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * opens a specified URL in the browser
      * 
-     * @param url
-     *            - an URL-String which represents the Web-Site to open in the
+     * @param url - an URL-String which represents the Web-Site to open in the
      *            browser. example: url = "http://www.google.com"
      */
     @FixtureMethod
-    public void goToUrl(String url) {
+    public void goToUrl(String url) throws FixtureException {
         driver.get(url);
     }
 
@@ -521,7 +533,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * close the Browser window
      */
     @FixtureMethod
-    public void closeBrowser() {
+    public void closeBrowser() throws FixtureException {
         // drive.close() leads to exception with Selenium V. 3.5.3 and Firefox
         // 55.0.3 preferred method -> just driver.quit();
         driver.quit();
@@ -532,60 +544,76 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * This method waits explicitly for a WebElement in the DOM-Object until the
      * given timeOut is reached before an Exception is thrown.
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
-     * @param timeOutInSeconds
-     *            The max timeout in seconds when an element is expected before a
-     *            NotFoundException will be thrown.
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
+     * @param timeOutInSeconds The max timeout in seconds when an element is
+     *            expected before a NotFoundException will be thrown.
      */
     @FixtureMethod
-    public void waitUntilElementFound(String elementLocator, LocatorStrategy locatorType, int timeOutInSeconds) {
+    public void waitUntilElementFound(String elementLocator, LocatorStrategy locatorType, int timeOutInSeconds)
+            throws FixtureException {
         WebDriverWait webDriverWait = new WebDriverWait(driver, timeOutInSeconds);
-        webDriverWait.until(ExpectedConditions.presenceOfElementLocated(getBy(elementLocator, locatorType)));
+        try {
+            webDriverWait.until(ExpectedConditions.presenceOfElementLocated(getBy(elementLocator, locatorType)));
+        } catch (TimeoutException e) {
+            throw new FixtureException("timeout during wait for element", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "timeout", Long.valueOf(timeOutInSeconds)),
+                    e);
+        }
     }
 
     /**
      * press enter on a specified Gui-Widget
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
-    public void pressEnterOn(String elementLocator, LocatorStrategy locatorType) {
+    public void pressEnterOn(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
-        element.submit();
+        try {
+            element.submit();
+        } catch (NoSuchElementException e) {
+            throw new FixtureException("element seems not to be part of a form so enter cannot be pressed on it", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "element", element.toString(), //
+                            "pageSource", driver.getPageSource()),
+                    e);
+        }
     }
 
     /**
      * type into text fields on a specified Gui-Widget
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
-     * @param value
-     *            String which is set into the textfield
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
+     * @param value String which is set into the textfield
      */
     @FixtureMethod
-    public void typeInto(String elementLocator, LocatorStrategy locatorType, String value) {
+    public void typeInto(String elementLocator, LocatorStrategy locatorType, String value) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
-        element.sendKeys(value);
+        try {
+            element.sendKeys(value);
+        } catch (IllegalArgumentException e) {
+            throw new FixtureException("string to be typed into element cannot be null", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "element", element.toString()), //
+                    e);
+        }
     }
 
     /**
      * empties the textfield
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
-    public void clear(String elementLocator, LocatorStrategy locatorType) {
+    public void clear(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
         element.clear();
     }
@@ -593,88 +621,112 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * click on a specified Gui-Widget
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
-    public void clickOn(String elementLocator, LocatorStrategy locatorType) {
+    public void clickOn(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
-        element.click();
+        try {
+            element.click();
+        } catch (StaleElementReferenceException e) {
+            throw new FixtureException("element to click seems to no longer exist", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "element", element.toString(), //
+                            "pageSource", driver.getPageSource()),
+                    e);
+        }
     }
 
     /**
      * @return The title of the actual accessed html web site.
      */
     @FixtureMethod
-    public String getTitle() {
+    public String getTitle() throws FixtureException {
         return driver.getTitle();
     }
 
     /**
      * Submits WebElements like forms ore whole websites
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      */
     @FixtureMethod
-    public void submit(String elementLocator, LocatorStrategy locatorType) {
+    public void submit(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
-        element.submit();
+        try {
+            element.submit();
+        } catch (NoSuchElementException e) {
+            throw new FixtureException("element seems not to be part of a form and cannot be submitted", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "element", element.toString(), //
+                            "pageSource", driver.getPageSource()),
+                    e);
+        }
     }
 
     /**
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return value of a label
      */
     @FixtureMethod
-    public String readValue(String elementLocator, LocatorStrategy locatorType) {
+    public String readValue(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
         return element.getText();
     }
 
     /**
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
-     * @param value
-     *            to be selected in a Selectionbox
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
+     * @param value to be selected in a Selectionbox
      * @throws InterruptedException
      */
     @FixtureMethod
     public void selectElementInSelection(String elementLocator, LocatorStrategy locatorType, String value)
-            throws InterruptedException {
+            throws FixtureException {
         clickOn(elementLocator, locatorType);
-        Thread.sleep(300);
+        wrappedSleep(300, "sleep after click on element was interrupted", FixtureException.keyValues("elementLocator",
+                elementLocator, "locatorType", locatorType.toString(), "value", value));
         WebElement element = getWebElement(elementLocator, locatorType);
-        new Select(element).selectByVisibleText(value);
+        try {
+            new Select(element).selectByVisibleText(value);
+        } catch (NoSuchElementException e) {
+            throw new FixtureException(
+                    "element could not be selected by visible text (option not part of this selection)", //
+                    FixtureException.keyValues("elementLoactor", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "value", value, "element", element.toString()),
+                    e);
+        } catch (UnexpectedTagNameException e) {
+            throw new FixtureException("element expected to be tag SELECT", //
+                    FixtureException.keyValues("elementLoactor", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "value", value, //
+                            "element", element.toString()),
+                    e);
+        }
     }
 
     /**
      * 
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return a JsonObject of the values in a Selectionbox
      * @throws InterruptedException
      */
     @FixtureMethod
     public JsonObject getOptionsInSelection(String elementLocator, LocatorStrategy locatorType)
-            throws InterruptedException {
+            throws FixtureException {
         JsonObject availableOptions = new JsonObject();
         clickOn(elementLocator, locatorType);
-        Thread.sleep(300);
-
+        wrappedSleep(300, "sleep after get options in selection was interrupted",
+                FixtureException.keyValues("elementLocator", elementLocator, "locatorType", locatorType.toString()));
         Select selection = new Select(getWebElement(elementLocator, locatorType));
         for (WebElement webElement : selection.getAllSelectedOptions()) {
             availableOptions.addProperty(webElement.getText(), webElement.getText());
@@ -684,33 +736,38 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLoacator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLoacator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return true if a checkable Gui-Widget is checked, false otherwise.
      */
     @FixtureMethod
-    public Boolean checkEnabled(String elementLoacator, LocatorStrategy locatorType) {
+    public Boolean checkEnabled(String elementLoacator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLoacator, locatorType);
         return element.isEnabled();
     }
 
     /**
-     * @param elementLocator
-     *            Locator for Gui-Widget
-     * @param locatorType
-     *            Type of locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
+     * @param locatorType Type of locator for Gui-Widget
      * @return {@code WebElement} where the Locator String begins in a specific
      *         manner.
      */
-    protected WebElement getWebElement(String elementLocator, LocatorStrategy locatorType) {
+    protected WebElement getWebElement(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         if (exeuteScript != null) {
             executeScript();
         }
 
         logger.info("Lookup element {} type {}", elementLocator, locatorType.name());
-        return driver.findElement(getBy(elementLocator, locatorType));
+        WebElement result = null;
+        try {
+            result = driver.findElement(getBy(elementLocator, locatorType));
+        } catch (NoSuchElementException exception) {
+            throw new FixtureException("element could not be located on the current page", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString(), "pageSource", driver.getPageSource(), "url",
+                            driver.getCurrentUrl(), "title", driver.getTitle()));
+        }
+        return result;
     }
 
     private By getBy(String elementLocator, LocatorStrategy locatorType) {
@@ -737,9 +794,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * executes a given Javascript file. Name or respectively path of script must be
-     * set before within method {@code setExecuteScript()}.
+     * set before using method {@code setExecuteScript()}.
      */
-    private void executeScript() {
+    private void executeScript() throws FixtureException {
         try {
             logger.info("execute script begin {}", exeuteScript);
             BufferedReader br = new BufferedReader(new FileReader(exeuteScript));
@@ -752,7 +809,17 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             ((JavascriptExecutor) driver).executeScript(sb.toString());
         } catch (IOException e) {
             logger.error("Can't read java script", e);
-            throw new RuntimeException(e);
+            throw new FixtureException("could not execute javascript", //
+                    FixtureException.keyValues("executeScript", exeuteScript), e);
+        }
+    }
+
+    protected void wrappedSleep(long ms, String msg, Map<String, Object> keyValueMap) throws FixtureException {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            keyValueMap.put("timeout", Long.valueOf(ms));
+            throw new FixtureException(msg, keyValueMap, e);
         }
     }
 

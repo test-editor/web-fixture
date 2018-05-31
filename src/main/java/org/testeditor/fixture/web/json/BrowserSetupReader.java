@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.web.io.FileReader;
 
 import com.google.gson.Gson;
@@ -30,16 +31,17 @@ import com.google.gson.JsonPrimitive;
 public class BrowserSetupReader {
     
     private static final String optionsString = "options";
-    private static final String capabilitiesString = "capabilities"; 
+    private static final String capabilitiesString = "capabilities";
 
     /**
-     * Reads all available elements. An element is a {@link BrowserSetupElement} like operating system "os" with the 
+     * Reads all available elements. An element is a {@link BrowserSetupElement} like operating system "os" with the
      * value "WINDOWS" or "LINUX"s or browser specific "capabilities" or "options". These elements can be used for
      * setting up a browser before starting a test.
      * @param fileName of the BrowserElements
-     * @return All Browser or OS specific settings for starting a browser in a test environment.  
+     * @return All Browser or OS specific settings for starting a browser in a test environment.
+     * @throws FixtureException
      */
-    public List<BrowserSetupElement> readElements(String fileName) {
+    public List<BrowserSetupElement> readElements(String fileName) throws FixtureException {
         FileReader reader = new FileReader();
         List<BrowserSetupElement> allSetupElements = new ArrayList<>();
         String jsonString = reader.getFileContentAsString(fileName);
@@ -51,23 +53,23 @@ public class BrowserSetupReader {
         return allSetupElements;
         
     }
-    
-    private void completeElementSettings(BrowserSetupElement browserSetupElement , 
+
+    private void completeElementSettings(BrowserSetupElement browserSetupElement ,
             JsonObject jsonObject) {
         List<BrowserSetting> capabilities = new ArrayList<BrowserSetting>();
         List<BrowserSetting> options = new ArrayList<BrowserSetting>();
-        setBrowserSetting(browserSetupElement, options, jsonObject.get(optionsString));  
+        setBrowserSetting(browserSetupElement, options, jsonObject.get(optionsString));
         browserSetupElement.setOptions(options);
-        setBrowserSetting(browserSetupElement, capabilities, jsonObject.get(capabilitiesString));  
+        setBrowserSetting(browserSetupElement, capabilities, jsonObject.get(capabilitiesString));
         browserSetupElement.setCapabilities(capabilities);
         setOsNameIfPresent(browserSetupElement, jsonObject);
         setOsVersionIfPresent(browserSetupElement, jsonObject);
         setBrowserNameIfPresent(browserSetupElement, jsonObject);
         setBrowserVersionIfPresent(browserSetupElement, jsonObject);
     }
-    
 
-    private void setBrowserSetting(BrowserSetupElement browserSetupElement, List<BrowserSetting> settings, 
+
+    private void setBrowserSetting(BrowserSetupElement browserSetupElement, List<BrowserSetting> settings,
             JsonElement optionsAsJSonElement) {
         if (optionsAsJSonElement != null) {
             Set<Map.Entry<String, JsonElement>> settingEntries = optionsAsJSonElement.getAsJsonObject()
@@ -129,7 +131,7 @@ public class BrowserSetupReader {
         List<BrowserSetupElement> browserSetupElements = new ArrayList<BrowserSetupElement>();
         Set<Map.Entry<String, JsonElement>> setupEntries = jsonObject.entrySet();
         for (Map.Entry<String, JsonElement> setupEntry : setupEntries) {
-            browserSetupElement = new BrowserSetupElement(); 
+            browserSetupElement = new BrowserSetupElement();
             browserSetupElement.setBrowserSetupName(setupEntry.getKey());
             JsonElement value = setupEntry.getValue();
             completeElementSettings(browserSetupElement, value.getAsJsonObject());
@@ -139,4 +141,3 @@ public class BrowserSetupReader {
     }
 
 }
-

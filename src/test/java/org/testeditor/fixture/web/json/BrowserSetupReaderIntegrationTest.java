@@ -17,11 +17,12 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.testeditor.fixture.core.FixtureException;
 
 public class BrowserSetupReaderIntegrationTest {
 
     @Test
-    public void integrationTest() {
+    public void integrationTest() throws FixtureException {
         
         // given
         BrowserSetupReader browserSetupReader = new BrowserSetupReader();

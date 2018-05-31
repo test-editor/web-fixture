@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.web.WebDriverFixture;
 
 import com.google.common.io.CharStreams;
@@ -33,7 +34,7 @@ public class FileReader {
      * 
      * @return File content as String
      */
-    public String getFileContentAsString(String fileName) {
+    public String getFileContentAsString(String fileName) throws FixtureException {
 
         // Get file from resources folder
         ClassLoader classLoader = getClass().getClassLoader();
@@ -44,7 +45,8 @@ public class FileReader {
             result = CharStreams.toString(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         } catch (IOException e) {
             logger.info("The file with the name {} can not be read in the resource folder. {}" , fileName, e);
-            throw new RuntimeException();
+            throw new FixtureException("file could not be found in resource folder",
+                    FixtureException.keyValues("fileName", fileName));
         } catch (NullPointerException e) {
             logger.info("The file with the name {} can not be found in the resource folder.", fileName);
             result = "";
