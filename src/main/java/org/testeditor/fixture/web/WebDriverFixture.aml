@@ -51,6 +51,11 @@ interaction type sendEnter {
 	method = WebDriverFixture.pressEnterOn(element, locatorStrategy)
 }
 
+interaction type sendSpecialKey {
+	template = "Press Key" ${value}
+	method = WebDriverFixture.pressSpecialKey(value)
+}
+
 interaction type submit {
     template = "submit element" ${element}
     method = WebDriverFixture.submit(element, locatorStrategy)
@@ -92,35 +97,35 @@ interaction type checkEnabled {
 }
 
 element type BrowserApplication {
-	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit
+	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit, sendSpecialKey
 }
 
 element type field {
-	interactions = typeIn, sendEnter, waitUntilElementFound
+	interactions = typeIn, sendEnter, waitUntilElementFound, sendSpecialKey
 }
 
 element type button {
-	interactions = click, sendEnter, checkEnabled, waitUntilElementFound
+	interactions = click, sendEnter, checkEnabled, waitUntilElementFound, sendSpecialKey
 }
 
 element type selection {
-	interactions = click, sendEnter, selectInSelection, getAvailableOptions, waitUntilElementFound
+	interactions = click, sendEnter, selectInSelection, getAvailableOptions, waitUntilElementFound, sendSpecialKey
 }
 
 element type dateTimePicker {
-	interactions = click, readValue, waitUntilElementFound
+	interactions = click, readValue, waitUntilElementFound, sendSpecialKey
 }
 
 element type labelElement {
-	interactions = readValue, waitUntilElementFound
+	interactions = readValue, waitUntilElementFound, sendSpecialKey
 }
 
 component type GeneralBrowser {
-	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser
+	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser, sendSpecialKey
 }
 
 component type Page {
-	interactions = wait, waitUntilElementFound, submit, getTitle
+	interactions = wait, waitUntilElementFound, submit, getTitle, sendSpecialKey
 }
 
 component WebBrowser is GeneralBrowser {

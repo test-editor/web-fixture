@@ -833,7 +833,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException
      *             if key is invalid
      */
-    public void pressSpecialKey(String specialKey) throws FixtureException {
+    @FixtureMethod
+    public void pressSpecialKey(String specialKey) 
+            throws FixtureException {
         if (specialKey == null || specialKey.trim().isEmpty()) {
             throw new FixtureException("Invalid or empty key!");
         }
