@@ -79,7 +79,6 @@ public class FirefoxTest {
         driver.pressSpecialKey("DELETE");
         driver.pressSpecialKey("DELETE");
         driver.pressSpecialKey("DELETE");
-        driver.waitSeconds(2);
         driver.submit("q", LocatorStrategy.NAME);
 
         // then

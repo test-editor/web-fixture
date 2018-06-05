@@ -22,10 +22,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -844,8 +846,17 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             Keys seleniumKey = Keys.valueOf(specialKey.trim().toUpperCase());
             new Actions(driver).sendKeys(seleniumKey).build().perform();
         } catch (IllegalArgumentException e) {
-            throw new FixtureException("The specified key '" + specialKey.trim().toUpperCase()
-                                    + "' is invalid and could not be found in selenium enum org.openqa.selenium.Keys!");
+            
+            throw new FixtureException("Key cannot be converted", 
+                    FixtureException.keyValues("key", specialKey, "allowed-keys", join()), e);
         }
+    }
+    
+    private String join() {
+        Keys[] values = Keys.values();
+        ArrayList<Keys> allKeyentries = new ArrayList<>(Arrays.asList(values));
+        return allKeyentries.stream()
+                 .map(n -> n.name())
+                 .collect(Collectors.joining("\", \""));
     }
 }
