@@ -56,7 +56,6 @@ public class FirefoxTest {
         driver.waitSeconds(2);
 
         // when
-        driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
         String title = driver.getTitle();
 
         // then
@@ -80,9 +79,10 @@ public class FirefoxTest {
         driver.pressSpecialKey("DELETE");
         driver.pressSpecialKey("DELETE");
         driver.submit("q", LocatorStrategy.NAME);
+        driver.waitSeconds(2);
 
         // then
-        driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
+
         String title = driver.getTitle();
         Assert.assertTrue(title.startsWith("Edito - Google"));
     }

@@ -848,13 +848,12 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         } catch (IllegalArgumentException e) {
             
             throw new FixtureException("Key cannot be converted", 
-                    FixtureException.keyValues("key", specialKey, "allowed-keys", join()), e);
+                    FixtureException.keyValues("key", specialKey, "allowed-keys", join(Keys.values())), e);
         }
     }
     
-    private String join() {
-        Keys[] values = Keys.values();
-        ArrayList<Keys> allKeyentries = new ArrayList<>(Arrays.asList(values));
+    private String join(Keys[] keys) {
+        ArrayList<Keys> allKeyentries = new ArrayList<>(Arrays.asList(keys));
         return allKeyentries.stream()
                  .map(n -> n.name())
                  .collect(Collectors.joining("\", \""));
