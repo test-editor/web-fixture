@@ -96,7 +96,7 @@ element type BrowserApplication {
 }
 
 element type field {
-	interactions = typeIn, sendEnter, waitUntilElementFound
+	interactions = typeIn, sendEnter, waitUntilElementFound, clear
 }
 
 element type button {
@@ -104,7 +104,7 @@ element type button {
 }
 
 element type selection {
-	interactions = click, sendEnter, selectInSelection, getAvailableOptions, waitUntilElementFound
+	interactions = click, sendEnter, selectInSelection, getAvailableOptions, waitUntilElementFound, clear
 }
 
 element type dateTimePicker {
