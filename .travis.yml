@@ -1,11 +1,22 @@
+sudo: false
 language: java
 addons:
-  firefox: "58.0"
   apt:
     packages:
       - xvfb
-sudo: false
+
+env: 
+  - FIREFOX_VERSION="latest"
+  - FIREFOX_VERSION="60.0.1"
+ 
 before_install:
+  # Install firefox for testing.
+  - echo $FIREFOX_VERSION
+  - export FIREFOX_SOURCE_URL='https://download.mozilla.org/?product=firefox-'$FIREFOX_VERSION'&lang=en-US&os=linux64'
+  - wget --no-verbose -O /tmp/firefox-$FIREFOX_VERSION.tar.bz2 $FIREFOX_SOURCE_URL
+  - mkdir /tmp/firefox-$FIREFOX_VERSION
+  - tar -xvf /tmp/firefox-$FIREFOX_VERSION.tar.bz2 -C /tmp/firefox-$FIREFOX_VERSION
+  - export PATH=/tmp/firefox-$FIREFOX_VERSION/firefox:$PATH 
  # Use a virtual display.
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
