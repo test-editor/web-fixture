@@ -51,14 +51,43 @@ public class FirefoxTest {
         driver.startBrowser("firefox");
         driver.goToUrl("https://google.de");
         driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+        driver.waitSeconds(2);
         driver.submit("q", LocatorStrategy.NAME);
+        driver.waitSeconds(2);
 
         // when
-        driver.waitUntilElementFound("res", LocatorStrategy.ID, 2);
         String title = driver.getTitle();
 
         // then
         Assert.assertTrue(title.startsWith("Test-Editor - Google"));
     }
+    
+    @Test
+    public void googleTestWithSpecialKeys() throws FixtureException {
+        // given
+        String searchField = "q";
+        driver.startBrowser("firefox");
+        driver.goToUrl("https://google.de");
+        driver.typeInto(searchField, LocatorStrategy.NAME, "Test-Editor");
+
+        // when
+        driver.pressSpecialKey("BACK_SPACE");
+        driver.pressSpecialKey("HOME");
+        driver.pressSpecialKey("DELETE");
+        driver.pressSpecialKey("DELETE");
+        driver.pressSpecialKey("DELETE");
+        driver.pressSpecialKey("DELETE");
+        driver.pressSpecialKey("DELETE");
+        driver.submit("q", LocatorStrategy.NAME);
+        driver.waitSeconds(2);
+
+        // then
+
+        String title = driver.getTitle();
+        Assert.assertTrue(title.startsWith("Edito - Google"));
+    }
 
 }
+
+
+

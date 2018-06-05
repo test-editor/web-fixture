@@ -22,16 +22,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -46,6 +49,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -822,5 +826,36 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             throw new FixtureException(msg, keyValueMap, e);
         }
     }
+    
+    /**
+     * A special keyboard key is pressed.
+     * 
+     * @param specialKey
+     *            the key to press (@see org.openqa.selenium.Keys)
+     * @throws FixtureException
+     *             if key is invalid
+     */
+    @FixtureMethod
+    public void pressSpecialKey(String specialKey) 
+            throws FixtureException {
+        if (specialKey == null || specialKey.trim().isEmpty()) {
+            throw new FixtureException("Invalid or empty key!");
+        }
 
+        try {
+            Keys seleniumKey = Keys.valueOf(specialKey.trim().toUpperCase());
+            new Actions(driver).sendKeys(seleniumKey).build().perform();
+        } catch (IllegalArgumentException e) {
+            
+            throw new FixtureException("Key cannot be converted", 
+                    FixtureException.keyValues("key", specialKey, "allowed-keys", join(Keys.values())), e);
+        }
+    }
+    
+    private String join(Keys[] keys) {
+        ArrayList<Keys> allKeyentries = new ArrayList<>(Arrays.asList(keys));
+        return allKeyentries.stream()
+                 .map(n -> n.name())
+                 .collect(Collectors.joining("\", \""));
+    }
 }
