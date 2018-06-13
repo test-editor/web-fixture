@@ -569,27 +569,6 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     /**
-     * press enter on a specified Gui-Widget
-     * 
-     * @param elementLocator Locator for Gui-Widget
-     * @param locatorType Type of locator for Gui-Widget
-     */
-    @FixtureMethod
-    public void pressEnterOn(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
-        WebElement element = getWebElement(elementLocator, locatorType);
-        try {
-            element.submit();
-        } catch (NoSuchElementException e) {
-            throw new FixtureException("element seems not to be part of a form so enter cannot be pressed on it", //
-                    FixtureException.keyValues("elementLocator", elementLocator, //
-                            "locatorType", locatorType.toString(), //
-                            "element", element.toString(), //
-                            "pageSource", driver.getPageSource()),
-                    e);
-        }
-    }
-
-    /**
      * type into text fields on a specified Gui-Widget
      * 
      * @param elementLocator Locator for Gui-Widget
