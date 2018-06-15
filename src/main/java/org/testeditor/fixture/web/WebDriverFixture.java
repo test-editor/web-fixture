@@ -660,7 +660,21 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     @FixtureMethod
     public String readValue(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
-        return element.getText();
+        
+        String readValueThroughAttribute = element.getAttribute("value");
+        String readValueThrougText = element.getText();
+        String value = null;
+        // Selenium getText() vs. getAttribute("value") see https://sqa.stackexchange.com/questions/24463/selenium-webdriver-gettext-vs-getattribute
+        if (!readValueThrougText.isEmpty()) {
+			value = readValueThrougText;
+		}else {
+        	if (!readValueThroughAttribute.isEmpty()) {
+				value = readValueThroughAttribute;
+			}else {
+				throw new FixtureException("No value found for element " + elementLocator);
+			}
+		}
+        return value;
     }
 
     /**
