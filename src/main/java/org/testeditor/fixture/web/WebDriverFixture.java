@@ -617,7 +617,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "element", element.toString(), //
-                            "pageSource", driver.getPageSource()),
+                            "pageSource", getPageSource()),
                     e);
         }
     }
@@ -646,34 +646,49 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
                             "element", element.toString(), //
-                            "pageSource", driver.getPageSource()),
+                            "pageSource", getPageSource()),
                     e);
         }
     }
 
     /**
-     * 
+     * Returns the innerText content of an HTML-Element e.g. {@code <button>My Button</button>}
+     * returns the text "My Button". If the value will not be found, a FixtureException will be thrown.
+     * The expectation is: the value has to be available on the HTML site, because the user typed this value 
+     * before this action.          
      * @param elementLocator Locator for Gui-Widget
      * @param locatorType Type of locator for Gui-Widget
-     * @return value of a label
+     * @return innerText of a HTML-Element
+     * @throws FixtureException
      */
     @FixtureMethod
     public String readValue(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
-        
-        String readValueThroughAttribute = element.getAttribute("value");
-        String readValueThrougText = element.getText();
+        String value = getValueOfWebElement(element);
+        if (value == null) {
+            throw new FixtureException("No value found for given locator " + elementLocator, //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString(), //
+                            "element", element.toString(), //
+                            "value", value));
+        }
+        return value;
+    }
+    
+    protected String getValueOfWebElement(WebElement element) {
         String value = null;
+        String readValueThroughText = element.getText();
         // Selenium getText() vs. getAttribute("value") see https://sqa.stackexchange.com/questions/24463/selenium-webdriver-gettext-vs-getattribute
-        if (!readValueThrougText.isEmpty()) {
-			value = readValueThrougText;
-		}else {
-        	if (!readValueThroughAttribute.isEmpty()) {
-				value = readValueThroughAttribute;
-			}else {
-				throw new FixtureException("No value found for element " + elementLocator);
-			}
-		}
+        if ((readValueThroughText != null) && (!readValueThroughText.isEmpty())) {
+            value = readValueThroughText;
+        } else { 
+            String readValueThroughAttribute = element.getAttribute("value");
+            if ((readValueThroughAttribute  != null) && (!readValueThroughAttribute.isEmpty())) {
+                value = readValueThroughAttribute;
+            } else {
+                value = null;
+            }
+        }
         return value;
     }
 
@@ -733,13 +748,13 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     /**
      * 
-     * @param elementLoacator Locator for Gui-Widget
+     * @param elementLocator Locator for Gui-Widget
      * @param locatorType Type of locator for Gui-Widget
      * @return true if a checkable Gui-Widget is checked, false otherwise.
      */
     @FixtureMethod
-    public Boolean checkEnabled(String elementLoacator, LocatorStrategy locatorType) throws FixtureException {
-        WebElement element = getWebElement(elementLoacator, locatorType);
+    public Boolean checkEnabled(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
+        WebElement element = getWebElement(elementLocator, locatorType);
         return element.isEnabled();
     }
 
@@ -761,7 +776,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         } catch (NoSuchElementException exception) {
             throw new FixtureException("element could not be located on the current page", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
-                            "locatorType", locatorType.toString(), "pageSource", driver.getPageSource(), "url",
+                            "locatorType", locatorType.toString(), "pageSource", getPageSource(), "url",
                             driver.getCurrentUrl(), "title", driver.getTitle()));
         }
         return result;
@@ -850,5 +865,52 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         return allKeyentries.stream()
                  .map(n -> n.name())
                  .collect(Collectors.joining("\", \""));
+    }
+
+    /**
+     * Checks if a specified text appears on a web site. Even just typed text artifacts 
+     * which are currently inserted into the DOM. 
+     * The expectation is: The user just wants to search for a specified text on a web site 
+     * without an error being reported if the text is not found on the web site. With this
+     * knowledge the user can decide what to do in the test. Using an assertion or just   
+     * assigning the result of this method to a variable for later usage.
+     * 
+     * @param textTobeFound
+     * @return true if searched text is found on a HTML Page and in DOM , false otherwise
+     * @throws FixtureException
+     */
+    @FixtureMethod
+    public boolean isTextOnPage(String textTobeFound) throws FixtureException {
+        // First looking in the page source for fix Web Elements
+        if (checkForConstantWebElements(textTobeFound)) {
+            return true;
+        }
+        // Now check for dynamic Web Elements in DOM 
+        return checkForDynamicWebElements(textTobeFound, getAllWebElementsOnPage());
+    }
+
+    protected List<WebElement> getAllWebElementsOnPage() {
+        return driver.findElements(By.xpath("//*"));
+    }
+
+    protected boolean checkForConstantWebElements(String textTobeFound) {
+        String pageSource = getPageSource();
+        return pageSource.contains(textTobeFound); 
+    }
+
+    protected String getPageSource() {
+        return driver.getPageSource();
+    }
+
+    protected boolean checkForDynamicWebElements(String textTobeFound, List<WebElement> elements) {
+        boolean textOnpage = false;
+        for (WebElement element :elements) {
+            String valueOfWebElement = getValueOfWebElement(element);
+            if (valueOfWebElement != null && valueOfWebElement.contains(textTobeFound)) {
+                textOnpage = true;
+                break;
+            } 
+        }
+        return textOnpage;
     }
 }

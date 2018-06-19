@@ -88,7 +88,7 @@ public class FirefoxTest {
     }
     
     @Test
-    public void testWithSpecialInputFields() throws FixtureException {
+    public void testReadValueToRetrieveTextFromValueAttribute() throws FixtureException {
         // given
         String searchField = "q";
         driver.startBrowser("firefox");
@@ -100,6 +100,21 @@ public class FirefoxTest {
 
         // then
         Assert.assertEquals(readValue, "Test-Editor");
+    }
+    
+    @Test
+    public void testPresenceOfTextOnWebPageInValueAttribute() throws FixtureException {
+        // given
+        String searchField = "q";
+        driver.startBrowser("firefox");
+        driver.goToUrl("https://google.de");
+        driver.typeInto(searchField, LocatorStrategy.NAME, "Test-Editor");
+       
+        // when
+        boolean presenceOfText = driver.isTextOnPage("Test-Editor");
+
+        // then
+        Assert.assertTrue(presenceOfText);
     }
 }
 
