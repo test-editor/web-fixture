@@ -6,8 +6,14 @@ addons:
       - xvfb
 
 env: 
-  - FIREFOX_VERSION="latest"
-  - FIREFOX_VERSION="60.0.1"
+  global: 
+    - # Environment variable for WebDriverManager see https://github.com/bonigarcia/webdrivermanager#known-issues
+    - secure: "bo3R0BpN8SzOCXHV3vJrO20X7dxub9EbPcktNuXoXrJEYq2JwnOYVp/7H3yGzQB+yG6j4uUjEZoHOt84oHMCJQjXIN60q+I7+GbMU1Ym+3AvNavsXgmV7YbH5jV1XI3VYWtEtBOGoE6rSUAvRi9bU9uNqAZkbwbR4gMsjm9ZEzYvtwLpt6YE79obAOZUcBM74GRlZIC8Kla/uFS3SE/peR9L8tEo4BMzgtM2HnaANro4Cg8Dg6EonHpOApvXn7H0HhbJ9jujMEselSpPIOxoCusH0UUC55Iaf+calPf9FNHsB4iE3nm3CDFWZbv29M+PEVIm8Trj8ztpj3eyrdbdwEn7Jlam8BPe8I95gL7FqK70fK0tPps84YiWAQcCKGF0I60oKQ4rXZh4hb5E64zngHNmt5NUFjVL4IvhNre3MPFVYskVlo/7qWUwGPR+I91pjxQHmxGoUjcZX0iv6NyraCvQIJTE9wlNNaM/Yv6hw09wc7W8GdoNt5Z+uF20P0+V3stSch8oLEWZwnbraRHgAOBrnopqTL5MD3kNAaSiY+14Egez/YOud8R7ARMqGHoPW6gU+PgUtz+lGjigyOzTqKsKyiGAqfyNGGErXoKvzYA6ab4boLi0Sjrw9NCfrFbdoP0DL0GrOO+v11rRH4sEaQxz6LKFBm2Fp0nLKLFJbWE="
+    - secure: "W9cR3N+NP/d8IJ/WdGuvdcOo31Agi4Qr0fH+Hd1MKrJHsH1d8JOStlQsec4Ih7aYlq2c1XRj1XHg7xrc9lH3JJxh7JkXr8XZIe+Fd1gdOKD23vI+4e+HfCeYVdv56Ia7fTBDCC+5L23x8F4zuyLRlfbPXUX9CrltKDtEfKq/XYKjJcESbOJSJiAsSNjFgd0AECvLLEsBZxh2KseJytAxoNT/ScYmoE+30N6o8Gke26IhiNEhCP43NUD5HzcfdDmjRaBjQPXTN1AjfjHxXmcqTxeBiqfSatKg7BplSm8zvCR2MnaJHQJCwD7hUVfrVGa8mNzVycuu2FimBpg9wGOFEqlOZ2tGx3Xy3siLVCfbZc6LykBeHdoZjhjsTF+NqYxmsFAWvfPIJudViB9qk5uODTMvgJdk1nYStuKQLmGjzDoCtnRoV3RWExhMZsSW2Io1jr/uLHKDCqWidYqyoFvIy++svwk6vte+IwQ3TTSrrff6RdddIs/oVeSI+aItffvXKbpEJHkRy5ZP/jh9fJS2UeVitSON09XEx4h2lVCgzDqNNN5wV78CJGhCY3GlrEjGOmnK5kpASoKEKbTh4ebNkkIBZD6npF7Kqz8HApafHhWmvKIxcc8HWz26qJp75XIX8j36Ix+2IBPoZ4zbhC6tVh8FexqH4pkArJ7nYmJpDHg="
+    
+  matrix: 
+    - FIREFOX_VERSION="latest"
+    - FIREFOX_VERSION="60.0.1"
  
 before_install:
   # Install firefox for testing.
