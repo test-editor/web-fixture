@@ -11,13 +11,13 @@ interaction type waitUntilElementFound {
 }
 
 interaction type startBrowser {
-	template = "Start " ${element}
+	template = "Start" ${element}
 	method = WebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "Start firefox portable " ${path} 
+	template = "Start firefox portable" ${path}
 	method = WebDriverFixture.startFireFoxPortable(path)
 }
 
@@ -42,7 +42,7 @@ interaction type setActiveBrowser {
 }
 
 interaction type typeIn {
-	template = "Enter" ${value} "into" ${element} 
+	template = "Enter" ${value} "into" ${element}
 	method = WebDriverFixture.typeInto(element, locatorStrategy, value)
 }
 
@@ -70,12 +70,12 @@ interaction type click {
 }
 
 interaction type selectInSelection {
-	template = "Select " ${value} "from" ${element}
+	template = "Select" ${value} "from" ${element}
 	method = WebDriverFixture.selectElementInSelection(element, locatorStrategy, value)
 }
 
 interaction type getAvailableOptions {
-	template = "Read available " ${element}
+	template = "Read available" ${element}
 	method = WebDriverFixture.getOptionsInSelection(element, locatorStrategy)
 }
 
@@ -90,7 +90,7 @@ interaction type executeScript {
 }
 
 interaction type checkEnabled {
-	template = "Is " ${element} " enabled"
+	template = "Is" ${element} "enabled"
 	method = WebDriverFixture.checkEnabled(element, locatorStrategy)
 }
 

@@ -6,7 +6,7 @@ interaction type wait {
 }
 
 interaction type waitUntilElementFound {
-    template = "Wait" ${seconds} "seconds until ${element} is found"
+    template = "Wait" ${seconds} "seconds until" ${element} "is found"
     method = NgOneWebDriverFixture.waitUntilElementFound(element, locatorStrategy, seconds)
 }
 
@@ -17,7 +17,7 @@ interaction type startBrowser {
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "Start firefox portable " ${path} 
+	template = "Start firefox portable" ${path}
 	method = NgOneWebDriverFixture.startFireFoxPortable(path)
 }
 
@@ -66,12 +66,12 @@ interaction type click {
 }
 
 interaction type selectInSelection {
-	template = "Select " ${value} "from" ${element}
+	template = "Select" ${value} "from" ${element}
 	method = NgOneWebDriverFixture.selectElementInSelection(element, locatorStrategy, value)
 }
 
 interaction type getAvailableOptions {
-	template = "Read available " ${element}
+	template = "Read available" ${element}
 	method = NgOneWebDriverFixture.getOptionsInSelection(element, locatorStrategy)
 }
 
@@ -87,7 +87,7 @@ interaction type executeScript {
 }
 
 interaction type checkEnabled {
-	template = "Is " ${element} " enabled"
+	template = "Is" ${element} "enabled"
 	method = NgOneWebDriverFixture.checkEnabled(element, locatorStrategy)
 
 }

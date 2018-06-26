@@ -6,18 +6,18 @@ interaction type wait {
 }
 
 interaction type waitUntilElementFound {
-    template = "Wait" ${seconds} "seconds until ${element} is found"
+    template = "Wait" ${seconds} "seconds until" ${element} "is found"
     method = NgMdWebDriverFixture..waitUntilElementFound(element, locatorStrategy, seconds)
 }
 
 interaction type startBrowser {
-	template = "Start " ${element}
+	template = "Start" ${element}
 	method = NgMdWebDriverFixture.startBrowser(element)
 }
 
 interaction type startFireFoxPortable {
 	label = "Start browser firefox portable"
-	template = "Start firefox portable " ${path} 
+	template = "Start firefox portable" ${path}
 	method = NgMdWebDriverFixture.startFireFoxPortable(path)
 }
 
@@ -67,12 +67,12 @@ interaction type click {
 }
 
 interaction type selectInSelection {
-	template = "Select " ${value} "from" ${element}
+	template = "Select" ${value} "from" ${element}
 	method = NgMdWebDriverFixture.selectElementInSelection(element, locatorStrategy, value)
 }
 
 interaction type getAvailableOptions {
-	template = "Read available " ${element}
+	template = "Read available" ${element}
 	method = NgMdWebDriverFixture.getOptionsInSelection(element, locatorStrategy)
 }
 
@@ -88,7 +88,7 @@ interaction type executeScript {
 }
 
 interaction type checkEnabled {
-	template = "Is " ${element} " enabled"
+	template = "Is" ${element} "enabled"
 	method = NgMdWebDriverFixture.checkEnabled(element, locatorStrategy)
 
 }
