@@ -86,7 +86,36 @@ public class FirefoxTest {
         String title = driver.getTitle();
         Assert.assertTrue(title.startsWith("Edito - Google"));
     }
+    
+    @Test
+    public void testReadValueToRetrieveTextFromValueAttribute() throws FixtureException {
+        // given
+        String searchField = "q";
+        driver.startBrowser("firefox");
+        driver.goToUrl("https://google.de");
+        driver.typeInto(searchField, LocatorStrategy.NAME, "Test-Editor");
+       
+        // when
+        String readValue = driver.readValue(searchField, LocatorStrategy.NAME);
 
+        // then
+        Assert.assertEquals(readValue, "Test-Editor");
+    }
+    
+    @Test
+    public void testPresenceOfTextOnWebPageInValueAttribute() throws FixtureException {
+        // given
+        String searchField = "q";
+        driver.startBrowser("firefox");
+        driver.goToUrl("https://google.de");
+        driver.typeInto(searchField, LocatorStrategy.NAME, "Test-Editor");
+       
+        // when
+        boolean presenceOfText = driver.isTextOnPage("Test-Editor");
+
+        // then
+        Assert.assertTrue(presenceOfText);
+    }
 }
 
 
