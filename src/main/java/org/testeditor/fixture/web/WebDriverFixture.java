@@ -64,6 +64,8 @@ import org.testeditor.fixture.core.TestRunReporter;
 import org.testeditor.fixture.core.TestRunReporter.Action;
 import org.testeditor.fixture.core.TestRunReporter.SemanticUnit;
 import org.testeditor.fixture.core.TestRunReporter.Status;
+import org.testeditor.fixture.core.artifacts.TestArtifact;
+import org.testeditor.fixture.core.artifacts.TestArtifactRegistry;
 import org.testeditor.fixture.core.interaction.FixtureMethod;
 import org.testeditor.fixture.web.json.BrowserSetting;
 import org.testeditor.fixture.web.json.BrowserSettingsManager;
@@ -195,7 +197,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             runningTest = msg;
         }
         if (screenshotShouldBeMade(unit, action, msg)) {
-            makeScreenshot(msg + '.' + action.name());
+            String screenshotFileName = makeScreenshot(msg + '.' + id);
+            TestArtifactRegistry.getInstance().register(new TestArtifact("screenshot", screenshotFileName), id);
         }
     }
 
