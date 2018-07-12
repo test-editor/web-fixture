@@ -57,6 +57,7 @@ import org.openqa.selenium.support.ui.UnexpectedTagNameException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testeditor.fixture.commons.text.generate.UniqueIdGenerator;
 import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.core.TestRunListener;
 import org.testeditor.fixture.core.TestRunReportable;
@@ -915,5 +916,21 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             } 
         }
         return textOnpage;
+    }
+    
+    
+    /**
+     * Creates a unique identifier for testing purposes
+     * @param amountOfCharacters This is the amount of hexadecimal characters which 
+     * should be returned for testing purposes. The amount can only be in the range of 1 to 64 characters.
+     * @return The generated unique identifier which persists of up to 64 hexadecimal characters. in the form ""
+     * @throws FixtureException 
+     */
+    @FixtureMethod
+    public String getUniqueId(int amountOfCharacters) throws FixtureException {
+        UniqueIdGenerator generator = new UniqueIdGenerator();
+        String uniqueId = null;
+        uniqueId = generator.generateUniqueId(amountOfCharacters);
+        return uniqueId;
     }
 }
