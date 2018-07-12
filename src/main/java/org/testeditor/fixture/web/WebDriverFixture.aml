@@ -31,6 +31,11 @@ interaction type getTitle {
     method = WebDriverFixture.getTitle()
 }
 
+interaction type getUniqueId {
+	template = "Get" ${amountOfCharacters} "unique characters"
+	method = WebDriverFixture.getUniqueId(amountOfCharacters)
+}
+
 interaction type closeBrowser {
 	template = "Close browser"
 	method = WebDriverFixture.closeBrowser
@@ -125,11 +130,11 @@ element type labelElement {
 }
 
 component type GeneralBrowser {
-	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser, sendSpecialKey, isTextOnPage
+	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser, sendSpecialKey, isTextOnPage, getUniqueId
 }
 
 component type Page {
-	interactions = wait, waitUntilElementFound, submit, getTitle, sendSpecialKey, isTextOnPage
+	interactions = wait, waitUntilElementFound, submit, getTitle, sendSpecialKey, isTextOnPage, getUniqueId
 }
 
 component WebBrowser is GeneralBrowser {

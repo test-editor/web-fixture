@@ -13,6 +13,8 @@
 
 package org.testeditor.fixture.web;
 
+import static org.hamcrest.CoreMatchers.is;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -79,6 +81,16 @@ public class WebDriverFixtureTest {
         Assert.assertEquals("foo", textOnPage); 
     }
     
+    @Test
+    public void generateUniqueIdWith28Chars() throws FixtureException {
+        // given
+        WebDriverFixture driver = new WebDriverFixture();
+        
+        // when
+        String uniqueId = driver.getUniqueId(28);
     
+        // then
+        Assert.assertThat(uniqueId.length(), is(28));
+    }
     
 }
