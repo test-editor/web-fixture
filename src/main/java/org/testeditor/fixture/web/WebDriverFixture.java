@@ -243,7 +243,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     private boolean screenshotShouldBeMade(SemanticUnit unit, Action action, String msg) {
         // configurable through maven build?
-        return ((action == Action.LEAVE) || unit == SemanticUnit.TEST) && driver != null;
+        return (((action == Action.LEAVE) && unit == SemanticUnit.STEP) || unit == SemanticUnit.TEST) && driver != null;
     }
 
     private String reduceToMaxLen(String base, int maxLen) {
