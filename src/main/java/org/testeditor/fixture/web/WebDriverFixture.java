@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -100,6 +101,16 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private static final Logger logger = LoggerFactory.getLogger(WebDriverFixture.class);
 
     private String executeScript = null;
+    
+    private final Supplier<TestArtifactRegistry> testArtifactRegistrySupplier;
+    
+    public WebDriverFixture() {
+        this(TestArtifactRegistry::getInstance);
+    }
+    
+    public WebDriverFixture(Supplier<TestArtifactRegistry> testArtifactRegistry) {
+        this.testArtifactRegistrySupplier = testArtifactRegistry;
+    }    
 
     /**
      * specifies the time to wait (in seconds) before an action will be performed.
@@ -199,7 +210,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
         if (screenshotShouldBeMade(unit, action, msg)) {
             String screenshotFileName = makeScreenshot(msg + '.' + id);
-            TestArtifactRegistry.getInstance().register(new TestArtifact("screenshot", screenshotFileName), id);
+            testArtifactRegistrySupplier.get().register(new TestArtifact("screenshot", screenshotFileName), id);
         }
     }
 
