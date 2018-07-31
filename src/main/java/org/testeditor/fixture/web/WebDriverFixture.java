@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -99,7 +100,17 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private WebDriver driver;
     private static final Logger logger = LoggerFactory.getLogger(WebDriverFixture.class);
 
-    private String exeuteScript = null;
+    private String executeScript = null;
+    
+    private final Supplier<TestArtifactRegistry> testArtifactRegistrySupplier;
+    
+    public WebDriverFixture() {
+        this(TestArtifactRegistry::getInstance);
+    }
+    
+    public WebDriverFixture(Supplier<TestArtifactRegistry> testArtifactRegistry) {
+        this.testArtifactRegistrySupplier = testArtifactRegistry;
+    }    
 
     /**
      * specifies the time to wait (in seconds) before an action will be performed.
@@ -140,7 +151,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     @FixtureMethod
     public void setExecuteScript(String exec) throws FixtureException {
-        exeuteScript = exec;
+        executeScript = exec;
     }
 
     /**
@@ -199,7 +210,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         }
         if (screenshotShouldBeMade(unit, action, msg)) {
             String screenshotFileName = makeScreenshot(msg + '.' + id);
-            TestArtifactRegistry.getInstance().register(new TestArtifact("screenshot", screenshotFileName), id);
+            testArtifactRegistrySupplier.get().register(new TestArtifact("screenshot", screenshotFileName), id);
         }
     }
 
@@ -232,7 +243,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     private boolean screenshotShouldBeMade(SemanticUnit unit, Action action, String msg) {
         // configurable through maven build?
-        return ((action == Action.LEAVE) || unit == SemanticUnit.TEST) && driver != null;
+        return (((action == Action.LEAVE) && unit == SemanticUnit.STEP) || unit == SemanticUnit.TEST) && driver != null;
     }
 
     private String reduceToMaxLen(String base, int maxLen) {
@@ -769,7 +780,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      *         manner.
      */
     protected WebElement getWebElement(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
-        if (exeuteScript != null) {
+        if (executeScript != null) {
             executeScript();
         }
 
@@ -814,19 +825,19 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void executeScript() throws FixtureException {
         try {
-            logger.info("execute script begin {}", exeuteScript);
-            BufferedReader br = new BufferedReader(new FileReader(exeuteScript));
+            logger.info("execute script begin {}", executeScript);
+            BufferedReader br = new BufferedReader(new FileReader(executeScript));
             StringBuilder sb = new StringBuilder();
             while (br.ready()) {
                 sb.append(br.readLine()).append("\n");
             }
             br.close();
-            logger.info("execute script end {}", exeuteScript);
+            logger.info("execute script end {}", executeScript);
             ((JavascriptExecutor) driver).executeScript(sb.toString());
         } catch (IOException e) {
             logger.error("Can't read java script", e);
             throw new FixtureException("could not execute javascript", //
-                    FixtureException.keyValues("executeScript", exeuteScript), e);
+                    FixtureException.keyValues("executeScript", executeScript), e);
         }
     }
 
