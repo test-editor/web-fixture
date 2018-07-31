@@ -93,7 +93,7 @@ public class WebDriverFixtureScreenshotsTest {
     }
 
     @Test
-    public void textIsOnPageDynamicElementTest() throws FixtureException, WebDriverException, IOException {
+    public void testScreenshotRegistrationOnUnitAndAction() throws FixtureException, WebDriverException, IOException {
         // given
         TestArtifactRegistry mockRegistry = mock(TestArtifactRegistry.class);
         WebDriverFixture driverUnderTest = new WebDriverFixture(() -> mockRegistry);
