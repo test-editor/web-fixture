@@ -1,5 +1,7 @@
 package org.testeditor.fixture.web.angularjs
 
+import static org.testeditor.fixture.web.LocatorStrategy.ID
+
 interaction type wait {
 	template = "Wait" ${seconds} "seconds"
 	method = NgOneWebDriverFixture.waitSeconds(seconds)
@@ -44,11 +46,6 @@ interaction type setActiveBrowser {
 interaction type typeIn {
 	template = "Enter" ${value} "into" ${element} 
 	method = NgOneWebDriverFixture.typeInto(element, locatorStrategy, value)
-}
-
-interaction type sendEnter {
-	template = "Press enter on" ${element}
-	method = NgOneWebDriverFixture.pressEnterOn(element, locatorStrategy)
 }
 
 interaction type submit {
@@ -97,15 +94,15 @@ element type BrowserApplication {
 }
 
 element type field {
-	interactions = typeIn, sendEnter, waitUntilElementFound
+	interactions = typeIn, submit, waitUntilElementFound
 }
 
 element type button {
-	interactions = click, sendEnter, checkEnabled, waitUntilElementFound
+	interactions = click, submit, checkEnabled, waitUntilElementFound
 }
 
 element type selection {
-	interactions = click, sendEnter, selectInSelection, getAvailableOptions, waitUntilElementFound
+	interactions = click, submit, selectInSelection, getAvailableOptions, waitUntilElementFound
 }
 
 element type dateTimePicker {
@@ -127,18 +124,22 @@ component type Page {
 component WebBrowser is GeneralBrowser {
 	element defaultBrowser is BrowserApplication {
 		locator ="default"
+		locatorStrategy = ID
 	}
 	element Firefox is BrowserApplication {
 		label = "Firefox"
 		locator ="firefox"
+		locatorStrategy = ID
 	}
 
 	element IE is BrowserApplication {
 		label = "Internet Explorer"
 		locator ="ie"
+		locatorStrategy = ID
 	}
 	element Chrome is BrowserApplication {
 		label = "Chrome"
 		locator ="chrome"
+		locatorStrategy = ID
 	}
 }
