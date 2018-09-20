@@ -58,7 +58,6 @@ import org.openqa.selenium.support.ui.UnexpectedTagNameException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testeditor.fixture.commons.text.generate.UniqueIdGenerator;
 import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.core.TestRunListener;
 import org.testeditor.fixture.core.TestRunReportable;
@@ -76,6 +75,7 @@ import org.testeditor.fixture.web.json.BrowserSetupElement;
 import com.google.gson.JsonObject;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -311,7 +311,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     @FixtureMethod
     public WebDriver startFireFoxPortable(String browserPath) throws FixtureException {
         logger.info("Starting firefox portable: {}", browserPath);
-        setupDrivermanager(FirefoxDriverManager.getInstance());
+        setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
         FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
         FirefoxOptions options = new FirefoxOptions();
         options.setBinary(binary);
@@ -327,7 +327,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException
      */
     private void launchChrome() throws FixtureException {
-        setupDrivermanager(ChromeDriverManager.getInstance());
+        setupDrivermanager(ChromeDriverManager.getInstance(DriverManagerType.CHROME));
         ChromeOptions chromeOptions = populateBrowserSettingsForChrome();
         driver = new ChromeDriver(chromeOptions);
         registerShutdownHook(driver);
@@ -341,7 +341,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException
      */
     private void launchFirefox() throws FixtureException {
-        setupDrivermanager(FirefoxDriverManager.getInstance());
+        setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
         FirefoxOptions firefoxOptions = populateBrowserSettingsForFirefox();
         driver = new FirefoxDriver(firefoxOptions);
         registerShutdownHook(driver);
@@ -355,7 +355,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException
      */
     private void launchInternetExplorer() throws FixtureException {
-        setupDrivermanager(InternetExplorerDriverManager.getInstance());
+        setupDrivermanager(InternetExplorerDriverManager.getInstance(DriverManagerType.IEXPLORER));
         InternetExplorerOptions ieOptions = populateBrowserSettingsForInternetExplorer();
         driver = new InternetExplorerDriver(ieOptions);
         registerShutdownHook(driver);
@@ -929,19 +929,4 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         return textOnpage;
     }
     
-    
-    /**
-     * Creates a unique identifier for testing purposes
-     * @param amountOfCharacters This is the amount of hexadecimal characters which 
-     * should be returned for testing purposes. The amount can only be in the range of 1 to 64 characters.
-     * @return The generated unique identifier which persists of up to 64 hexadecimal characters. in the form ""
-     * @throws FixtureException 
-     */
-    @FixtureMethod
-    public String getUniqueId(int amountOfCharacters) throws FixtureException {
-        UniqueIdGenerator generator = new UniqueIdGenerator();
-        String uniqueId = null;
-        uniqueId = generator.generateUniqueId(amountOfCharacters);
-        return uniqueId;
-    }
 }

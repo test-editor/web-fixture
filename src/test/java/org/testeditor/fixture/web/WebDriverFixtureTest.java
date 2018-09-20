@@ -81,16 +81,4 @@ public class WebDriverFixtureTest {
         Assert.assertEquals("foo", textOnPage); 
     }
     
-    @Test
-    public void generateUniqueIdWith28Chars() throws FixtureException {
-        // given
-        WebDriverFixture driver = new WebDriverFixture();
-        
-        // when
-        String uniqueId = driver.getUniqueId(28);
-    
-        // then
-        Assert.assertThat(uniqueId.length(), is(28));
-    }
-    
 }
