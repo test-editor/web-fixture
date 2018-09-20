@@ -610,7 +610,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
     
     /**
-     * CLears the given input field.
+     * Clears the given input field.
      * 
      * @param elementLocator Locator for Gui-Widget
      * @param locatorType Type of locator for Gui-Widget
