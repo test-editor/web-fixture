@@ -542,6 +542,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * 
      * @param url - an URL-String which represents the Web-Site to open in the
      *            browser. example: url = "http://www.google.com"
+     * @throws FixtureException Exception occurs when browser can not open the given URL. 
      */
     @FixtureMethod
     public void goToUrl(String url) throws FixtureException {
@@ -567,6 +568,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @param locatorType Type of locator for Gui-Widget
      * @param timeOutInSeconds The max timeout in seconds when an element is
      *            expected before a NotFoundException will be thrown.
+     * @throws FixtureException Exception occurs when wait until an element is 
+     *         found on a Web-Element can not be performed. 
      */
     @FixtureMethod
     public void waitUntilElementFound(String elementLocator, LocatorStrategy locatorType, int timeOutInSeconds)
@@ -584,16 +587,18 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     }
 
     /**
-     * type into text fields on a specified Gui-Widget
+     * First empties the input field and then types given text into input fields on a specified Gui-Widget
      * 
      * @param elementLocator Locator for Gui-Widget
      * @param locatorType Type of locator for Gui-Widget
      * @param value String which is set into the textfield
+     * @throws FixtureException Exception occurs when sendKeys can not be performed on a Web-Element. 
      */
     @FixtureMethod
     public void typeInto(String elementLocator, LocatorStrategy locatorType, String value) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
         try {
+            element.clear();
             element.sendKeys(value);
         } catch (IllegalArgumentException e) {
             throw new FixtureException("string to be typed into element cannot be null", //
@@ -603,18 +608,26 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
                     e);
         }
     }
-
+    
     /**
-     * empties the textfield
+     * Clears the given input field.
      * 
      * @param elementLocator Locator for Gui-Widget
      * @param locatorType Type of locator for Gui-Widget
+     * @throws FixtureException  Exception occurs when input field could not be emptied. 
      */
     @FixtureMethod
     public void clear(String elementLocator, LocatorStrategy locatorType) throws FixtureException {
-        WebElement element = getWebElement(elementLocator, locatorType);
-        element.clear();
-    }
+        try {
+            WebElement element = getWebElement(elementLocator, locatorType);
+            element.clear();
+        } catch (Exception e) {
+            throw new FixtureException("Could not find Web Element: " + elementLocator , //
+                    FixtureException.keyValues("elementLocator", 
+                    elementLocator, "locatorType", locatorType.toString()), e);
+        }
+    } 
+ 
 
     /**
      * click on a specified Gui-Widget

@@ -19,6 +19,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
 import org.testeditor.fixture.core.FixtureException;
 
 /**
@@ -115,6 +116,24 @@ public class FirefoxTest {
 
         // then
         Assert.assertTrue(presenceOfText);
+    }
+    
+    @Test
+    public void typeIntoTest() throws FixtureException {
+        // given
+        driver.startBrowser("firefox");
+        driver.goToUrl("https://google.de");
+        driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+        WebElement webElement = driver.getWebElement("q", LocatorStrategy.NAME);
+        String valueOfWebElement = driver.getValueOfWebElement(webElement);
+        Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
+        driver.waitSeconds(1);
+
+        // when
+        driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+
+        // then
+        Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
     }
 }
 
