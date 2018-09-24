@@ -52,6 +52,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.UnexpectedTagNameException;
@@ -59,6 +60,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
+import org.testeditor.fixture.core.MaskingString;
 import org.testeditor.fixture.core.TestRunListener;
 import org.testeditor.fixture.core.TestRunReportable;
 import org.testeditor.fixture.core.TestRunReporter;
@@ -314,6 +316,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
         FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
         FirefoxOptions options = new FirefoxOptions();
+        String browserName = options.getBrowserName();
+        String version = options.getVersion();
+        logger.info("Browser: {} with version: {} is starting ..." , browserName, version);
         options.setBinary(binary);
         driver = new FirefoxDriver(options);
         return driver;
@@ -330,6 +335,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(ChromeDriverManager.getInstance(DriverManagerType.CHROME));
         ChromeOptions chromeOptions = populateBrowserSettingsForChrome();
         driver = new ChromeDriver(chromeOptions);
+        String browserName = chromeOptions.getBrowserName();
+        String version = ((RemoteWebDriver) driver).getCapabilities().getVersion();
+        logger.info("*******************************************************************");
+        logger.info("Browser \"{}\" with version \"{}\" started ..." , browserName, version);
         registerShutdownHook(driver);
     }
 
@@ -344,6 +353,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
         FirefoxOptions firefoxOptions = populateBrowserSettingsForFirefox();
         driver = new FirefoxDriver(firefoxOptions);
+        String browserName = firefoxOptions.getBrowserName();
+        String version = ((RemoteWebDriver) driver).getCapabilities().getVersion();
+        logger.info("*******************************************************************");
+        logger.info("Browser \"{}\" with version \"{}\" started ..." , browserName, version);
         registerShutdownHook(driver);
     }
 
@@ -358,6 +371,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(InternetExplorerDriverManager.getInstance(DriverManagerType.IEXPLORER));
         InternetExplorerOptions ieOptions = populateBrowserSettingsForInternetExplorer();
         driver = new InternetExplorerDriver(ieOptions);
+        String browserName = ieOptions.getBrowserName();
+        String version = ((RemoteWebDriver) driver).getCapabilities().getVersion();
+        logger.info("*******************************************************************");
+        logger.info("Browser \"{}\" with version \"{}\" started ..." , browserName, version);
         registerShutdownHook(driver);
     }
 
@@ -604,10 +621,34 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             throw new FixtureException("string to be typed into element cannot be null", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
-                            "element", element.toString()), //
+                            "element", value.toString()), //
                     e);
         }
     }
+    
+    /**
+     * First empties the input field and then types given text obfuscated into input fields on a specified Gui-Widget.
+     * The specialty about the text which is typed in is, that it will be obfuscated in log files
+     * 
+     * @param elementLocator Locator for Gui-Widget.
+     * @param locatorType Type of locator for Gui-Widget.
+     * @param value A masked String which is set into the textfield.
+     * @throws FixtureException Exception occurs when sendKeys can not be performed on a Web-Element. 
+     */
+    @FixtureMethod
+    public void typeSecretInto(String elementLocator, LocatorStrategy locatorType, //
+            MaskingString value) throws FixtureException {
+        WebElement element = getWebElement(elementLocator, locatorType);
+        try {
+            element.clear();
+            element.sendKeys(value.get());
+        } catch (IllegalArgumentException e) {
+            throw new FixtureException("string to be typed into element cannot be null", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString()), 
+                    e);
+        }
+    }    
     
     /**
      * Clears the given input field.
