@@ -59,6 +59,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
+import org.testeditor.fixture.core.MaskingString;
 import org.testeditor.fixture.core.TestRunListener;
 import org.testeditor.fixture.core.TestRunReportable;
 import org.testeditor.fixture.core.TestRunReporter;
@@ -604,10 +605,34 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             throw new FixtureException("string to be typed into element cannot be null", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
-                            "element", element.toString()), //
+                            "element", value.toString()), //
                     e);
         }
     }
+    
+    /**
+     * First empties the input field and then types given text obfuscated into input fields on a specified Gui-Widget.
+     * The specialty about the text which is typed in is, that it will be obfuscated in log files
+     * 
+     * @param elementLocator Locator for Gui-Widget.
+     * @param locatorType Type of locator for Gui-Widget.
+     * @param value A masked String which is set into the textfield.
+     * @throws FixtureException Exception occurs when sendKeys can not be performed on a Web-Element. 
+     */
+    @FixtureMethod
+    public void typeSecretInto(String elementLocator, LocatorStrategy locatorType, //
+            MaskingString value) throws FixtureException {
+        WebElement element = getWebElement(elementLocator, locatorType);
+        try {
+            element.clear();
+            element.sendKeys(value.get());
+        } catch (IllegalArgumentException e) {
+            throw new FixtureException("string to be typed into element cannot be null", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString()), 
+                    e);
+        }
+    }    
     
     /**
      * Clears the given input field.
