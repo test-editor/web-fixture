@@ -52,6 +52,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.UnexpectedTagNameException;
@@ -315,6 +316,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
         FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
         FirefoxOptions options = new FirefoxOptions();
+        String browserName = options.getBrowserName();
+        String version = options.getVersion();
+        logger.info("Browser: {} with version: {} is starting ..." , browserName, version);
         options.setBinary(binary);
         driver = new FirefoxDriver(options);
         return driver;
@@ -331,6 +335,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(ChromeDriverManager.getInstance(DriverManagerType.CHROME));
         ChromeOptions chromeOptions = populateBrowserSettingsForChrome();
         driver = new ChromeDriver(chromeOptions);
+        String browserName = chromeOptions.getBrowserName();
+        String version = ((RemoteWebDriver) driver).getCapabilities().getVersion();
+        logger.info("*******************************************************************");
+        logger.info("Browser \"{}\" with version \"{}\" started ..." , browserName, version);
         registerShutdownHook(driver);
     }
 
@@ -345,6 +353,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
         FirefoxOptions firefoxOptions = populateBrowserSettingsForFirefox();
         driver = new FirefoxDriver(firefoxOptions);
+        String browserName = firefoxOptions.getBrowserName();
+        String version = ((RemoteWebDriver) driver).getCapabilities().getVersion();
+        logger.info("*******************************************************************");
+        logger.info("Browser \"{}\" with version \"{}\" started ..." , browserName, version);
         registerShutdownHook(driver);
     }
 
@@ -359,6 +371,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         setupDrivermanager(InternetExplorerDriverManager.getInstance(DriverManagerType.IEXPLORER));
         InternetExplorerOptions ieOptions = populateBrowserSettingsForInternetExplorer();
         driver = new InternetExplorerDriver(ieOptions);
+        String browserName = ieOptions.getBrowserName();
+        String version = ((RemoteWebDriver) driver).getCapabilities().getVersion();
+        logger.info("*******************************************************************");
+        logger.info("Browser \"{}\" with version \"{}\" started ..." , browserName, version);
         registerShutdownHook(driver);
     }
 
