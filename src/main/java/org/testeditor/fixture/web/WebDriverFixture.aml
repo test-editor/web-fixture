@@ -43,17 +43,18 @@ interaction type setActiveBrowser {
 	method = WebDriverFixture.setDriver(browser)
 }
 
-interaction type typeIn {
+interaction type typeInto {
 	template = "Enter" ${value} "into" ${element}
 	method = WebDriverFixture.typeInto(element, locatorStrategy, value)
 }
 
-interaction type typeSecretIn {
+interaction type typeSecretInto {
 	template = "Enter secret" ${value} "into" ${element}
 	method = WebDriverFixture.typeSecretInto(element, locatorStrategy, value)
 }
-interaction type typeSecretInUnsecure {
-	template = "Enter secret" ${value} "into unsecure field " ${element}
+
+interaction type typeSecretIntoInsecure {
+	template = "Enter secret" ${value} "into insecure field " ${element}
 	method = WebDriverFixture.typeSecretIntoUnsecureField(element, locatorStrategy, value)
 }
 
@@ -115,7 +116,7 @@ element type BrowserApplication {
 }
 
 element type field {
-	interactions = typeIn, typeSecretIn, typeSecretInUnsecure, submit, waitUntilElementFound, clear, sendSpecialKey
+	interactions = typeInto, typeSecretInto, typeSecretIntoInsecure, submit, waitUntilElementFound, clear, sendSpecialKey
 }
 
 element type button {

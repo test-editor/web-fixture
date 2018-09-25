@@ -148,7 +148,6 @@ public class FirefoxTest {
         driver.typeSecretInto("pwd", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
         WebElement webElement = driver.getWebElement("pwd", LocatorStrategy.NAME);
         String valueOfWebElement = driver.getValueOfWebElement(webElement);
-        driver.waitSeconds(1);
 
         // then
         Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
@@ -160,10 +159,7 @@ public class FirefoxTest {
         driver.startBrowser("firefox");
         driver.goToUrl("https://keepass.info/help/kb/testform.html");
 
-        // when
-        
-
-        // then
+        // when then
         Assertions.assertThrows(FixtureException.class, () -> {
             driver.typeSecretInto("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
         });
