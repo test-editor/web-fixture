@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -52,6 +53,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.UnexpectedTagNameException;
@@ -316,7 +318,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
         FirefoxOptions options = new FirefoxOptions();
         options.setBinary(binary);
-        driver = new FirefoxDriver(options);
+        FirefoxDriver firefoxdriver = new FirefoxDriver(options);
+        driver = firefoxdriver;
+        logBrowserVersion(options, firefoxdriver);
         return driver;
     }
 
@@ -329,8 +333,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchChrome() throws FixtureException {
         setupDrivermanager(ChromeDriverManager.getInstance(DriverManagerType.CHROME));
-        ChromeOptions chromeOptions = populateBrowserSettingsForChrome();
-        driver = new ChromeDriver(chromeOptions);
+        ChromeOptions options = populateBrowserSettingsForChrome();
+        ChromeDriver chromeDriver = new ChromeDriver(options);
+        driver = chromeDriver;
+        logBrowserVersion(options, chromeDriver);
         registerShutdownHook(driver);
     }
 
@@ -343,8 +349,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchFirefox() throws FixtureException {
         setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
-        FirefoxOptions firefoxOptions = populateBrowserSettingsForFirefox();
-        driver = new FirefoxDriver(firefoxOptions);
+        FirefoxOptions options = populateBrowserSettingsForFirefox();
+        FirefoxDriver firefoxdriver = new FirefoxDriver(options);
+        driver = firefoxdriver;
+        logBrowserVersion(options, firefoxdriver);
         registerShutdownHook(driver);
     }
 
@@ -357,9 +365,18 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void launchInternetExplorer() throws FixtureException {
         setupDrivermanager(InternetExplorerDriverManager.getInstance(DriverManagerType.IEXPLORER));
-        InternetExplorerOptions ieOptions = populateBrowserSettingsForInternetExplorer();
-        driver = new InternetExplorerDriver(ieOptions);
+        InternetExplorerOptions options = populateBrowserSettingsForInternetExplorer();
+        InternetExplorerDriver iedriver = new InternetExplorerDriver(options);
+        driver = iedriver;
+        logBrowserVersion(options, iedriver);
         registerShutdownHook(driver);
+    }
+    
+    private void logBrowserVersion(Capabilities capabilities, RemoteWebDriver remoteDriver) {
+        String browserName = capabilities.getBrowserName();
+        String version = remoteDriver.getCapabilities().getVersion();
+        logger.info("*******************************************************************");
+        logger.info("Browser \"{}\" with version \"{}\" successfully started ..." , browserName, version);
     }
 
     private ChromeOptions populateBrowserSettingsForChrome() throws FixtureException {
