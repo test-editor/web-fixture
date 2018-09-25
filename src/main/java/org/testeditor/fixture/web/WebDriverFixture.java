@@ -61,6 +61,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
+import org.testeditor.fixture.core.MaskingString;
 import org.testeditor.fixture.core.TestRunListener;
 import org.testeditor.fixture.core.TestRunReportable;
 import org.testeditor.fixture.core.TestRunReporter;
@@ -621,10 +622,68 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             throw new FixtureException("string to be typed into element cannot be null", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
-                            "element", element.toString()), //
+                            "value", value.toString()), //
                     e);
         }
     }
+    
+    /**
+     * First empties the input field and then types given text obfuscated into input fields on a specified Gui-Widget.
+     * The specialty about the text which is typed in is, that it will be obfuscated in log files
+     * 
+     * @param elementLocator Locator for Gui-Widget.
+     * @param locatorType Type of locator for Gui-Widget.
+     * @param value A masked String which is set into the textfield where the type is password.
+     * @throws FixtureException Exception occurs when a secret text will be typed into a 
+     *         web input field which HTML-Atrribute is not type="password". 
+     */
+    @FixtureMethod
+    public void typeSecretInto(String elementLocator, LocatorStrategy locatorType, //
+            MaskingString value) throws FixtureException {
+        WebElement element = getWebElement(elementLocator, locatorType);
+        if (element.getAttribute("type").equals("password")) {
+            try {
+                element.clear();
+                element.sendKeys(value.get());
+            } catch (IllegalArgumentException e) {
+                throw new FixtureException("string to be typed into element cannot be null", //
+                        FixtureException.keyValues("elementLocator", elementLocator, //
+                                "locatorType", locatorType.toString()), 
+                        e);
+            }
+            
+        } else {
+            throw new FixtureException("The searched Web-Element is not of type [password] further processing aborted."
+                    + "Please prefer an input field of type password ", //
+                    FixtureException.keyValues("elementLocator", elementLocator, //
+                            "locatorType", locatorType.toString()));
+        }
+    }  
+    
+    /**
+     * First empties the input field and then types given text not obfuscated into a non secure input field
+     * on a specified Gui-Widget. The specialty about the text which is typed in is, 
+     * that it will be not obfuscated in log files
+     * 
+     * @param elementLocator Locator for Gui-Widget as {@link String}.
+     * @param locatorType Type of locator for Gui-Widget as enum {@link LocatorStrategy}.
+     * @param value A masked {@link String} which is set into the textfield.
+     * @throws FixtureException Exception occurs when sendKeys can not be performed on a Web-Element. 
+     */
+    @FixtureMethod
+    public void typeSecretIntoUnsecureField(String elementLocator, LocatorStrategy locatorType, //
+            MaskingString value) throws FixtureException {
+        WebElement element = getWebElement(elementLocator, locatorType);
+        try {
+            element.clear();
+            element.sendKeys(value.get());
+        } catch (IllegalArgumentException e) {
+            throw new FixtureException("string to be typed into element cannot be null", //
+                        FixtureException.keyValues("elementLocator", elementLocator, //
+                                "locatorType", locatorType.toString()), 
+                        e);
+        }
+    }   
     
     /**
      * Clears the given input field.
@@ -898,6 +957,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         try {
             Keys seleniumKey = Keys.valueOf(specialKey.trim().toUpperCase());
             new Actions(driver).sendKeys(seleniumKey).build().perform();
+            logger.debug("press special key performed with key : {}", specialKey);
         } catch (IllegalArgumentException e) {
             
             throw new FixtureException("Key cannot be converted", 
@@ -927,6 +987,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     @FixtureMethod
     public boolean isTextOnPage(String textTobeFound) throws FixtureException {
         // First looking in the page source for fix Web Elements
+        logger.debug("Text \"{}\" is searched on web page", textTobeFound);
         if (checkForConstantWebElements(textTobeFound)) {
             return true;
         }
