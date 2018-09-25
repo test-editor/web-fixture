@@ -7,6 +7,8 @@ plugins {
     id 'org.testeditor.gradle-plugin' version '0.8'
 }
 
+description = """Testing framework for web applications using Selenium for automating browsers see https://www.seleniumhq.org/"""
+
 apply from: 'code-style/codestyle.gradle'
 
 // Configure the testeditor plugin
@@ -32,7 +34,10 @@ dependencies {
 	compile 'org.apache.logging.log4j:log4j-core:2.11.0'
 	compile 'org.apache.logging.log4j:log4j-api:2.11.0'
 	compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.0'
-	compile 'junit:junit:4.12'
+		
+	// Testing now with JUnit5
+	testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.1'
+	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.1.1'
 	testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
     // these are just added for web-fixtures

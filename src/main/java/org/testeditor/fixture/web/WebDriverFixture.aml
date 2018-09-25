@@ -52,6 +52,10 @@ interaction type typeSecretIn {
 	template = "Enter secret" ${value} "into" ${element}
 	method = WebDriverFixture.typeSecretInto(element, locatorStrategy, value)
 }
+interaction type typeSecretInUnsecure {
+	template = "Enter secret" ${value} "into unsecure field " ${element}
+	method = WebDriverFixture.typeSecretIntoUnsecureField(element, locatorStrategy, value)
+}
 
 interaction type isTextOnPage {
 	template = "Is text" ${value} "on page" 
@@ -111,7 +115,7 @@ element type BrowserApplication {
 }
 
 element type field {
-	interactions = typeIn, submit, waitUntilElementFound, clear, sendSpecialKey
+	interactions = typeIn, typeSecretIn, typeSecretInUnsecure, submit, waitUntilElementFound, clear, sendSpecialKey
 }
 
 element type button {

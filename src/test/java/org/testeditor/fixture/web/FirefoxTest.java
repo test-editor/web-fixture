@@ -19,8 +19,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import org.testeditor.fixture.core.FixtureException;
+import org.testeditor.fixture.core.MaskingString;
 
 /**
  * 
@@ -135,6 +137,38 @@ public class FirefoxTest {
         // then
         Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
     }
+    
+    @Test 
+    public void typeSecretIntoTest() throws FixtureException {
+        // given
+        driver.startBrowser("firefox");
+        driver.goToUrl("https://keepass.info/help/kb/testform.html");
+
+        // when
+        driver.typeSecretInto("pwd", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
+        WebElement webElement = driver.getWebElement("pwd", LocatorStrategy.NAME);
+        String valueOfWebElement = driver.getValueOfWebElement(webElement);
+        driver.waitSeconds(1);
+
+        // then
+        Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
+    }
+    
+    @Test
+    public void typeSecretIntoUnsecretFieldTest() throws FixtureException {
+        // given
+        driver.startBrowser("firefox");
+        driver.goToUrl("https://keepass.info/help/kb/testform.html");
+
+        // when
+        
+
+        // then
+        Assertions.assertThrows(FixtureException.class, () -> {
+            driver.typeSecretInto("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
+        });
+    }
+
 }
 
 
