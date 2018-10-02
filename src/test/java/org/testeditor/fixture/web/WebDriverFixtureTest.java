@@ -17,10 +17,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
 
 
 public class WebDriverFixtureTest {
+    
+    private static final Logger logger = LoggerFactory.getLogger(WebDriverFixtureTest.class);
     
     @Test
     public void textIsOnPageDynamicElementTest() throws FixtureException {
@@ -35,6 +39,7 @@ public class WebDriverFixtureTest {
         
         //then
         Assert.assertEquals(expectedValue, textOnPage); 
+        logger.debug(" ######## End of Test textIsOnPageDynamicElementTest ########");
     }
     
     @Test
@@ -49,6 +54,7 @@ public class WebDriverFixtureTest {
         
         //then
         Assert.assertNull(textOnPage); 
+        logger.debug(" ######## End of Test textIsNotOnPageDynamicElementTest ########");
     }
     
     @Test
@@ -63,6 +69,7 @@ public class WebDriverFixtureTest {
         
         //then
         Assert.assertNull(textOnPage); 
+        logger.debug(" ######## End of Test textIsNotOnPageChecksGetText ########");
     }
     
     @Test
@@ -77,6 +84,7 @@ public class WebDriverFixtureTest {
         
         //then
         Assert.assertEquals("foo", textOnPage); 
+        logger.debug(" ######## End of Test textIsOnPageChecksGetText ########");
     }
     
 }

@@ -58,7 +58,7 @@ public class CapabilityIntegrationtest {
         assertEquals(proxySslExpected, proxySsl);
         assertEquals(proxySslPortExpected, proxySslPort);
         assertEquals(proxyTypeExpected, proxyType);
-        logger.debug(" ######## End of Integrationtest ########");
+        logger.debug(" ######## End of Test readCapabilitySuccesful ########");
         
     }
    
@@ -78,6 +78,7 @@ public class CapabilityIntegrationtest {
         logger.debug("Firefox Preference proxy SSL port = {}  read succesfully", proxySslPort);
         proxyType = profile.getIntegerPreference("network.proxy.type", 0);
         logger.debug("Firefox Preference proxy type = {}  read succesfully", proxyType);
+        logger.debug(" ######## End of Test readCapabilitiesFromProfile ########");
     }
 
 }

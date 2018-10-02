@@ -17,9 +17,13 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
 
 public class BrowserSetupReaderIntegrationTest {
+    
+    private static final Logger logger = LoggerFactory.getLogger(BrowserSetupReaderIntegrationTest.class);
 
     @Test
     public void integrationTest() throws FixtureException {
@@ -76,6 +80,7 @@ public class BrowserSetupReaderIntegrationTest {
         Assert.assertTrue(options2.isEmpty());
         Assert.assertEquals("VISTA", osName2);
         Assert.assertEquals("10.0", osVersion2);
+        logger.debug(" ######## End of Test integrationTest ########");
     }
 
 }
