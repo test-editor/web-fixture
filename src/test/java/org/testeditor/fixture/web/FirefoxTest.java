@@ -80,11 +80,18 @@ public class FirefoxTest {
         // when
         driver.pressSpecialKey("BACK_SPACE");
         driver.pressSpecialKey("HOME");
+        // used waits because Firefox since version 62.x is behaving slower on special keys. For robust tests.
+        driver.waitSeconds(1);
         driver.pressSpecialKey("DELETE");
+        driver.waitSeconds(1);
         driver.pressSpecialKey("DELETE");
+        driver.waitSeconds(1);
         driver.pressSpecialKey("DELETE");
+        driver.waitSeconds(1);
         driver.pressSpecialKey("DELETE");
+        driver.waitSeconds(1);
         driver.pressSpecialKey("DELETE");
+        driver.waitSeconds(1);
         String readValue = driver.readValue(searchField, LocatorStrategy.NAME);
         logger.debug(" read value in searchfield : {} " , readValue);
 
