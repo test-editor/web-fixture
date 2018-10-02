@@ -15,8 +15,11 @@ package org.testeditor.fixture.web.json;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CapabilityTest {
+    private static final Logger logger = LoggerFactory.getLogger(CapabilityTest.class);
     
     @Test
     public void capabilityTestPositive() throws Exception {
@@ -30,6 +33,7 @@ public class CapabilityTest {
         Assert.assertTrue("Value is not a String", capabilityString.getValue().equals("world")) ;
         Assert.assertTrue("Value is not a double", (Double) capabilityDouble.getValue() == 0.2);
         Assert.assertTrue("Value is not a boolean", (Boolean) capabilityBoolean.getValue() == true);
+        logger.debug(" ######## End of Test capabilityTestPositive ########");
     }
     
 }

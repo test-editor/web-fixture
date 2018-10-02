@@ -15,10 +15,13 @@ package org.testeditor.fixture.web.io;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileReaderTest {
 
     static final String lineSeparator = System.getProperty("line.separator");
+    private static final Logger logger = LoggerFactory.getLogger(FileReaderTest.class);
         
     String result = "firefox-cap1 = \"abcdüöß\"" + lineSeparator  
             + "firefox-cap2 = 8" + lineSeparator  
@@ -29,6 +32,7 @@ public class FileReaderTest {
         FileReader reader = new FileReader();
         String fileContentAsString = reader.getFileContentAsString("utf8EncodedTextWithUmlaut.txt");
         Assert.assertEquals(result, fileContentAsString);
+        logger.debug(" ######## End of Test testReadFile ########");
     }
 
 }
