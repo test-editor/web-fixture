@@ -28,9 +28,14 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import org.openqa.selenium.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
+import org.testeditor.fixture.web.io.FileReaderTest;
 
 public class BrowserSettingsManagerTest {
+    
+    private static final Logger logger = LoggerFactory.getLogger(FileReaderTest.class);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -49,6 +54,7 @@ public class BrowserSettingsManagerTest {
 
         // then
         // expected RuntimeException will be thrown.
+        logger.debug(" ######## End of Test failureInDuplicateCapability ########");
     }
 
     @Test
@@ -68,6 +74,7 @@ public class BrowserSettingsManagerTest {
 
         // then
         // expected RuntimeException will be thrown.
+        logger.debug(" ######## End of Test failureInDuplicateOption ########");
     }
 
     @Test
@@ -87,6 +94,7 @@ public class BrowserSettingsManagerTest {
         assertEquals("windows-firefox-section", browserSettings.get(1).getBrowserSetupName());
         assertEquals(null, browserSettings.get(2).getOsName());
         assertEquals("firefox-section-without-os", browserSettings.get(2).getBrowserSetupName());
+        logger.debug(" ######## End of Test successfulWindowsTestForOptions ########");
     }
 
     @Test
@@ -106,6 +114,7 @@ public class BrowserSettingsManagerTest {
         assertEquals("firefox-section-without-os", browserSettings.get(1).getBrowserSetupName());
         assertEquals("firefox", browserSettings.get(1).getBrowserName());
         assertEquals("firefox", browserSettings.get(0).getBrowserName());
+        logger.debug(" ######## End of Test successfulLinuxTestForOptions ########");
     }
 
     @Test
@@ -125,6 +134,7 @@ public class BrowserSettingsManagerTest {
         assertEquals("firefox-section-without-os", browserSettings.get(1).getBrowserSetupName());
         assertEquals("firefox", browserSettings.get(0).getBrowserName());
         assertEquals("firefox", browserSettings.get(1).getBrowserName());
+        logger.debug(" ######## End of Test successfulMacTestForOptions ########");
     }
 
     private Matcher<FixtureException> fixtureExceptionMatcher(final Object... objects) {

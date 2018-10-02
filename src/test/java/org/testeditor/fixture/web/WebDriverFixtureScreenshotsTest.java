@@ -48,6 +48,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.core.TestRunReporter.Action;
 import org.testeditor.fixture.core.TestRunReporter.SemanticUnit;
@@ -57,6 +59,8 @@ import org.testeditor.fixture.core.artifacts.TestArtifactRegistry;
 
 @RunWith(Parameterized.class)
 public class WebDriverFixtureScreenshotsTest {
+    
+    private static final Logger logger = LoggerFactory.getLogger(WebDriverFixtureScreenshotsTest.class);
 
     @Parameters(name = "{0}, {1}: {2}")
     public static Collection<Object[]> data() {
@@ -106,6 +110,7 @@ public class WebDriverFixtureScreenshotsTest {
 
         // then
         verify(mockRegistry, expectedInvocations).register(any(TestArtifact.class), anyString());
+        logger.debug(" ######## End of Test readCapabilitySuccesful ########");
     }
 
 }
