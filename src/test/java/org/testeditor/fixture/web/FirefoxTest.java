@@ -21,6 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
 import org.testeditor.fixture.core.MaskingString;
 
@@ -33,6 +35,7 @@ import org.testeditor.fixture.core.MaskingString;
 public class FirefoxTest {
 
     private WebDriverFixture driver;
+    private static final Logger logger = LoggerFactory.getLogger(FirefoxTest.class);
 
     @Before
     public void setupTest() throws IOException {
@@ -63,6 +66,7 @@ public class FirefoxTest {
 
         // then
         Assert.assertTrue(title.startsWith("Test-Editor - Google"));
+        logger.debug(" ######## End of Test googleTest ########");
     }
     
     @Test
@@ -88,6 +92,7 @@ public class FirefoxTest {
 
         String title = driver.getTitle();
         Assert.assertTrue(title.startsWith("Edito - Google"));
+        logger.debug(" ######## End of Test googleTestWithSpecialKeys ########");
     }
     
     @Test
@@ -103,6 +108,7 @@ public class FirefoxTest {
 
         // then
         Assert.assertEquals(readValue, "Test-Editor");
+        logger.debug(" ######## End of Test testReadValueToRetrieveTextFromValueAttribute ########");
     }
     
     @Test
@@ -118,6 +124,7 @@ public class FirefoxTest {
 
         // then
         Assert.assertTrue(presenceOfText);
+        logger.debug(" ######## End of Test testPresenceOfTextOnWebPageInValueAttribute ########");
     }
     
     @Test
@@ -136,6 +143,7 @@ public class FirefoxTest {
 
         // then
         Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
+        logger.debug(" ######## End of Test typeIntoTest ########");
     }
     
     @Test 
@@ -143,6 +151,7 @@ public class FirefoxTest {
         // given
         driver.startBrowser("firefox");
         driver.goToUrl("https://keepass.info/help/kb/testform.html");
+        driver.waitUntilElementFound("pwd", LocatorStrategy.NAME, 5);
 
         // when
         driver.typeSecretInto("pwd", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
@@ -151,6 +160,7 @@ public class FirefoxTest {
 
         // then
         Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
+        logger.debug(" ######## End of Test typeSecretIntoTest ########");
     }
     
     @Test
@@ -158,11 +168,13 @@ public class FirefoxTest {
         // given
         driver.startBrowser("firefox");
         driver.goToUrl("https://keepass.info/help/kb/testform.html");
+        driver.waitUntilElementFound("user", LocatorStrategy.NAME, 5);
 
         // when then
         Assertions.assertThrows(FixtureException.class, () -> {
             driver.typeSecretInto("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
         });
+        logger.debug(" ######## End of Test typeSecretIntoUnsecretFieldTest ########");
     }
 
 }
