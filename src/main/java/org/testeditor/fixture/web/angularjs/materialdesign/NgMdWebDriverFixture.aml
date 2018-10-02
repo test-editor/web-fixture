@@ -43,9 +43,19 @@ interaction type setActiveBrowser {
 	method = NgMdWebDriverFixture.setDriver(browser)
 }
 
-interaction type typeIn {
-	template = "Enter" ${value} "into" ${element} 
+interaction type typeInto {
+	template = "Enter" ${value} "into" ${element}
 	method = NgMdWebDriverFixture.typeInto(element, locatorStrategy, value)
+}
+
+interaction type typeConfidentialIntoConfidential {
+	template = "Enter confidential" ${value} "into" ${element}
+	method = NgMdWebDriverFixture.typeConfidentialIntoConfidential(element, locatorStrategy, value)
+}
+
+interaction type typeConfidentialInto {
+	template = "Enter confidential" ${value} "into insecure field " ${element}
+	method = NgMdWebDriverFixture.typeConfidentialInto(element, locatorStrategy, value)
 }
 
 interaction type isTextOnPage {
@@ -104,23 +114,23 @@ interaction type checkEnabled {
 }
 
 element type BrowserApplication {
-	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit
+	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit, sendSpecialKey
 }
 
 element type field {
-	interactions = typeIn, submit, checkEnabled, waitUntilElementFound, sendSpecialKey
+	interactions = typeInto, typeConfidentialIntoConfidential, typeConfidentialInto, submit, waitUntilElementFound, clear, sendSpecialKey, readValue
 }
 
 element type button {
-	interactions = click, submit, checkEnabled, waitUntilElementFound
+	interactions = click, submit, checkEnabled, waitUntilElementFound, readValue
 }
 
 element type selection {
-	interactions = click, submit, selectInSelection, getAvailableOptions, waitUntilElementFound
+	interactions = click, submit, selectInSelection, getAvailableOptions, waitUntilElementFound, clear, sendSpecialKey, readValue
 }
 
 element type dateTimePicker {
-	interactions = click, readValue, waitUntilElementFound
+	interactions = click, readValue, waitUntilElementFound, sendSpecialKey
 }
 
 element type labelElement {
@@ -128,11 +138,11 @@ element type labelElement {
 }
 
 component type GeneralBrowser {
-	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser
+	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser, sendSpecialKey, isTextOnPage
 }
 
 component type Page {
-	interactions = wait, submit, sendSpecialKey
+	interactions = wait, waitUntilElementFound, submit, getTitle, sendSpecialKey, isTextOnPage
 }
 
 component WebBrowser is GeneralBrowser {
@@ -140,21 +150,19 @@ component WebBrowser is GeneralBrowser {
 		locator ="default"
 		locatorStrategy = ID
 	}
-	element OlderFirefox is BrowserApplication {
-		label = "Firefox(older)"
+	
+	element Firefox is BrowserApplication {
+		label = "Firefox"
 		locator ="firefox"
 		locatorStrategy = ID
 	}
-	element Firefox is BrowserApplication {
-		label = "Firefox(47 and above)"
-		locator ="modernfirefox"
-		locatorStrategy = ID
-	}
+
 	element IE is BrowserApplication {
 		label = "Internet Explorer"
 		locator ="ie"
 		locatorStrategy = ID
 	}
+	
 	element Chrome is BrowserApplication {
 		label = "Chrome"
 		locator ="chrome"

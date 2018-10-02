@@ -629,6 +629,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     
     /**
      * First empties the input field and then types given text obfuscated into input fields on a specified Gui-Widget.
+     * E.g. a HTML input field with type "password".
      * The specialty about the text which is typed in is, that it will be obfuscated in log files
      * 
      * @param elementLocator Locator for Gui-Widget.
@@ -638,7 +639,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      *         web input field which HTML-Atrribute is not type="password". 
      */
     @FixtureMethod
-    public void typeSecretInto(String elementLocator, LocatorStrategy locatorType, //
+    public void typeConfidentialIntoConfidential(String elementLocator, LocatorStrategy locatorType, //
             MaskingString value) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
         if (element.getAttribute("type").equals("password")) {
@@ -671,7 +672,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException Exception occurs when sendKeys can not be performed on a Web-Element. 
      */
     @FixtureMethod
-    public void typeSecretIntoUnsecureField(String elementLocator, LocatorStrategy locatorType, //
+    public void typeConfidentialInto(String elementLocator, LocatorStrategy locatorType, //
             MaskingString value) throws FixtureException {
         WebElement element = getWebElement(elementLocator, locatorType);
         try {
