@@ -31,11 +31,10 @@ import org.openqa.selenium.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
-import org.testeditor.fixture.web.io.FileReaderTest;
 
 public class BrowserSettingsManagerTest {
     
-    private static final Logger logger = LoggerFactory.getLogger(FileReaderTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(BrowserSettingsManagerTest.class);
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
