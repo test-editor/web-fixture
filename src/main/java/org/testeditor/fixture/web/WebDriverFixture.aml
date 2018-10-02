@@ -48,14 +48,14 @@ interaction type typeInto {
 	method = WebDriverFixture.typeInto(element, locatorStrategy, value)
 }
 
-interaction type typeSecretInto {
-	template = "Enter secret" ${value} "into" ${element}
-	method = WebDriverFixture.typeSecretInto(element, locatorStrategy, value)
+interaction type typeConfidentialIntoConfidential {
+	template = "Enter confidential" ${value} "into" ${element}
+	method = WebDriverFixture.typeConfidentialIntoConfidential(element, locatorStrategy, value)
 }
 
-interaction type typeSecretIntoInsecure {
-	template = "Enter secret" ${value} "into insecure field " ${element}
-	method = WebDriverFixture.typeSecretIntoUnsecureField(element, locatorStrategy, value)
+interaction type typeConfidentialInto {
+	template = "Enter confidential" ${value} "into insecure field " ${element}
+	method = WebDriverFixture.typeConfidentialInto(element, locatorStrategy, value)
 }
 
 interaction type isTextOnPage {
@@ -116,7 +116,7 @@ element type BrowserApplication {
 }
 
 element type field {
-	interactions = typeInto, typeSecretInto, typeSecretIntoInsecure, submit, waitUntilElementFound, clear, sendSpecialKey, readValue
+	interactions = typeInto, typeConfidentialIntoConfidential, typeConfidentialInto, submit, waitUntilElementFound, clear, sendSpecialKey, readValue
 }
 
 element type button {

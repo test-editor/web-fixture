@@ -13,7 +13,7 @@ interaction type waitUntilElementFound {
 }
 
 interaction type startBrowser {
-	template = "Start " ${element}
+	template = "Start" ${element}
 	method = NgOneWebDriverFixture.startBrowser(element)
 }
 
@@ -43,15 +43,39 @@ interaction type setActiveBrowser {
 	method = NgOneWebDriverFixture.setDriver(browser)
 }
 
-interaction type typeIn {
-	template = "Enter" ${value} "into" ${element} 
+interaction type typeInto {
+	template = "Enter" ${value} "into" ${element}
 	method = NgOneWebDriverFixture.typeInto(element, locatorStrategy, value)
 }
 
+interaction type typeConfidentialIntoConfidential {
+	template = "Enter confidential" ${value} "into" ${element}
+	method = NgOneWebDriverFixture.typeConfidentialIntoConfidential(element, locatorStrategy, value)
+}
+
+interaction type typeConfidentialInto {
+	template = "Enter confidential" ${value} "into insecure field " ${element}
+	method = NgOneWebDriverFixture.typeConfidentialInto(element, locatorStrategy, value)
+}
+
+interaction type isTextOnPage {
+	template = "Is text" ${value} "on page"
+	method = NgOneWebDriverFixture.isTextOnPage(value)
+}
+
+value-space seleniumKeys = #["NULL", "CANCEL", "HELP", "BACK_SPACE", "TAB", "CLEAR", "RETURN", "ENTER", "SHIFT", "LEFT_SHIFT", "CONTROL", "LEFT_CONTROL", "ALT", "LEFT_ALT", "PAUSE", "ESCAPE", "SPACE", "PAGE_UP", "PAGE_DOWN", "END", "HOME", "LEFT", "ARROW_LEFT", "UP", "ARROW_UP", "RIGHT", "ARROW_RIGHT", "DOWN", "ARROW_DOWN", "INSERT", "DELETE", "SEMICOLON", "EQUALS", "NUMPAD0", "NUMPAD1", "NUMPAD2", "NUMPAD3", "NUMPAD4", "NUMPAD5", "NUMPAD6", "NUMPAD7", "NUMPAD8", "NUMPAD9", "MULTIPLY", "ADD", "SEPARATOR", "SUBTRACT", "DECIMAL", "DIVIDE", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "META", "COMMAND", "ZENKAKU_HANKAKU"]
+
+interaction type sendSpecialKey {
+	template = "Press key" ${value}
+	method = NgOneWebDriverFixture.pressSpecialKey(value)
+	restrict value to seleniumKeys
+}
+
 interaction type submit {
-    template = "submit element" ${element}
+    template = "Submit element" ${element}
     method = NgOneWebDriverFixture.submit(element, locatorStrategy)
 }
+
 interaction type clear {
 	template = "Clear" ${element}
 	method = NgOneWebDriverFixture.clear(element, locatorStrategy)
@@ -77,7 +101,6 @@ interaction type readValue {
 	method = NgOneWebDriverFixture.readValue(element, locatorStrategy)
 }
 
-
 interaction type executeScript {
 	template = "Execute script" ${value}
 	method = NgOneWebDriverFixture.setExecuteScript(value)	
@@ -90,23 +113,23 @@ interaction type checkEnabled {
 }
 
 element type BrowserApplication {
-	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit
+	interactions = startBrowser, startFireFoxPortable, executeScript, getTitle, submit, sendSpecialKey
 }
 
 element type field {
-	interactions = typeIn, submit, waitUntilElementFound
+	interactions = typeInto, typeConfidentialIntoConfidential, typeConfidentialInto, submit, waitUntilElementFound, clear, sendSpecialKey, readValue
 }
 
 element type button {
-	interactions = click, submit, checkEnabled, waitUntilElementFound
+	interactions = click, submit, checkEnabled, waitUntilElementFound, readValue
 }
 
 element type selection {
-	interactions = click, submit, selectInSelection, getAvailableOptions, waitUntilElementFound
+	interactions = click, submit, selectInSelection, getAvailableOptions, waitUntilElementFound, clear, sendSpecialKey, readValue
 }
 
 element type dateTimePicker {
-	interactions = click, readValue, waitUntilElementFound
+	interactions = click, readValue, waitUntilElementFound, sendSpecialKey
 }
 
 element type labelElement {
@@ -114,11 +137,11 @@ element type labelElement {
 }
 
 component type GeneralBrowser {
-	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser
+	interactions = wait, waitUntilElementFound, goToUrl, closeBrowser, setActiveBrowser, sendSpecialKey, isTextOnPage
 }
 
 component type Page {
-	interactions = wait, waitUntilElementFound, submit, getTitle
+	interactions = wait, waitUntilElementFound, submit, getTitle, sendSpecialKey, isTextOnPage
 }
 
 component WebBrowser is GeneralBrowser {
@@ -126,6 +149,7 @@ component WebBrowser is GeneralBrowser {
 		locator ="default"
 		locatorStrategy = ID
 	}
+	
 	element Firefox is BrowserApplication {
 		label = "Firefox"
 		locator ="firefox"
@@ -137,6 +161,7 @@ component WebBrowser is GeneralBrowser {
 		locator ="ie"
 		locatorStrategy = ID
 	}
+	
 	element Chrome is BrowserApplication {
 		label = "Chrome"
 		locator ="chrome"

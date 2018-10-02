@@ -165,7 +165,7 @@ public class FirefoxTest {
         driver.waitUntilElementFound("pwd", LocatorStrategy.NAME, 5);
 
         // when
-        driver.typeSecretInto("pwd", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
+        driver.typeConfidentialIntoConfidential("pwd", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
         WebElement webElement = driver.getWebElement("pwd", LocatorStrategy.NAME);
         String valueOfWebElement = driver.getValueOfWebElement(webElement);
         logger.debug(" read value in searchfield : {} " , valueOfWebElement);
@@ -176,7 +176,7 @@ public class FirefoxTest {
     }
     
     @Test
-    public void typeSecretIntoUnsecretFieldTest() throws FixtureException {
+    public void typeSecretIntoInsecretFieldTest() throws FixtureException {
         // given
         driver.startBrowser("firefox");
         driver.goToUrl("https://keepass.info/help/kb/testform.html");
@@ -184,7 +184,7 @@ public class FirefoxTest {
         
         // when then
         Assertions.assertThrows(FixtureException.class, () -> {
-            driver.typeSecretInto("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
+            driver.typeConfidentialIntoConfidential("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
         });
         logger.debug(" ######## End of Test typeSecretIntoUnsecretFieldTest ########");
     }
