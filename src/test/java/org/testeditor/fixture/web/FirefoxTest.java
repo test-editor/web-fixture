@@ -184,7 +184,7 @@ public class FirefoxTest {
         
         // when then
         Assertions.assertThrows(FixtureException.class, () -> {
-            driver.typeConfidentialInto("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
+            driver.typeConfidentialIntoConfidential("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
         });
         logger.debug(" ######## End of Test typeSecretIntoUnsecretFieldTest ########");
     }
