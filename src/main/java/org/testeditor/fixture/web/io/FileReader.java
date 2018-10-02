@@ -21,13 +21,12 @@ import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
-import org.testeditor.fixture.web.WebDriverFixture;
 
 import com.google.common.io.CharStreams;
 
 public class FileReader {
     
-    private static final Logger logger = LoggerFactory.getLogger(WebDriverFixture.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileReader.class);
 
     /**
      * Opens a file defined as fileName and read the content line by line.
