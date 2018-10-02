@@ -116,15 +116,15 @@ element type BrowserApplication {
 }
 
 element type field {
-	interactions = typeInto, typeSecretInto, typeSecretIntoInsecure, submit, waitUntilElementFound, clear, sendSpecialKey
+	interactions = typeInto, typeSecretInto, typeSecretIntoInsecure, submit, waitUntilElementFound, clear, sendSpecialKey, readValue
 }
 
 element type button {
-	interactions = click, submit, checkEnabled, waitUntilElementFound
+	interactions = click, submit, checkEnabled, waitUntilElementFound, readValue
 }
 
 element type selection {
-	interactions = click, submit, selectInSelection, getAvailableOptions, waitUntilElementFound, clear, sendSpecialKey
+	interactions = click, submit, selectInSelection, getAvailableOptions, waitUntilElementFound, clear, sendSpecialKey, readValue
 }
 
 element type dateTimePicker {
