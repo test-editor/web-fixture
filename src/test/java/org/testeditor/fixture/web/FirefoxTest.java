@@ -128,6 +128,7 @@ public class FirefoxTest {
         driver.typeInto(searchField, LocatorStrategy.NAME, "Test-Editor");
        
         // when
+        driver.waitSeconds(1);
         boolean presenceOfText = driver.isTextOnPage("Test-Editor");
         logger.debug(" Is text on page : {} " , presenceOfText);
 
@@ -161,7 +162,7 @@ public class FirefoxTest {
 
 
         // then
-        assertEquals(typedText, valueOfWebElement, "The given text is not the one we searched for.");
+        assertEquals(typedText, readValue, "The given text is not the one we searched for.");
         logger.debug(" ######## End of Test typeIntoTest ########");
     }
     
