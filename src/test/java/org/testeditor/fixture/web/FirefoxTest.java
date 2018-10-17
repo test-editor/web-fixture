@@ -137,30 +137,31 @@ public class FirefoxTest {
     }
     
     @Test
-    public void typeIntoTest() throws FixtureException {
+    public void testTypeIntoToReplaceExistingText() throws FixtureException {
         // given
         driver.startBrowser("firefox");
         driver.goToUrl("https://google.de");
         logger.debug("open website google.de");
-        String searchField = "q";
-        String typedText = "Test-Editor";
-        driver.typeInto(searchField, LocatorStrategy.NAME, typedText);
-        logger.debug("typed {} into field with name {}" , typedText, searchField);
+        final String searchField = "q";
+        final String firstTypedText = "FooBar";
+        final String typedText = "Test-Editor";
+        driver.typeInto(searchField, LocatorStrategy.NAME, firstTypedText);
+        logger.debug("typed {} into field with name {}" , firstTypedText, searchField);
         WebElement webElement = driver.getWebElement("q", LocatorStrategy.NAME);
         logger.debug("searched for inputfield ...");
         String valueOfWebElement = driver.getValueOfWebElement(webElement);
         logger.debug("got value of inputfield ...");
-        assertEquals("Test-Editor", valueOfWebElement, "The given text is not the one we searched for.");
+        assertEquals(firstTypedText, valueOfWebElement, "The given text is not the one we searched for.");
         driver.waitSeconds(1);
 
         // when
-        driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+        driver.typeInto("q", LocatorStrategy.NAME, typedText);
         String readValue = driver.readValue(searchField, LocatorStrategy.NAME);
         logger.debug(" read value in searchfield : {} " , readValue);
 
 
         // then
-        assertEquals("Test-Editor", valueOfWebElement, "The given text is not the one we searched for.");
+        assertEquals(typedText, valueOfWebElement, "The given text is not the one we searched for.");
         logger.debug(" ######## End of Test typeIntoTest ########");
     }
     

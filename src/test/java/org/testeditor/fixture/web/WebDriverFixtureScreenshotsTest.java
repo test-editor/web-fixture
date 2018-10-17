@@ -110,7 +110,7 @@ public class WebDriverFixtureScreenshotsTest {
 
         // then
         verify(mockRegistry, expectedInvocations).register(any(TestArtifact.class), anyString());
-        logger.debug(" ######## End of Test readCapabilitySuccesful ########");
+        logger.debug(" ######## End of Test testScreenshotRegistrationOnUnitAndAction ########");
     }
 
 }
