@@ -13,8 +13,9 @@
 
 package org.testeditor.fixture.web.json;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,15 +25,15 @@ public class CapabilityTest {
     @Test
     public void capabilityTestPositive() throws Exception {
         
-        BrowserSetting capabilityInt = new BrowserSetting("This is an Integer", 1); 
-        BrowserSetting capabilityString = new BrowserSetting("This is a String", "world"); 
-        BrowserSetting capabilityDouble = new BrowserSetting("This is a Double", 0.2);
-        BrowserSetting capabilityBoolean = new BrowserSetting("This is a Boolean", true);
+        final BrowserSetting capabilityInt = new BrowserSetting("This is an Integer", 1); 
+        final BrowserSetting capabilityString = new BrowserSetting("This is a String", "world"); 
+        final BrowserSetting capabilityDouble = new BrowserSetting("This is a Double", 0.2);
+        final BrowserSetting capabilityBoolean = new BrowserSetting("This is a Boolean", true);
         
-        Assert.assertTrue("Value is not an integer", (Integer) capabilityInt.getValue() == 1);
-        Assert.assertTrue("Value is not a String", capabilityString.getValue().equals("world")) ;
-        Assert.assertTrue("Value is not a double", (Double) capabilityDouble.getValue() == 0.2);
-        Assert.assertTrue("Value is not a boolean", (Boolean) capabilityBoolean.getValue() == true);
+        assertTrue((Integer) capabilityInt.getValue() == 1, "Value is not an integer");
+        assertTrue(capabilityString.getValue().equals("world"), "Value is not a String") ;
+        assertTrue((Double) capabilityDouble.getValue() == 0.2, "Value is not a double");
+        assertTrue((Boolean) capabilityBoolean.getValue() == true, "Value is not a boolean");
         logger.debug(" ######## End of Test capabilityTestPositive ########");
     }
     

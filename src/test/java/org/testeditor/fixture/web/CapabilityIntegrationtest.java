@@ -14,11 +14,11 @@
 
 package org.testeditor.fixture.web;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -49,7 +49,7 @@ public class CapabilityIntegrationtest {
         
         // when
         fixture.startBrowser("firefox");
-        logger.debug("Firefox started succesfully");
+        logger.debug("Firefox started successfully");
 
         // then
         readCapabilitiesFromProfile(fixture);
@@ -66,18 +66,18 @@ public class CapabilityIntegrationtest {
         WebDriver driver = fixture.getDriver();
         Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
         String profilePath = (String) cap.getCapability("moz:profile");
-        logger.debug("Firefox Preferences read succesfully");
+        logger.debug("Firefox Preferences read successfully");
         FirefoxProfile profile = new FirefoxProfile(new File(profilePath));
         proxyHttp = profile.getStringPreference("network.proxy.http", "");
-        logger.debug("Firefox Preference proxy HTTP = {} read succesfully" , proxyHttp);
+        logger.debug("Firefox Preference proxy HTTP = {} read successfully" , proxyHttp);
         proxyHttpPort = profile.getIntegerPreference("network.proxy.http_port", 0);
-        logger.debug("Firefox Preference proxy HTTP port = {} read succesfully" , proxyHttpPort);
+        logger.debug("Firefox Preference proxy HTTP port = {} read successfully" , proxyHttpPort);
         proxySsl = profile.getStringPreference("network.proxy.ssl", "");
-        logger.debug("Firefox Preference proxy SSL = {}  read succesfully", proxySsl);
+        logger.debug("Firefox Preference proxy SSL = {}  read successfully", proxySsl);
         proxySslPort = profile.getIntegerPreference("network.proxy.ssl_port", 0);
-        logger.debug("Firefox Preference proxy SSL port = {}  read succesfully", proxySslPort);
+        logger.debug("Firefox Preference proxy SSL port = {}  read successfully", proxySslPort);
         proxyType = profile.getIntegerPreference("network.proxy.type", 0);
-        logger.debug("Firefox Preference proxy type = {}  read succesfully", proxyType);
+        logger.debug("Firefox Preference proxy type = {}  read successfully", proxyType);
         logger.debug(" ######## End of Test readCapabilitiesFromProfile ########");
     }
 

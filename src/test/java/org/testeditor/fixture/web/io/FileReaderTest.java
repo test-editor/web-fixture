@@ -13,8 +13,9 @@
 
 package org.testeditor.fixture.web.io;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class FileReaderTest {
     public void testReadFile() throws Exception {
         FileReader reader = new FileReader();
         String fileContentAsString = reader.getFileContentAsString("utf8EncodedTextWithUmlaut.txt");
-        Assert.assertEquals(result, fileContentAsString);
+        assertEquals(result, fileContentAsString);
         logger.debug(" ######## End of Test testReadFile ########");
     }
 
