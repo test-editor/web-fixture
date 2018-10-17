@@ -13,13 +13,15 @@
 
 package org.testeditor.fixture.web;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.IOException;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,14 +39,14 @@ public class FirefoxTest {
     private WebDriverFixture driver;
     private static final Logger logger = LoggerFactory.getLogger(FirefoxTest.class);
 
-    @Before
+    @BeforeEach
     public void setupTest() throws IOException {
         // This new may fail, if the driver fixture cannot properly connect to
         // the started browser instance resulting in driver == null
         driver = new WebDriverFixture();
     }
 
-    @After
+    @AfterEach
     public void teardown() throws FixtureException {
         if (driver != null) {
             driver.closeBrowser();
@@ -65,7 +67,7 @@ public class FirefoxTest {
         String title = driver.getTitle();
 
         // then
-        Assert.assertTrue(title.startsWith("Test-Editor - Google"));
+        assertTrue(title.startsWith("Test-Editor - Google"));
         logger.debug(" ######## End of Test googleTest ########");
     }
     
@@ -96,7 +98,7 @@ public class FirefoxTest {
         logger.debug(" read value in searchfield : {} " , readValue);
 
         // then
-        Assert.assertEquals("The value does not match the requirement", "Edito", readValue);
+        assertEquals("Edito", readValue, "The value does not match the requirement");
         logger.debug(" ######## End of Test googleTestWithSpecialKeys ########");
     }
     
@@ -113,7 +115,7 @@ public class FirefoxTest {
         logger.debug(" read value in searchfield : {} " , readValue);
 
         // then
-        Assert.assertEquals("The value does not match the requirement", readValue, "Test-Editor");
+        assertEquals(readValue, "Test-Editor", "The value does not match the requirement");
         logger.debug(" ######## End of Test testReadValueToRetrieveTextFromValueAttribute ########");
     }
     
@@ -126,34 +128,41 @@ public class FirefoxTest {
         driver.typeInto(searchField, LocatorStrategy.NAME, "Test-Editor");
        
         // when
+        driver.waitSeconds(1);
         boolean presenceOfText = driver.isTextOnPage("Test-Editor");
         logger.debug(" Is text on page : {} " , presenceOfText);
 
         // then
-        Assert.assertTrue(presenceOfText);
+        assertTrue(presenceOfText);
         logger.debug(" ######## End of Test testPresenceOfTextOnWebPageInValueAttribute ########");
     }
     
     @Test
-    public void typeIntoTest() throws FixtureException {
+    public void testTypeIntoToReplaceExistingText() throws FixtureException {
         // given
         driver.startBrowser("firefox");
         driver.goToUrl("https://google.de");
-        String searchField = "q";
-        driver.typeInto(searchField, LocatorStrategy.NAME, "Test-Editor");
+        logger.debug("open website google.de");
+        final String searchField = "q";
+        final String firstTypedText = "FooBar";
+        final String typedText = "Test-Editor";
+        driver.typeInto(searchField, LocatorStrategy.NAME, firstTypedText);
+        logger.debug("typed {} into field with name {}" , firstTypedText, searchField);
         WebElement webElement = driver.getWebElement("q", LocatorStrategy.NAME);
+        logger.debug("searched for inputfield ...");
         String valueOfWebElement = driver.getValueOfWebElement(webElement);
-        Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
+        logger.debug("got value of inputfield ...");
+        assertEquals(firstTypedText, valueOfWebElement, "The given text is not the one we searched for.");
         driver.waitSeconds(1);
 
         // when
-        driver.typeInto("q", LocatorStrategy.NAME, "Test-Editor");
+        driver.typeInto("q", LocatorStrategy.NAME, typedText);
         String readValue = driver.readValue(searchField, LocatorStrategy.NAME);
         logger.debug(" read value in searchfield : {} " , readValue);
 
 
         // then
-        Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
+        assertEquals(typedText, readValue, "The given text is not the one we searched for.");
         logger.debug(" ######## End of Test typeIntoTest ########");
     }
     
@@ -171,7 +180,7 @@ public class FirefoxTest {
         logger.debug(" read value in searchfield : {} " , valueOfWebElement);
 
         // then
-        Assert.assertEquals("The given text is not the one we searched for.", "Test-Editor", valueOfWebElement);
+        assertEquals("Test-Editor", valueOfWebElement, "The given text is not the one we searched for.");
         logger.debug(" ######## End of Test typeSecretIntoTest ########");
     }
     
@@ -183,7 +192,7 @@ public class FirefoxTest {
         driver.waitUntilElementFound("user", LocatorStrategy.NAME, 5);
         
         // when then
-        Assertions.assertThrows(FixtureException.class, () -> {
+        assertThrows(FixtureException.class, () -> {
             driver.typeConfidentialIntoConfidential("user", LocatorStrategy.NAME, new MaskingString("Test-Editor"));
         });
         logger.debug(" ######## End of Test typeSecretIntoUnsecretFieldTest ########");

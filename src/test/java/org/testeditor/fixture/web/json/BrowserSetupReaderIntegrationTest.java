@@ -13,13 +13,15 @@
 
 package org.testeditor.fixture.web.json;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Assert;
-import org.junit.Test;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testeditor.fixture.core.FixtureException;
+
 
 public class BrowserSetupReaderIntegrationTest {
     
@@ -39,47 +41,47 @@ public class BrowserSetupReaderIntegrationTest {
         String browserName = firstBrowserSetupElement.getBrowserName();
         String browserSetupName = firstBrowserSetupElement.getBrowserSetupName();
         String browserVersion = firstBrowserSetupElement.getBrowserVersion();
-        List<BrowserSetting> capabilities = firstBrowserSetupElement.getCapabilities();
-        List<BrowserSetting> options = firstBrowserSetupElement.getOptions();
-        String osName = firstBrowserSetupElement.getOsName();
-        String osVersion = firstBrowserSetupElement.getOsVersion();
+        final List<BrowserSetting> capabilities = firstBrowserSetupElement.getCapabilities();
+        final List<BrowserSetting> options = firstBrowserSetupElement.getOptions();
+        final String osName = firstBrowserSetupElement.getOsName();
+        final String osVersion = firstBrowserSetupElement.getOsVersion();
         
         // Second Element
         BrowserSetupElement secondBrowserSetupElement = browserSetupElements.get(2);
-        String browserName2 = secondBrowserSetupElement.getBrowserName();
-        String browserSetupName2 = secondBrowserSetupElement.getBrowserSetupName();
-        String browserVersion2 = secondBrowserSetupElement.getBrowserVersion();
-        List<BrowserSetting> capabilities2 = secondBrowserSetupElement.getCapabilities();
-        List<BrowserSetting> options2 = secondBrowserSetupElement.getOptions();
-        String osName2 = secondBrowserSetupElement.getOsName();
-        String osVersion2 = secondBrowserSetupElement.getOsVersion();
+        final String browserName2 = secondBrowserSetupElement.getBrowserName();
+        final String browserSetupName2 = secondBrowserSetupElement.getBrowserSetupName();
+        final String browserVersion2 = secondBrowserSetupElement.getBrowserVersion();
+        final List<BrowserSetting> capabilities2 = secondBrowserSetupElement.getCapabilities();
+        final List<BrowserSetting> options2 = secondBrowserSetupElement.getOptions();
+        final String osName2 = secondBrowserSetupElement.getOsName();
+        final String osVersion2 = secondBrowserSetupElement.getOsVersion();
         
         
         // then
         
         // First element
-        Assert.assertEquals(null, browserName);
-        Assert.assertEquals("proxy section", browserSetupName);
-        Assert.assertEquals(null, browserVersion);
-        Assert.assertEquals(1, capabilities.size());
-        Assert.assertEquals("httpProxyUrl", capabilities.get(0).getKey());
-        Assert.assertEquals("http://mysystem.proxy.server:100", capabilities.get(0).getValue());
-        Assert.assertTrue(options.isEmpty());
-        Assert.assertEquals(null, osName);
-        Assert.assertEquals(null, osVersion);
+        assertEquals(null, browserName);
+        assertEquals("proxy section", browserSetupName);
+        assertEquals(null, browserVersion);
+        assertEquals(1, capabilities.size());
+        assertEquals("httpProxyUrl", capabilities.get(0).getKey());
+        assertEquals("http://mysystem.proxy.server:100", capabilities.get(0).getValue());
+        assertTrue(options.isEmpty());
+        assertEquals(null, osName);
+        assertEquals(null, osVersion);
         
         // Second Element
-        Assert.assertEquals("chrome", browserName2);
-        Assert.assertEquals("chromium 52 under window 10", browserSetupName2);
-        Assert.assertEquals("52.0", browserVersion2);
-        Assert.assertEquals(3, capabilities2.size());
-        Assert.assertEquals("chromium-cap1", capabilities2.get(0).getKey());
-        Assert.assertEquals("value1", capabilities2.get(0).getValue());
-        Assert.assertEquals(80, capabilities2.get(1).getValue());
-        Assert.assertEquals(false, capabilities2.get(2).getValue());
-        Assert.assertTrue(options2.isEmpty());
-        Assert.assertEquals("VISTA", osName2);
-        Assert.assertEquals("10.0", osVersion2);
+        assertEquals("chrome", browserName2);
+        assertEquals("chromium 52 under window 10", browserSetupName2);
+        assertEquals("52.0", browserVersion2);
+        assertEquals(3, capabilities2.size());
+        assertEquals("chromium-cap1", capabilities2.get(0).getKey());
+        assertEquals("value1", capabilities2.get(0).getValue());
+        assertEquals(80, capabilities2.get(1).getValue());
+        assertEquals(false, capabilities2.get(2).getValue());
+        assertTrue(options2.isEmpty());
+        assertEquals("VISTA", osName2);
+        assertEquals("10.0", osVersion2);
         logger.debug(" ######## End of Test integrationTest ########");
     }
 

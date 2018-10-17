@@ -13,8 +13,8 @@ apply from: 'code-style/codestyle.gradle'
 
 // Configure the testeditor plugin
 testeditor {
-	version '1.17.1'
-	xtextVersion '2.13.0'
+    version '1.17.1'
+    xtextVersion '2.13.0'
 }
 
 task cleanScreenshotDir(type: Delete) {
@@ -30,15 +30,18 @@ def commonsFixtureVersion = "1.2.+"
 def webdriverManagerVersion = "3.0.0"
 
 dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.25'
-	compile 'org.apache.logging.log4j:log4j-core:2.11.0'
-	compile 'org.apache.logging.log4j:log4j-api:2.11.0'
-	compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.0'
-		
-	// Testing now with JUnit5
-	testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.1'
-	testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.1.1'
-	testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.6'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'org.apache.logging.log4j:log4j-core:2.11.0'
+    compile 'org.apache.logging.log4j:log4j-api:2.11.0'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.0'
+
+    // Testing now with JUnit5
+    testCompileOnly 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.1.0' //For tests that needs JUnit 4.X 
+
+    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.6'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
     // these are just added for web-fixtures
     compile "org.testeditor.fixture:core-fixture:$coreFixtureVersion"
@@ -69,6 +72,7 @@ sourceSets.main.resources.includes = [ "**/*.aml" ]
  */
 repositories {
     jcenter()
+    mavenCentral() // This is very important for JUnit 5 tests to execute see https://www.petrikainulainen.net/programming/testing/junit-5-tutorial-running-unit-tests-with-gradle/
     maven { url "http://dl.bintray.com/test-editor/Fixtures/" }
     maven { url "http://dl.bintray.com/test-editor/maven/" }
 }
@@ -79,7 +83,12 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 // show standard out during test to see logging output
-test.testLogging.showStandardStreams = true
+test {
+    // enable JUnit 5 support
+    useJUnitPlatform()
+    // show standard out during test to see logging output
+    testLogging.showStandardStreams = true
+}
 
 jar {
     manifest {

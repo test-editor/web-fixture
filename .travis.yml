@@ -13,7 +13,7 @@ env:
     
   matrix: 
     - FIREFOX_VERSION="latest"
-    - FIREFOX_VERSION="60.0.1"
+    - FIREFOX_VERSION="62.0.3"
  
 before_install:
   # Install firefox for testing.

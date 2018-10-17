@@ -13,8 +13,10 @@
 
 package org.testeditor.fixture.web;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
@@ -38,7 +40,7 @@ public class WebDriverFixtureTest {
         String textOnPage = driver.getValueOfWebElement(element);
         
         //then
-        Assert.assertEquals(expectedValue, textOnPage); 
+        assertEquals(expectedValue, textOnPage); 
         logger.debug(" ######## End of Test textIsOnPageDynamicElementTest ########");
     }
     
@@ -53,7 +55,7 @@ public class WebDriverFixtureTest {
         String textOnPage = driver.getValueOfWebElement(element);
         
         //then
-        Assert.assertNull(textOnPage); 
+        assertNull(textOnPage); 
         logger.debug(" ######## End of Test textIsNotOnPageDynamicElementTest ########");
     }
     
@@ -68,7 +70,7 @@ public class WebDriverFixtureTest {
         String textOnPage = driver.getValueOfWebElement(element);
         
         //then
-        Assert.assertNull(textOnPage); 
+        assertNull(textOnPage); 
         logger.debug(" ######## End of Test textIsNotOnPageChecksGetText ########");
     }
     
@@ -83,7 +85,7 @@ public class WebDriverFixtureTest {
         String textOnPage = driver.getValueOfWebElement(element);
         
         //then
-        Assert.assertEquals("foo", textOnPage); 
+        assertEquals("foo", textOnPage); 
         logger.debug(" ######## End of Test textIsOnPageChecksGetText ########");
     }
     
