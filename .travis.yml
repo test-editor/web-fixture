@@ -28,7 +28,7 @@ env:
 
   matrix:
     - FIREFOX_VERSION="latest"
-    - FIREFOX_VERSION="60-esr"
+    - FIREFOX_VERSION="esr"
 
 script:
   - nix-shell shell-${FIREFOX_VERSION}.nix --command "./gradlew assemble"
