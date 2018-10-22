@@ -1,9 +1,18 @@
+language: nix
 sudo: false
-language: java
-addons:
-  apt:
-    packages:
-      - xvfb
+cache:
+  directories:
+  - "$HOME/nix.store"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+before_install:
+- sudo mkdir -p /etc/nix
+- echo "substituters = https://cache.nixos.org/ file://$HOME/nix.store" | sudo tee -a /etc/nix/nix.conf > /dev/null
+- echo 'require-sigs = false' | sudo tee -a /etc/nix/nix.conf > /dev/null
+before_cache:
+- mkdir -p $HOME/nix.store
+- nix copy --to file://$HOME/nix.store -f default.nix buildInputs
+
 env:
   global:
     - # Environment variable for WebDriverManager see https://github.com/bonigarcia/webdrivermanager#known-issues
@@ -18,25 +27,12 @@ env:
 
   matrix:
     - FIREFOX_VERSION="latest"
-    - FIREFOX_VERSION="62.0.3"
+#    - FIREFOX_VERSION="62.0.3"
 
-before_install:
-  # Install firefox for testing.
-  - echo $FIREFOX_VERSION
-  - export FIREFOX_SOURCE_URL='https://download.mozilla.org/?product=firefox-'$FIREFOX_VERSION'&lang=en-US&os=linux64'
-  - wget --no-verbose -O /tmp/firefox-$FIREFOX_VERSION.tar.bz2 $FIREFOX_SOURCE_URL
-  - mkdir /tmp/firefox-$FIREFOX_VERSION
-  - tar -xvf /tmp/firefox-$FIREFOX_VERSION.tar.bz2 -C /tmp/firefox-$FIREFOX_VERSION
-  - export PATH=/tmp/firefox-$FIREFOX_VERSION/firefox:$PATH
- # Use a virtual display.
-  - "export DISPLAY=:99.0"
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
-jdk:
-  - openjdk10
-cache:
-  directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
+script:
+  - nix-shell --command "./gradlew assemble"
+  - nix-shell --command "xvfb-run --server-args=\"-ac -screen 0 1920x1080x16\" ./gradlew check"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - nix-shell --command "./.travis-publishOnRelease.sh"
   - ./.travis-publishOnRelease.sh
