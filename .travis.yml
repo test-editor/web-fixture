@@ -27,12 +27,12 @@ env:
 
   matrix:
     - FIREFOX_VERSION="latest"
-#    - FIREFOX_VERSION="62.0.3"
+    - FIREFOX_VERSION="60-esr"
 
 script:
-  - nix-shell --command "./gradlew assemble"
-  - nix-shell --command "xvfb-run --server-args=\"-ac -screen 0 1920x1080x16\" ./gradlew check"
+  - nix-shell shell-${FIREFOX_VERSION}.nix --command "./gradlew assemble"
+  - nix-shell shell-${FIREFOX_VERSION}.nix --command "xvfb-run --server-args=\"-ac -screen 0 1920x1080x16\" ./gradlew check"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - nix-shell --command "./.travis-publishOnRelease.sh"
+  - nix-shell shell-${FIREFOX_VERSION}.nix --command "./.travis-publishOnRelease.sh"
   - ./.travis-publishOnRelease.sh
