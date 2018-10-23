@@ -33,9 +33,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
     testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.1.0' //For tests that needs JUnit 4.X
+    testCompile 'org.mockito:mockito-core:2.23.0'
 
-    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.6'
-    testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.6'
     // these are just added for web-fixtures
     compile "org.testeditor.fixture:core-fixture:$coreFixtureVersion"
     compile "org.testeditor.fixture:commons-fixture:$commonsFixtureVersion"
