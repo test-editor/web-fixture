@@ -4,6 +4,13 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.4'
     id 'net.researchgate.release' version '2.7.0'
     id 'eclipse'
+    id 'org.testeditor.gradle-plugin' version '0.11'
+ }
+
+// Configure the testeditor plugin
+testeditor {
+    languageVersion '2.1.+'
+    xtextVersion '2.15.0'
 }
 
 description = """Testing framework for web applications using Selenium for automating browsers see https://www.seleniumhq.org/"""
