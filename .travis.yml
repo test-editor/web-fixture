@@ -1,5 +1,9 @@
 sudo: false
 language: java
+addons:
+  apt:
+    packages:
+      - xvfb
 env:
   global:
     - # Environment variable for WebDriverManager see https://github.com/bonigarcia/webdrivermanager#known-issues
