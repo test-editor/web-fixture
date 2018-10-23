@@ -4,9 +4,8 @@ addons:
   apt:
     packages:
       - xvfb
-
-env: 
-  global: 
+env:
+  global:
     - # Environment variable for WebDriverManager see https://github.com/bonigarcia/webdrivermanager#known-issues
     - secure: "W28/Z09ZeHHU5MvR+eTlMSjvdTlvjy8hU94x3BiOgEn/IEKcVV41zO0EXSRh3QnfgeTFzIju6YmjlIi0BTlADGlYyFJHjYvDA60wthj1Knv6fm+HA7ybhGn9m+ZzHpKu8lVJxC5s/MC8iHz16vGMHNKRNC/PGOYOiJHfFML4HnxTpMrFA805G9/sDzJp2DPS0pWKsJ6wtWpodUk5mJeKyu4xQPyxC+YDkOVRUAG6MjVdtvvzplP6GPNi9kDNXHr95HQo1xBeDRjYZExW4AAA+22jonxRfh/zxmT3DWZEh071G96azSs3TfivNZc73GgDURyRcC91AdDIgxXonK2XrimubJR8VZOfeCxxKllyEq5kcH8TBUIYINmduouIOpuM2AJpE6Bs7UwJj91KH+7eKBPk++YdUSKlyprZAHNaiKeqmBICn83HvsYHlkxWFwSL8TJfTdL0egJn7YueWFZOHrZHYGkXUDniKvdyf2oSjBYTRGWUJGP8pxW7SUzt32Xp2qOvNY26QiFnMdyu1lncC5ZgDqZl4Nn2JBRt9wBgp90vs2IuVrAdIkxlGrHInK12ArNpEi2uyRuV/lisAwrgUL3rUv8zM6TBNW+fDEI7teU0HHbgf9XzU0d2mrNL+bfXlID+MkLm6VCZ/fzM1rY9L6wc5QCSLQKCfCV63aC+OKQ="
     - secure: "pUDMQXWHIXZ2oDyixVRvAyOXo14WrZlZC0WhASD+3NDaOsyVIEnog2rpELmFSWoPKlQtyQpS9piB3aR+PZvRGq4kgkt0xdhKvQX2EvcMZ0tAwYBEOE3u0E51+5oJCav6n3Wmr+Eg3he3sSm53qVgngUpzX0deK1Jvll+yvOKmLmIDjKd44bFH4JwdwGYxzfouB8NBQaO+4jL5NcPWcU9u3HSazUrGPN/Ev3M0Vw3kwqJcM8120uxqclS9DblqQOebtCz0r7TkbA96MG8Dy1S/b5S/LIXI+N6kpueek08N5ChIRa1pa50pLUgcL1OQ3hoxL7GS4xNygzGyLFCSuMAGXk6ZJxbZqwBZI+Yu9sVXjzDXD7rDRDS6rDDpeH0W7nZ2YFEXb12XyZ28H4IyAzuOb/e4SUt7QootiyNBxibCBgCAIKJJOq+TqiW6NxbF3I31+3uYsEfxny5CoAfPyIHsGjRELJp8b284LQafIh5rBcc+xwDI4jdrBPq7B5C4xYwcBc0b3zQELW1CStWSLfuDY3Pvh2Qv356XIS4VCU/wxXAYC3qBfhxFgYobcHXw8vzie6CEKKzibUDGokfUqcXcxUZW3KgE48FSAm5UwXraZewbm4O+y+iaQfYadI+oIZoHRRPeLH/gdOZnZ6zU+MY1xdzJRLhvaI8KsVZs5ru2Gg="
@@ -16,11 +15,11 @@ env:
     - # Environment variables for GITHUB
     - secure: "Os7T3JgsgDbXr27/gL7aiFvexXBeAp+f0Mn+64Vb651w2nb9OACEqINpGK4baq5BQTt+5z9wGzYho1LC6NoWgGS0Rg9boHescqszmIZ1K2zKrL7Vk+0F3/RYiz7yZf4hk2jyti8u4b4vj68XM5ZWqmZsDqzBh2FGw83ui5bK4NtHrzX+/7igWgEUc1ikyOXSMVNsNqd+vpcYGkGKZfuqEVdsdhCMa1umKpCvJWZOtO0XtL2zxAO43Smf64Vu0FGIfwM/3MAL3tubCYBBliJTAk6krdOlZwOleKyyEm6yfJCWG2smCxz7pj0zJ6qEdFIR9echrexUuUgBKhuDYh78508Tq0o6AuKPXWAPiNUk1MiWvqz0eSDEHuz6ngytXE2kE2DZ8cGNDgTVqD5lo9iiMhvfnZ31f6qe7BNEK8hF3ZqWp0YT5g5TXt0mLF5tvlxM4wkGVwYbe7jSmauSlTgJ7gIhPzmCCvXmyZi8l6pPFBgXpvPHo7lquXfPVV4bLqwVKWv7kDGgm9tVKuK0Wo742SNFoNJrmDdbnLA29LHA6KKWIEXlZO1y+SJAL4IogY5Z2FcQHbkx2wgqWbAX+pxng6oLnTUCfd/QaoX+9IQ6vH85RUhGwDx9w/KkG81Mtx4T/wldZB6t3pmsvYgKPAcqahfo2QWnhqmeB8Vqi7nbHnw="
     - secure: "odbv36H3eDjjoP5yonIjhd8fFNJDYZ3QjugGlLqly1aNRvqRYiSvvs2g3ZdSf4XEEB2UEOsV0MJ8cXYVhUSaAOCS9uBAi+oogZPyb/s0NyWVP+56Z94Q66LLNnE/EyaOgfqGy3VEmlm5TflOWDGKAAcOwXOUPG94iuWrA0dEw//9sTeK/Sapvd9lyY07AYCn6TSpUHU5UyPJhO/L6Sp+jl+z2r3UYuYL5nlKKLNhVdAEkZIsf1jUy8mpUXvkX0AxZqkKu82H5tP4tGx2GTbSEOPU+bh0foTK2k2AFZVWdEtCdj+22drbaLLBT5z32GI+Q5G/xhCFcHPhNHdTH/BcfJx1KfVlR5Lufmr0YrhTcUYdWyhlqfh+PWKSMBP4LcTMvJ1+fIEF8x4MUQOdWSONAz1+kMKMQnkkiHCH79QakGexXB6Xft7P/5FT+X8BbXcr4hSwqrcVsV/3IdpBhBl62L3oApCFwWYnLGfEkjhRv/YE0gu0D+eLVtiKuyT+f5JbKbYou4gUlAYSF+gmj01QpeVfkN/MwDVlk6WWpNYoKBjNc3dSLr/6eQl4VCffW+c3aigdPgPUWPjbbkeqZMCAVzAE+z/ZTg4kOSHidHD8iWMJtmatzLG23/JDhFzNiAAoJBUhUAuUnk3/dA9NiE1QXb8LrlfmyviqCN5PEtExsyM="
-    
-  matrix: 
+
+  matrix:
     - FIREFOX_VERSION="latest"
     - FIREFOX_VERSION="62.0.3"
- 
+
 before_install:
   # Install firefox for testing.
   - echo $FIREFOX_VERSION
@@ -28,12 +27,12 @@ before_install:
   - wget --no-verbose -O /tmp/firefox-$FIREFOX_VERSION.tar.bz2 $FIREFOX_SOURCE_URL
   - mkdir /tmp/firefox-$FIREFOX_VERSION
   - tar -xvf /tmp/firefox-$FIREFOX_VERSION.tar.bz2 -C /tmp/firefox-$FIREFOX_VERSION
-  - export PATH=/tmp/firefox-$FIREFOX_VERSION/firefox:$PATH 
+  - export PATH=/tmp/firefox-$FIREFOX_VERSION/firefox:$PATH
  # Use a virtual display.
   - "export DISPLAY=:99.0"
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1920x1080x16"
 jdk:
-  - oraclejdk8
+  - openjdk10
 cache:
   directories:
   - $HOME/.gradle/caches/
