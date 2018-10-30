@@ -1,1 +1,1 @@
-/home/u134552/repo/web-fixture/shell-latest.nix
+shell-latest.nix
