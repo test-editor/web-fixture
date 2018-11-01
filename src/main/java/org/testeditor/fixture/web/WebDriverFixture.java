@@ -156,12 +156,12 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     /**
      * Sets a String as a script-name for execution.
      * 
-     * @param exec
+     * @param executionScript
      */
     @FixtureMethod
-    public void setExecuteScript(String exec) throws FixtureException {
-        executeScript = exec;
-        logger.trace("WebDriver is set"); 
+    public void setExecuteScript(String executionScript) throws FixtureException {
+        executeScript = executionScript;
+        logger.trace("Execution script is set - name = {}", executionScript); 
     }
 
     /**
@@ -307,7 +307,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             try {
                 File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
                 FileUtils.copyFile(scrFile, new File(finalFilename));
-                logger.info("Wrote screenshot to file='{}'.", finalFilename);
+                logger.debug("Wrote screenshot to file='{}'.", finalFilename);
             } catch (IOException e) {
                 logger.error("Could not write screenshot to file='{}'.", finalFilename);
             }
@@ -326,7 +326,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     @FixtureMethod
     public WebDriver startFireFoxPortable(String browserPath) throws FixtureException {
-        logger.info("Setup for Firefox Portable on path : {} started.", browserPath);
+        logger.debug("Starting Firefox Portable on path : {} ...", browserPath);
         setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
         logger.trace("WebDriverManager setup executed!");
         FirefoxBinary binary = new FirefoxBinary(new File(browserPath));
@@ -347,7 +347,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException
      */
     private void launchChrome() throws FixtureException {
-        logger.trace("Setup for Google Chrome started.");
+        logger.debug("Starting Google Chrome ...");
         setupDrivermanager(ChromeDriverManager.getInstance(DriverManagerType.CHROME));
         logger.trace("WebDriverManager setup executed!");
         ChromeOptions options = populateBrowserSettingsForChrome();
@@ -366,9 +366,9 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException
      */
     private void launchFirefox() throws FixtureException {
-        logger.info("Setup for Firefox started.");
+        logger.debug("Starting Firefox ...");
         setupDrivermanager(FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX));
-        logger.trace("WebDriverManager setup executed!");
+        logger.trace("WebDriverManager setup executed succesfully!");
         FirefoxOptions options = populateBrowserSettingsForFirefox();
         FirefoxDriver firefoxdriver = new FirefoxDriver(options);
         driver = firefoxdriver;
@@ -385,7 +385,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @throws FixtureException
      */
     private void launchInternetExplorer() throws FixtureException {
-        logger.info("Setup for Internet Explorer started.");
+        logger.debug("Starting Internet Explorer ...");
         setupDrivermanager(InternetExplorerDriverManager.getInstance(DriverManagerType.IEXPLORER));
         logger.trace("WebDriverManager setup executed!");
         InternetExplorerOptions options = populateBrowserSettingsForInternetExplorer();
@@ -399,8 +399,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     private void logBrowserVersion(Capabilities capabilities, RemoteWebDriver remoteDriver) {
         String browserName = capabilities.getBrowserName();
         String version = remoteDriver.getCapabilities().getVersion();
-        logger.info("*******************************************************************");
-        logger.info("Browser \"{}\" with version \"{}\" successfully started ..." , browserName, version);
+        logger.debug("Browser \"{}\" has version \"{}\"." , browserName, version);
     }
 
     private ChromeOptions populateBrowserSettingsForChrome() throws FixtureException {
@@ -532,10 +531,10 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             httpProxyPassword = System.getenv(HTTP_PROXY_PASSWORD);
             proxyCredentialsAvailable = true;
             logger.debug("Proxy settings found as System Environment Variable: {}" , HTTP_PROXY_HOST);
-            logger.debug("Proxy user and password set as System Environment Variables : {} and {}" , 
+            logger.trace("Proxy user and password set as System Environment Variables : {} and {}" , 
                     HTTP_PROXY_USER, HTTP_PROXY_PASSWORD);
         } else {
-            logger.debug("No proxy set - No settings found as System Environment Variable: {}. "
+            logger.trace("No proxy set - No settings found as System Environment Variable: {}. "
                     + "If proxy settings are neccessary, following Environment Variables "
                     + "have to be specified for test execution : {} = <YOUR_PROXY_HOSTNAME> ; "
                     + "{} = <YOUR_PROXY_USERNAME> ; {} = <YOUR_PROXYPASSWORD>" , HTTP_PROXY_HOST, 
@@ -569,8 +568,8 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      * @param browserManager The specific BrowserManager of a browser.
      */
     private void settingProxyCredentials(WebDriverManager browserManager) {
-        logger.debug("Proxy Credentials for Browsermanager ( {} = {} ; {} = {})",
-                HTTP_PROXY_HOST , HTTP_PROXY_USER , httpProxyHost,
+        logger.debug("Proxy Credentials for WebDrivermanager ( {} = {} ; {} = {})",
+                HTTP_PROXY_HOST , httpProxyHost, HTTP_PROXY_USER ,
                 httpProxyUser);
         browserManager.proxy(httpProxyHost);
         browserManager.proxyUser(httpProxyUser);
@@ -589,7 +588,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
                 driver.quit();
             }
         });
-        logger.trace("ShutDownHook registered on WebDriver.");
+        logger.debug("ShutDownHook registered on WebDriver.");
     }
 
     /**
@@ -651,10 +650,13 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     @FixtureMethod
     public void waitUntilElementFound(String elementLocator, LocatorStrategy locatorType, int timeOutInSeconds)
             throws FixtureException {
+        logger.debug("Waiting max {} seconds until element {} with strategy {} is found", 
+                timeOutInSeconds, elementLocator, locatorType);
         WebDriverWait webDriverWait = new WebDriverWait(driver, timeOutInSeconds);
         logger.trace("Timeout for WebDriverWait is set to {}.", timeOutInSeconds);
         try {
             webDriverWait.until(ExpectedConditions.presenceOfElementLocated(getBy(elementLocator, locatorType)));
+            logger.trace("WebDriverWait executed until element with elementlocator {} found.", elementLocator);
         } catch (TimeoutException e) {
             throw new FixtureException("timeout during wait for element", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
@@ -778,6 +780,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         try {
             element.click();
         } catch (StaleElementReferenceException e) {
+            logPageSource(getPageSource());
             throw new FixtureException("element to click seems to no longer exist", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
@@ -807,6 +810,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         try {
             element.submit();
         } catch (NoSuchElementException e) {
+            logPageSource(getPageSource());
             throw new FixtureException("element seems not to be part of a form and cannot be submitted", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), //
@@ -846,20 +850,20 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         // Selenium getText() vs. getAttribute("value") see https://sqa.stackexchange.com/questions/24463/selenium-webdriver-gettext-vs-getattribute
         if ((readValueThroughText != null) && (!readValueThroughText.isEmpty())) {
             value = readValueThroughText;
-            logger.trace("readValueThroughText -> element.getText() returned: {} for element {}", 
-                    readValueThroughText, element.getTagName());
+            logger.trace("readValueThroughText -> element.getText() returned elements successfully");
         } else { 
             String readValueThroughAttribute = element.getAttribute("value");
             if ((readValueThroughAttribute  != null) && (!readValueThroughAttribute.isEmpty())) {
                 value = readValueThroughAttribute;
-                logger.trace("readValueThroughAttribute -> element.getAttribute(\"value\") returned: {} for element {}",
-                        readValueThroughAttribute, element.getTagName());
+                logger.trace("readValueThroughAttribute -> element.getAttribute(\"value\") returned "
+                        + "elements successfully {}");
             } else {
                 logger.trace("readValueThroughAttribute -> element.getAttribute(\"value\") and element.getText() "
                         + "returned no result for element {}", element.getTagName());
                 value = null;
             }
         }
+        logger.trace("getValueOfWebElement returned: \n{} for element {}", value, element.getTagName());
         return value;
     }
 
@@ -874,14 +878,14 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     public void selectElementInSelection(String elementLocator, LocatorStrategy locatorType, String value)
             throws FixtureException {
         clickOn(elementLocator, locatorType);
-        logger.trace("Selection clicked with locator: {} and locatorType: {}" , elementLocator, locatorType);
+        logger.debug("Select element {} in selection {} located by: {}." , value, elementLocator, locatorType);
         wrappedSleep(300, "sleep after click on element was interrupted", FixtureException.keyValues("elementLocator",
                 elementLocator, "locatorType", locatorType.toString(), "value", value));
         logger.trace("wait for 300 ms");
         WebElement element = getWebElement(elementLocator, locatorType);
         try {
             new Select(element).selectByVisibleText(value);
-            logger.info("Selected value: {}" , value);
+            logger.trace("Selected value: {}" , value);
         } catch (NoSuchElementException e) {
             throw new FixtureException(
                     "element could not be selected by visible text (option not part of this selection)", //
@@ -948,12 +952,13 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             executeScript();
         }
 
-        logger.trace("Lookup element with locator \"{}\" and locatorType \"{}\"", elementLocator, locatorType.name());
+        logger.debug("Lookup element with locator \"{}\" and locatorType \"{}\"", elementLocator, locatorType.name());
         WebElement result = null;
         try {
             result = driver.findElement(getBy(elementLocator, locatorType));
             logger.trace("Lookup element was successful.");
         } catch (NoSuchElementException exception) {
+            logPageSource(getPageSource());
             throw new FixtureException("element could not be located on the current page", //
                     FixtureException.keyValues("elementLocator", elementLocator, //
                             "locatorType", locatorType.toString(), "pageSource", getPageSource(), "url",
@@ -995,14 +1000,14 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
      */
     private void executeScript() throws FixtureException {
         try {
-            logger.debug("execute script begin {}", executeScript);
+            logger.trace("execute script begin {}", executeScript);
             BufferedReader br = new BufferedReader(new FileReader(executeScript));
             StringBuilder sb = new StringBuilder();
             while (br.ready()) {
                 sb.append(br.readLine()).append("\n");
             }
             br.close();
-            logger.debug("execute script end {}", executeScript);
+            logger.trace("execute script end {}", executeScript);
             logger.trace("Script for execution : {}", sb.toString());
             ((JavascriptExecutor) driver).executeScript(sb.toString());
         } catch (IOException e) {
@@ -1032,7 +1037,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     @FixtureMethod
     public void pressSpecialKey(String specialKey) 
             throws FixtureException {
-        logger.debug("Special Key : {} will be pressed.", specialKey);
+        logger.debug("Press special Key : {}.", specialKey);
         if (specialKey == null || specialKey.trim().isEmpty()) {
             throw new FixtureException("Invalid or empty key!");
         }
@@ -1040,7 +1045,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
         try {
             Keys seleniumKey = Keys.valueOf(specialKey.trim().toUpperCase());
             new Actions(driver).sendKeys(seleniumKey).build().perform();
-            logger.debug("Press special key performed with key : {}", specialKey);
+            logger.trace("Press special key performed with key : {}", specialKey);
         } catch (IllegalArgumentException e) {
             
             throw new FixtureException("Key cannot be converted", 
@@ -1070,7 +1075,7 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
     @FixtureMethod
     public boolean isTextOnPage(String textTobeFound) throws FixtureException {
         // First looking in the page source for fix Web Elements
-        logger.debug("Text \"{}\" is searched on web page", textTobeFound);
+        logger.debug("Is text '{}' on page?", textTobeFound);
         if (checkForConstantWebElements(textTobeFound)) {
             return true;
         }
@@ -1080,39 +1085,39 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
 
     protected List<WebElement> getAllWebElementsOnPage() {
         List<WebElement> elements = driver.findElements(By.xpath("//*"));
-        StringBuilder builder = new StringBuilder();
-        elements.forEach(element -> {
-            builder.append("Tag: <" + element.getTagName() + "> class = " + element.getAttribute("class") 
-                + " id=" + element.getAttribute("id") 
-                + " name=" + element.getAttribute("name") 
-                + " value=" + element.getAttribute("value") 
-                + " type=" + element.getAttribute("name"));
-            builder.append("\n");
-        });
-        logger.trace("All WebElements on Webpage: {}" , builder);
         return elements;
     }
 
     protected boolean checkForConstantWebElements(String textTobeFound) {
         String pageSource = getPageSource();
+        logPageSource(pageSource);
         boolean textFoundOnPageSource = pageSource.contains(textTobeFound); 
-        logger.debug("Text is found on page source : {}" , textFoundOnPageSource);
+        logger.trace("Text \"{}\" is found on page source : {}" , textTobeFound, textFoundOnPageSource);
         return textFoundOnPageSource;
     }
 
     protected String getPageSource() {
         String pageSource = driver.getPageSource();
-        logger.trace("PageSource: {}" , pageSource);
         return pageSource;
+    }
+    
+    protected void logPageSource(String pageSource) {
+        logger.trace("PageSource: \n "
+                + "************************ Begin Pagesource ********************************************************"  
+                + "\n {} \n "
+                + "************************* End Pagesource *********************************************************",
+                pageSource);
     }
 
     protected boolean checkForDynamicWebElements(String textTobeFound, List<WebElement> elements) {
         boolean textOnpage = false;
+        logger.trace("Text \"{}\" is not found on static HTML, now we try all values of existing Web-Elements", 
+                textTobeFound);
         for (WebElement element :elements) {
             String valueOfWebElement = getValueOfWebElement(element);
             if (valueOfWebElement != null && valueOfWebElement.contains(textTobeFound)) {
                 textOnpage = true;
-                logger.trace("Text : {} is found on page" , textTobeFound);
+                logger.trace("Text : \"{}\" is found on page" , textTobeFound);
                 break;
             } 
         }
