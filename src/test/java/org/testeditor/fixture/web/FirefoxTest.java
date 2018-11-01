@@ -130,7 +130,6 @@ public class FirefoxTest {
         // when
         driver.waitSeconds(1);
         boolean presenceOfText = driver.isTextOnPage("Test-Editor");
-        logger.debug(" Is text on page : {} " , presenceOfText);
 
         // then
         assertTrue(presenceOfText);
