@@ -14,7 +14,7 @@ can be added with `nix-channel --add https://nixos.org/channels/nixpkgs-unstable
 To enter the development environment, execute `NIXPKGS_ALLOW_UNFREE=1 nix-shell` in this repos root directory. For even more convenience,
 please install [direnv](https://github.com/direnv/direnv) which will enter the development environment automatically for you.
 
-Once within the development environment, run `/gradlew build` to resolve all necessary dependencies.
+Once within the development environment, run `./gradlew build` to resolve all necessary dependencies and run all checks.
 
     
 ### Build
