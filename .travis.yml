@@ -35,4 +35,3 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - nix-shell shell-${FIREFOX_VERSION}.nix --command "./.travis-publishOnRelease.sh"
-  - ./.travis-publishOnRelease.sh
