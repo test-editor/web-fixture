@@ -1,6 +1,22 @@
 # Browser Setup for Testing
-It is possible to activate browser-specific settings before test execution.  
-E.g. when a special proxy setting is needed for Firefox on a System Under Test (SUT) environment under Linux which is different to the proxy setting under Windows, it is possible to create a JSON-File called **browserSetup.json** in the directory **src/test/resources** of the actual test project. These specified settings will be used for test execution.
+It is possible to activate browser-specific settings before test execution. 
+There are two posibilities to activate these settings.
+1. through an environment variable named ```TEST_EDITOR_BROWSER_SETUP_PATH``` 
+When this possibility will be chosen, the tester can determine which file name he wants to use and the path where the file should be located. 
+
+
+   1. **Example for Linux:**
+   setting the environment variable in your HOME directory under testsetup
+   
+      ``` export TEST_EDITOR_BROWSER_SETUP_PATH=~/testsetup/firefoxBrowserSettings.json```
+
+   1. **Example for Windows:**
+   setting the environment variable on drive C:\ in directory testsetup
+    
+      ``` set TEST_EDITOR_BROWSER_SETUP_PATH=C:/testsetup/firefoxBrowserSettings.json```
+
+2. through JSON-File called ```browserSetup.json```
+E.g. when a special proxy setting is needed for Firefox on a System Under Test (SUT) environment under Linux which is different to the proxy setting under Windows, it is possible to create a JSON-File called ```browserSetup.json``` in the directory ```src/test/resources``` of the actual test project. These specified settings will be used for test execution.
 
 ## Documentation for Options
 For [Firefox Options](https://seleniumhq.github.io/selenium/docs/api/rb/Selenium/WebDriver/Firefox/Options.html)
