@@ -52,6 +52,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.logging.NeedsLocalLogs;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -497,7 +498,12 @@ public class WebDriverFixture implements TestRunListener, TestRunReportable {
             throws FixtureException {
         StringBuilder builder = new StringBuilder();
         BrowserSettingsManager manager = new BrowserSettingsManager();
-        List<BrowserSetupElement> browserSettings = manager.getBrowserSettings();
+        List<BrowserSetupElement> browserSettings = null;
+        try {
+            browserSettings = manager.getBrowserSettings();
+        } catch (IOException e) {
+            throw new FixtureException("An error occured when resolving browser settings", e);
+        }
         browserSettings.forEach((setting) -> {
             if (setting.getBrowserName().equalsIgnoreCase(browserName)) {
                 List<BrowserSetting> separateOptions = setting.getOptions();
