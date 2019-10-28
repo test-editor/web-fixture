@@ -26,7 +26,7 @@ test.dependsOn cleanScreenshotDir
 
 def coreFixtureVersion = "4.4.0"
 def seleniumJavaVersion = "3.14.0"
-def commonsFixtureVersion = "1.3.2"
+def commonsFixtureVersion = "1.3.3"
 def webdriverManagerVersion = "3.0.0"
 
 dependencies {
