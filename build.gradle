@@ -9,8 +9,8 @@ plugins {
 
 // Configure the testeditor plugin
 testeditor {
-    languageVersion '2.1.+'
-    xtextVersion '2.15.0'
+    languageVersion '2.3.5'
+    xtextVersion '2.18.0'
 }
 
 description = """Testing framework for web applications using Selenium for automating browsers see https://www.seleniumhq.org/"""
@@ -24,9 +24,9 @@ task cleanScreenshotDir(type: Delete) {
 
 test.dependsOn cleanScreenshotDir
 
-def coreFixtureVersion = "4.2.+"
+def coreFixtureVersion = "4.4.0"
 def seleniumJavaVersion = "3.14.0"
-def commonsFixtureVersion = "1.2.+"
+def commonsFixtureVersion = "1.3.2"
 def webdriverManagerVersion = "3.0.0"
 
 dependencies {
