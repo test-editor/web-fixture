@@ -13,6 +13,7 @@
 
 package org.testeditor.fixture.web.json;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +42,9 @@ public class BrowserSettingsManager {
         }
 
      * </code>
+     * @throws IOException 
      */
-    public List<BrowserSetupElement> getBrowserSettings() throws FixtureException {
+    public List<BrowserSetupElement> getBrowserSettings() throws FixtureException, IOException {
         BrowserSetupReader reader = new BrowserSetupReader();
         List<BrowserSetupElement> elements = reader.readElements(FILE_NAME);
         Platform currentPlattform = getCurrentPlatform();
@@ -54,8 +56,9 @@ public class BrowserSettingsManager {
      * 
      * @param fileName of JSON test file for browserSetup.json.
      * @return A List of BrowserSetupElement
+     * @throws IOException 
      */
-    protected List<BrowserSetupElement> getBrowserSettings(String fileName) throws FixtureException {
+    protected List<BrowserSetupElement> getBrowserSettings(String fileName) throws FixtureException, IOException {
         BrowserSetupReader reader = new BrowserSetupReader();
         List<BrowserSetupElement> elements = reader.readElements(fileName);
         Platform currentPlattform = getCurrentPlatform();

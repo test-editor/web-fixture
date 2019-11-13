@@ -17,6 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class BrowserSettingsManagerTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void failureInDuplicateCapability() throws FixtureException {
+    public void failureInDuplicateCapability() throws FixtureException, IOException {
         // given + when
         thrown.expect(FixtureException.class);
         thrown.expectMessage("Duplicate entries existing in configuration file");
@@ -57,7 +58,7 @@ public class BrowserSettingsManagerTest {
     }
 
     @Test
-    public void failureInDuplicateOption() throws FixtureException {
+    public void failureInDuplicateOption() throws FixtureException, IOException {
 
         // given
         // when
@@ -77,7 +78,7 @@ public class BrowserSettingsManagerTest {
     }
 
     @Test
-    public void successfulWindowsTestForOptions() throws FixtureException {
+    public void successfulWindowsTestForOptions() throws FixtureException, IOException {
 
         // given
         BrowserSettingsManager manager = new BrowserSettingsManager();
@@ -97,7 +98,7 @@ public class BrowserSettingsManagerTest {
     }
 
     @Test
-    public void successfulLinuxTestForOptions() throws FixtureException {
+    public void successfulLinuxTestForOptions() throws FixtureException, IOException {
 
         // given
         BrowserSettingsManager manager = new BrowserSettingsManager();
@@ -117,7 +118,7 @@ public class BrowserSettingsManagerTest {
     }
 
     @Test
-    public void successfulMacTestForOptions() throws FixtureException {
+    public void successfulMacTestForOptions() throws FixtureException, IOException {
 
         // given
         BrowserSettingsManager manager = new BrowserSettingsManager();

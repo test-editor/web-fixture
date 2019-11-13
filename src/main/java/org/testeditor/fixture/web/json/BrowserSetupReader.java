@@ -13,6 +13,7 @@
 
 package org.testeditor.fixture.web.json;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +41,9 @@ public class BrowserSetupReader {
      * @param fileName of the BrowserElements
      * @return All Browser or OS specific settings for starting a browser in a test environment.
      * @throws FixtureException
+     * @throws IOException 
      */
-    public List<BrowserSetupElement> readElements(String fileName) throws FixtureException {
+    public List<BrowserSetupElement> readElements(String fileName) throws FixtureException, IOException {
         FileReader reader = new FileReader();
         List<BrowserSetupElement> allSetupElements = new ArrayList<>();
         String jsonString = reader.getFileContentAsString(fileName);

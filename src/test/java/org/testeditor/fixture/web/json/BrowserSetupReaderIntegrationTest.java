@@ -16,6 +16,7 @@ package org.testeditor.fixture.web.json;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class BrowserSetupReaderIntegrationTest {
     private static final Logger logger = LoggerFactory.getLogger(BrowserSetupReaderIntegrationTest.class);
 
     @Test
-    public void integrationTest() throws FixtureException {
+    public void integrationTest() throws FixtureException, IOException {
         
         // given
         BrowserSetupReader browserSetupReader = new BrowserSetupReader();
